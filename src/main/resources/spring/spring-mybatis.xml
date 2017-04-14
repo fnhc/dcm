@@ -1,0 +1,114 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+       xsi:schemaLocation="
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+  http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
+
+    <mybatis:scan base-package="com.chinawiserv.dsp.dcm.mapper" />
+
+    <bean name="dataSource_dcm" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+
+        <property name="driverClassName" value="${db.driver}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="initialSize" value="${db.initialSize}"/>
+        <!-- 初始化连接数 -->
+        <property name="maxActive" value="${db.maxActive}"/>
+        <!-- 最大连接数量 -->
+        <property name="minIdle" value="${db.minIdle}"/>
+        <!-- 最小空闲连接 -->
+        <property name="testWhileIdle" value="${db.testWhileIdle}"/>
+        <!-- 是否要进行检测 -->
+        <property name="validationQuery" value="${db.validationQuery}"/>
+        <!-- 进行检测一个连接是有效的SQL语句，比如oracle是select 1 from dual 而 mysql是 select 1 -->
+
+        <property name="timeBetweenEvictionRunsMillis" value="${db.timeBetweenEvictionRunsMillis}"/>
+        <!-- 每隔多少时间检测一次，比如每半小时检测一次，总不能总是检测，这会对性能产生影响 -->
+
+        <property name="removeAbandoned" value="${db.removeAbandoned}"/>
+        <!-- 超过removeAbandonedTimeout时间后，是否进行没用连接（废弃）的回收 -->
+
+        <property name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout}"/>
+        <!-- 超过时间限制，回收没有用(废弃)的连接，默认300秒 -->
+
+        <property name="maxWait" value="${db.maxWait}"/>
+        <!-- 最大超时等待时间,单位毫秒 -->
+
+        <property name="minEvictableIdleTimeMillis" value="${db.minEvictableIdleTimeMillis}"/>
+        <!-- 一个数据库连接连空闲少时间之后，我们认为其应该不再适用了(可能下一次就会失效了)，应该移除并重新建立连接了 -->
+
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true" />
+
+        <!-- 开启Druid的监控统计功能 -->
+        <property name="filters" value="stat" />
+        <!--<property name="filters" value="mergeStat" /> -->
+        <!-- Oracle连接是获取字段注释 -->
+        <property name="connectProperties">
+            <props>
+                <prop key="remarksReporting">true</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">
+        <!-- 配置数据源 -->
+        <property name="dataSource" ref="dataSource_dcm"/>
+        <!-- 自动扫描 Xml 文件位置 -->
+        <property name="mapperLocations" value="classpath:mybatis/*/*.xml"/>
+        <!-- 配置 Mybatis 配置文件（可无） -->
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
+        <!-- 配置包别名 -->
+        <property name="typeAliasesPackage" value="com.chinawiserv.dsp.dcm.domain"/>
+
+        <!-- 以上配置和传统 Mybatis 一致 -->
+
+        <!-- 插件配置 -->
+        <property name="plugins">
+            <array>
+                <!-- 分页插件配置 -->
+                <bean id="paginationInterceptor" class="com.baomidou.mybatisplus.plugins.PaginationInterceptor">
+                    <!-- 指定数据库方言 -->
+                    <property name="dialectType" value="mysql"/>
+                </bean>
+                <!-- 如需要开启其他插件，可配置于此 -->
+            </array>
+        </property>
+
+        <!-- MP 全局配置注入 -->
+        <property name="globalConfig" ref="globalConfig"/>
+    </bean>
+
+    <!-- 定义 MP 全局策略 -->
+    <bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
+        <!-- 主键策略配置 -->
+        <!-- 可选参数
+            AUTO->`0`("数据库ID自增")
+            INPUT->`1`(用户输入ID")
+            ID_WORKER->`2`("全局唯一ID")
+            UUID->`3`("全局唯一ID")
+        -->
+        <property name="idType" value="3"/>
+
+        <!-- 数据库类型配置 -->
+        <!-- 可选参数（默认mysql）
+            MYSQL->`mysql`
+            ORACLE->`oracle`
+            DB2->`db2`
+            H2->`h2`
+            HSQL->`hsql`
+            SQLITE->`sqlite`
+            POSTGRE->`postgresql`
+            SQLSERVER2005->`sqlserver2005`
+            SQLSERVER->`sqlserver`
+        -->
+        <property name="dbType" value="mysql"/>
+
+        <!-- 全局表为下划线命名设置 true -->
+        <property name="dbColumnUnderline" value="true"/>
+    </bean>
+
+</beans>

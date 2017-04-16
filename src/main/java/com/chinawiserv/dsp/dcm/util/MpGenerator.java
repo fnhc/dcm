@@ -31,7 +31,7 @@ public class MpGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("D:\\Tmp\\gcode\\");
+        gc.setOutputDir("D:\\temp\\gcode\\java\\");
         gc.setFileOverride(true);
         gc.setActiveRecord(true);
         gc.setEnableCache(false);// XML 二级缓存
@@ -61,15 +61,16 @@ public class MpGenerator {
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("Wiser159");
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/kangarooadmin?characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/dcm?characterEncoding=utf8");
         mpg.setDataSource(dsc);
 
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
-        strategy.setTablePrefix(new String[] { "sys_"});// 此处可以修改为您的表前缀
+//        strategy.setTablePrefix(new String[] { "sys_"});// 此处可以修改为您的表前缀
+        //****
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-        // strategy.setInclude(new String[] { "user" }); // 需要生成的表
+//         strategy.setInclude(new String[] { "test_user" }); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -113,7 +114,7 @@ public class MpGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return "D://Tmp//gcode//page//" + tableInfo.getEntityName() + "List.jsp";
+                return "D:\\temp\\gcode\\page\\" + tableInfo.getEntityName() + "List.jsp";
             }
         });
         cfg.setFileOutConfigList(focList);

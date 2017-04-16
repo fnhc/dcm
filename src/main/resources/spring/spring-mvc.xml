@@ -19,111 +19,121 @@
 	<context:component-scan base-package="com.chinawiserv.dsp.dcm.*" >
 	</context:component-scan>
 
-	<context:property-placeholder location="classpath:*.properties" />
+	<!-- 开启aop，对类代理 -->
+	<aop:config proxy-target-class="true" />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 
-	<!-- 拦截器 -->
-	<!--<mvc:interceptors>-->
-		<!--<mvc:interceptor>-->
-			<!--<mvc:mapping path="/**" />-->
-			<!--<bean id="inteceptor_springInteceptor"-->
-				  <!--class="com.chinawiserv.dcm.inteceptor.SpringInteceptor">-->
-				<!--<constructor-arg>-->
-					<!--<description>无需登录，可以访问</description>-->
-					<!--<list>-->
-						<!--&lt;!&ndash; 用户登录 &ndash;&gt;-->
-						<!--<value>admin/console/adminconsole.shtml</value>-->
-						<!--<value>admin/console/adminconsoleLoginSuccess.shtml</value>-->
-						<!--<value>admin/console/adminconsoleCancelLogin.shtml</value>-->
-
-						<!--&lt;!&ndash; 初始化产品名称 &ndash;&gt;-->
-						<!--<value>dcmLogoTitle.shtml</value>-->
-
-						<!--&lt;!&ndash; 用户登出 &ndash;&gt;-->
-						<!--<value>admin/console/logout.shtml</value>-->
-						<!--<value>admin/console/logoutSafe.shtml</value>-->
-						<!--<value>admin/console/logout.shtml</value>-->
-
-						<!--<value>noLogin.shtml</value>-->
-					<!--</list>-->
-				<!--</constructor-arg>-->
-				<!--<constructor-arg>-->
-					<!--<description>需要登录，无需授权，可以访问</description>-->
-					<!--<list>-->
-						<!--&lt;!&ndash; 选择器 &ndash;&gt;-->
-						<!--<value>admin/selector/departmentSelectorInit.shtml</value>-->
-
-						<!--&lt;!&ndash; 桌面 &ndash;&gt;-->
-						<!--<value>desktop.shtml</value>-->
-						<!--<value>showInformation.shtml</value>-->
-						<!--<value>loadQuestionType.shtml</value>-->
-						<!--<value>addUseHistory.shtml</value>-->
-
-
-
-						<!--&lt;!&ndash; 修改密码 &ndash;&gt;-->
-						<!--<value>admin/sys/account/tsysAccountEditPasswordInit.shtml</value>-->
-						<!--<value>admin/sys/account/tsysAccountEditLoadLoginInfo.shtml</value>-->
-						<!--<value>admin/sys/account/tsysAccountEditPasswordEdit.shtml</value>-->
-
-					<!--</list>-->
-				<!--</constructor-arg>-->
-			<!--</bean>-->
-		<!--</mvc:interceptor>-->
-	<!--</mvc:interceptors>-->
+	<context:property-placeholder location="classpath:/conf/*.properties" />
 
 	<!-- 开启spring mvc的注解 -->
 	<mvc:annotation-driven />
 
-	<!-- 这样根目录下面的resource的文件(.css,.js)就不会被spring的DispatchServlet进行过滤 -->
-	<mvc:resources location="/css/" mapping="/css/**" />
-	<mvc:resources location="/image/" mapping="/image/**" />
-	<mvc:resources location="/js/" mapping="/js/**" />
-
-	<!-- 内容协商视图解析器；根据客户端不同的请求决定不同的view进行响应 -->
-	<!-- 会自动根据解析的contentType来决定使用哪个视图解析器（默认使用整个web应用中的viewResolver�? -->
-	<bean id="contentNegotiatingViewResolver"
-		  class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-		<!-- 内容协商管理器 用于决定media type -->
-		<property name="contentNegotiationManager" ref="contentNegotiationManager"></property>
-		<property name="viewResolvers" ref="internalResourceViewResolver"></property>
-	</bean>
-
-	<!-- 内容协商管理配置，检查扩展名、检查Parameter、检查Accept Header -->
-	<bean id="contentNegotiationManager"
-		  class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-		<!-- 是否启用扩展名支持，默认就是true -->
-		<property name="favorPathExtension" value="true" />
-
-		<!-- 是否启用参数支持，默认就是true -->
-		<property name="favorParameter" value="true" />
-
-		<!-- 是否忽略掉accept header，默认就是false -->
-		<property name="ignoreAcceptHeader" value="false" />
-
-		<!-- 如果启用参数支持，这里指定参数名称，favorParameter是true时起作用 -->
-		<property name="parameterName" value="format" />
-
-		<!--扩展名到mimeType的映射；favorPathExtension, favorParameter是true时起作用 -->
-		<property name="mediaTypes">
-			<map>
-				<entry key="json" value="application/json" />
-				<entry key="xml" value="application/xml" />
-				<entry key="html" value="text/html" />
-				<entry key="htm" value="text/html" />
-			</map>
+	<!-- freemarker的配置 -->
+	<bean id="freemarkerConfig"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath" value="/WEB-INF/views/" />
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="freemarkerSettings">
+			<props>
+				<prop key="template_update_delay">10</prop>
+				<prop key="locale">zh_CN</prop>
+				<prop key="datetime_format">yyyy-MM-dd</prop>
+				<prop key="date_format">yyyy-MM-dd</prop>
+				<prop key="number_format">#.##</prop>
+			</props>
 		</property>
-		<!-- 默认的content type -->
-		<property name="defaultContentType" value="text/html" />
 	</bean>
 
-	<!-- 自动匹配视图 -->
-	<bean id="internalResourceViewResolver"
-		  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="contentType" value="text/html" />
-		<property name="prefix" value="/WEB-INF/page/" />
-		<property name="suffix" value=".jsp" />
+	<!--视图解析器 -->
+	<bean id="viewResolver"
+		  class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="viewClass"
+				  value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>
+		<property name="suffix" value=".html" />
+		<property name="contentType" value="text/html;charset=utf-8" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="order" value="1" />
 	</bean>
+
+	<!-- 资源映射 -->
+	<mvc:resources location="/WEB-INF/static/app/" mapping="/app/**" />
+	<mvc:resources location="/WEB-INF/static/images/"
+				   mapping="/images/**" />
+	<mvc:resources location="/WEB-INF/static/plugins/"
+				   mapping="/plugins/**" />
+
+	<!-- 定义文件上传解析器 -->
+	<bean id="multipartResolver"
+		  class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设定默认编码 -->
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<!-- 设定文件上传的最大值5MB，5*1024*1024 -->
+		<property name="maxUploadSize" value="5242880"></property>
+	</bean>
+
+	<mvc:annotation-driven>
+		<!-- 编码转换 -->
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/plain;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+
+		<!-- 登录拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.chinawiserv.dsp.dcm.interceptor.LoginInterceptor" />
+		</mvc:interceptor>
+
+		<!-- 权限拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.chinawiserv.dsp.dcm.interceptor.PermissionInterceptor">
+				<property name="permissionService" ref="permissionServiceImpl"></property>
+			</bean>
+		</mvc:interceptor>
+
+	</mvc:interceptors>
 
 	<!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>-->
+
+	<!-- 事务管理器 -->
+	<bean id="transactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- 数据源 -->
+		<property name="dataSource" ref="dataSource_dcm" />
+	</bean>
+	<!-- 通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 传播行为 -->
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="create*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 切面 -->
+	<aop:config>
+		<aop:advisor advice-ref="txAdvice"
+					 pointcut="execution(* com.chinawiserv.dsp.dcm.service.impl.*.*(..))" />
+	</aop:config>
 
 </beans>

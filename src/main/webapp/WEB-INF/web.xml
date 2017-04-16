@@ -42,9 +42,9 @@
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
-    <!--<listener>-->
-        <!--<listener-class>com.vacomall.common.util.SpringUtil</listener-class>-->
-    <!--</listener>-->
+    <listener>
+        <listener-class>com.chinawiserv.dsp.dcm.common.util.SpringUtil</listener-class>
+    </listener>
 
     <servlet>
         <servlet-name>springServlet</servlet-name>

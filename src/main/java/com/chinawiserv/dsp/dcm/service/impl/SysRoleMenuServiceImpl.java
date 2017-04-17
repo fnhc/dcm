@@ -28,7 +28,7 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 		/**
 		 * 删除原有权限
 		 */
-		this.delete(new EntityWrapper<SysRoleMenu>().eq("roleId",roleId));
+		this.delete(new EntityWrapper<SysRoleMenu>().eq("role_id",roleId));
 		/**
 		 * 重新授权
 		 */
@@ -44,10 +44,8 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
 	@Override
 	public List<SysRoleMenu> selectByRole(String roleId) {
-		// TODO Auto-generated method stub
-		
 		EntityWrapper<SysRoleMenu> ew = new EntityWrapper<SysRoleMenu>();
-		ew.addFilter("roleId = {0}", roleId);
+		ew.addFilter("role_id = {0}", roleId);
 		return this.selectList(ew);
 		
 	}

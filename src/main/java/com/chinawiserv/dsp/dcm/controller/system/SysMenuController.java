@@ -58,7 +58,7 @@ public class SysMenuController extends BaseController {
         // 查询分页
         EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
         if(StringUtils.isNotBlank(search)){
-            ew.like("menuName",search);
+            ew.like("menu_name",search);
             model.addAttribute("search",search);
         }
         Page<SysMenu> pageData = sysMenuService.selectPage(page, ew);

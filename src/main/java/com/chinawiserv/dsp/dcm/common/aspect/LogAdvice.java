@@ -51,6 +51,7 @@ public class LogAdvice {
 			SysLog sysLog  =new SysLog();
 			sysLog.setCreateTime(new Date());
 			sysLog.setTitle(log.value());
+			sysLog.setUserId((st != null )? st.getUid() : "systemUserId");
 			sysLog.setUserName((st != null )? st.getUname() : "system");
 			sysLog.setUrl(request.getRequestURI().toString());
 			sysLog.setParams(JSON.toJSONString(request.getParameterMap()));

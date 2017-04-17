@@ -60,7 +60,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //更新用户
         userMapper.updateById(sysUser);
         //删除已有权限
-        userRoleMapper.delete(new EntityWrapper<SysUserRole>().eq("userId",sysUser.getId()));
+        userRoleMapper.delete(new EntityWrapper<SysUserRole>().eq("user_id",sysUser.getId()));
         //重新绑定角色
         if(ArrayUtils.isNotEmpty(roleIds)){
             for(String rid : roleIds){
@@ -79,16 +79,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public Page<Map<Object, Object>> selectUserPage(Page<Map<Object, Object>> page, String search) {
-        // TODO Auto-generated method stub
         page.setRecords(userMapper.selectUserList(page, search));
         return page;
     }
 
     @Override
     public void delete(String id) {
-        // TODO Auto-generated method stub
         this.deleteById(id);
-        userRoleMapper.delete(new EntityWrapper<SysUserRole>().addFilter("userId = {0}", id));
+        userRoleMapper.delete(new EntityWrapper<SysUserRole>().addFilter("user_id = {0}", id));
     }
 
 }

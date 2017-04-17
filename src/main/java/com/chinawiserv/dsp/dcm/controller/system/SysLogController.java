@@ -42,13 +42,13 @@ public class SysLogController extends BaseController{
     public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, String daterange, Model model){
 
         Page<SysLog> page = getPage(pageNumber,pageSize);
-        page.setOrderByField("createTime");
+        page.setOrderByField("create_time");
         page.setAsc(false);
         model.addAttribute("pageSize", pageSize);
         // 查询分页
         EntityWrapper<SysLog> ew = new EntityWrapper<SysLog>();
         if(StringUtils.isNotBlank(search)){
-            ew.where("(userName like CONCAT('%',{0},'%')", search)
+            ew.where("(user_name like CONCAT('%',{0},'%')", search)
                     .or("title like CONCAT('%',{0},'%'))", search);
             model.addAttribute("search", search);
         }
@@ -56,8 +56,8 @@ public class SysLogController extends BaseController{
         if(StringUtils.isNotBlank(daterange)){
             model.addAttribute("daterange", daterange);
             String[] dateranges = StringUtils.split(daterange, "-");
-            ew.addFilter(" createTime >= {0}", dateranges[0].trim().replaceAll("/","-") + " 00:00:00");
-            ew.addFilter(" createTime <= {0}", dateranges[1].trim().replaceAll("/","-") + " 23:59:59");
+            ew.addFilter(" create_time >= {0}", dateranges[0].trim().replaceAll("/","-") + " 00:00:00");
+            ew.addFilter(" create_time <= {0}", dateranges[1].trim().replaceAll("/","-") + " 23:59:59");
         }
         Page<SysLog> pageData = sysLogService.selectPage(page, ew);
         model.addAttribute("pageData", pageData);

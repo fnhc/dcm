@@ -82,6 +82,12 @@
         <property name="globalConfig" ref="globalConfig"/>
     </bean>
 
+    <bean class="com.baomidou.mybatisplus.spring.MybatisMapperRefresh">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <constructor-arg name="mapperLocations" value="classpath:com/chinawiserv/dsp/dcm/mapper/xml/*Mapper.xml"/>
+        <constructor-arg name="enabled" value="true"/>
+    </bean>
+
     <!-- 定义 MP 全局策略 -->
     <bean id="globalConfig" class="com.baomidou.mybatisplus.entity.GlobalConfiguration">
         <!-- 主键策略配置 -->

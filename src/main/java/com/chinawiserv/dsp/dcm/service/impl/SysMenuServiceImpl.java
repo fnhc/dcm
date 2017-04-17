@@ -95,8 +95,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 	@Override
 	public List<TreeMenuAllowAccess> selectTreeMenuAllowAccessByMenuIdsAndPid(
 			final List<String> menuIds, String pid) {
-		// TODO Auto-generated method stub
-		
+
 		EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
 		ew.orderBy("sort", true);
 		ew.addFilter("pid = {0} ", pid);

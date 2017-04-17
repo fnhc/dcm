@@ -73,13 +73,13 @@ public class SysRoleController extends BaseController{
     public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, Model model){
 
         Page<SysRole> page = getPage(pageNumber,pageSize);
-        page.setOrderByField("createTime");
+        page.setOrderByField("create_time");
         page.setAsc(false);
         model.addAttribute("pageSize",pageSize);
         // 查询分页
         EntityWrapper<SysRole> ew = new EntityWrapper<SysRole>();
         if(StringUtils.isNotBlank(search)){
-            ew.like("roleName",search);
+            ew.like("role_name",search);
             model.addAttribute("search",search);
         }
         Page<SysRole> pageData = sysRoleService.selectPage(page, ew);
@@ -168,7 +168,7 @@ public class SysRoleController extends BaseController{
             throw new RuntimeException("该角色不存在");
         }
 
-        List<SysRoleMenu> sysRoleMenus = sysRoleMenuService.selectList(new EntityWrapper<SysRoleMenu>().addFilter("roleId = {0}", id));
+        List<SysRoleMenu> sysRoleMenus = sysRoleMenuService.selectList(new EntityWrapper<SysRoleMenu>().addFilter("role_id = {0}", id));
         List<String> menuIds = Lists.transform(sysRoleMenus, input -> input.getMenuId());
 
         List<TreeMenuAllowAccess> treeMenuAllowAccesses = sysMenuService.selectTreeMenuAllowAccessByMenuIdsAndPid(menuIds, "0");
@@ -197,7 +197,7 @@ public class SysRoleController extends BaseController{
     @RequestMapping("/getUsers")
     public String getUsers(String roleId,Model model){
 
-        List<SysUserRole> sysUserRoles = sysUserRoleService.selectList(new EntityWrapper<SysUserRole>().addFilter("roleId = {0}", roleId));
+        List<SysUserRole> sysUserRoles = sysUserRoleService.selectList(new EntityWrapper<SysUserRole>().addFilter("role_id = {0}", roleId));
 
         List<String> userIds = Lists.transform(sysUserRoles,input -> input.getUserId());
 
@@ -220,7 +220,7 @@ public class SysRoleController extends BaseController{
     @ResponseBody
     public String getCount(String roleId){
 
-        int count =  sysUserRoleService.selectCount(new EntityWrapper<SysUserRole>().addFilter("roleId = {0}", roleId));
+        int count =  sysUserRoleService.selectCount(new EntityWrapper<SysUserRole>().addFilter("role_id = {0}", roleId));
         return String.valueOf(count);
     }
 

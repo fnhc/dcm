@@ -107,7 +107,7 @@ public class SysUserController extends BaseController {
 
         List<SysRole> sysRoles = sysRoleService.selectList(null);
         EntityWrapper<SysUserRole> ew = new EntityWrapper<SysUserRole>();
-        ew.addFilter("userId = {0} ", id);
+        ew.addFilter("user_id = {0} ", id);
         List<SysUserRole> mySysUserRoles = sysUserRoleService.selectList(ew);
         List<String> myRolds = Lists.transform(mySysUserRoles, input -> input.getRoleId());
 
@@ -135,7 +135,7 @@ public class SysUserController extends BaseController {
     @ResponseBody
     public String checkName(String userName){
 
-        List<SysUser> list = sysUserService.selectList(new EntityWrapper<SysUser>().addFilter("userName = {0}", userName));
+        List<SysUser> list = sysUserService.selectList(new EntityWrapper<SysUser>().addFilter("user_name = {0}", userName));
         if(list.size() > 0){
             return "{\"error\":\" "+userName+" 用户名已存在,请换一个尝试.\"}";
         }

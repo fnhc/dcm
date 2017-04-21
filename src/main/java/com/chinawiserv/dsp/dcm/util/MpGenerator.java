@@ -31,7 +31,7 @@ public class MpGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("D:\\temp\\gcode\\java\\");
+        gc.setOutputDir("D:\\tmp\\gcode\\java\\");
         gc.setFileOverride(true);
         gc.setActiveRecord(true);
         gc.setEnableCache(false);// XML 二级缓存
@@ -61,7 +61,7 @@ public class MpGenerator {
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("Wiser159");
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/dcm?characterEncoding=utf8");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/dcm_new?characterEncoding=utf8");
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -83,7 +83,7 @@ public class MpGenerator {
         // 自定义 service 实现类父类
         // strategy.setSuperServiceImplClass("com.baomidou.demo.TestServiceImpl");
         // 自定义 controller 父类
-        // strategy.setSuperControllerClass("com.baomidou.demo.TestController");
+         strategy.setSuperControllerClass("com.chinawiserv.dsp.dcm.controller.BaseController");
         // 【实体】是否生成字段常量（默认 false）
         // public static final String ID = "test_id";
         // strategy.setEntityColumnConstant(true);
@@ -114,7 +114,7 @@ public class MpGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return "D:\\temp\\gcode\\page\\" + tableInfo.getEntityName() + "List.jsp";
+                return "D:\\tep\\gcode\\page\\" + tableInfo.getEntityName() + "List.jsp";
             }
         });
         cfg.setFileOutConfigList(focList);

@@ -61,7 +61,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value = "/doLogin",method=RequestMethod.POST)  
     public  String doLogin(String userName,String password, String captcha,String return_url,Model model){
 		
-		if(StringUtils.isBlank(userName) || StringUtils.isBlank(captcha) ||  StringUtils.isBlank(captcha)){
+		if(StringUtils.isBlank(userName) || StringUtils.isBlank(password) ||  StringUtils.isBlank(captcha)){
 			model.addAttribute("error", "用户名/密码/验证码不能为空.");
 			return "login";
 		}

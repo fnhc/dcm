@@ -39,6 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			/**
 			 * 加载全局非登录访问常量
 			 */
+			//todo
 			List<SysSetting> list =  SpringUtil.getBean(ISysSettingService.class).selectList(new EntityWrapper<SysSetting>().orderBy("sort",true));
 			for(SysSetting setting : list){
 				request.setAttribute(setting.getSysKey(),setting.getSysValue());

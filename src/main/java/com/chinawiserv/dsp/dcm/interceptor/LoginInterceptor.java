@@ -13,6 +13,7 @@ import com.chinawiserv.dsp.dcm.service.ISysMenuService;
 import com.chinawiserv.dsp.dcm.service.ISysSettingService;
 import com.chinawiserv.dsp.dcm.service.ISysUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -29,6 +30,8 @@ import com.chinawiserv.dsp.dcm.common.util.TokenUtil;
  * @date 2016年12月27日 上午11:52:56
  */
 public class LoginInterceptor extends HandlerInterceptorAdapter {
+	@Autowired
+	private ISysSettingService sysSettingService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request,
@@ -40,7 +43,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			 * 加载全局非登录访问常量
 			 */
 			//todo
-			List<SysSetting> list =  SpringUtil.getBean(ISysSettingService.class).selectList(new EntityWrapper<SysSetting>().orderBy("sort",true));
+//			List<SysSetting> list =  SpringUtil.getBean(ISysSettingService.class).selectList(new EntityWrapper<SysSetting>().orderBy("sort",true));
+			List<SysSetting> list =  sysSettingService.selectList(new EntityWrapper<SysSetting>().orderBy("sort",true));
 			for(SysSetting setting : list){
 				request.setAttribute(setting.getSysKey(),setting.getSysValue());
 			}

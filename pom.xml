@@ -34,6 +34,7 @@
         <kaptcha-version>0.0.9</kaptcha-version>
         <guava.version>19.0</guava.version>
         <ehcache.version>2.6.11</ehcache.version>
+        <jstl.version>1.2</jstl.version>
     </properties>
 
     <dependencies>
@@ -104,6 +105,11 @@
             <artifactId>jsp-api</artifactId>
             <version>${jsp-api.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${jstl.version}</version>
         </dependency>
 
         <dependency>

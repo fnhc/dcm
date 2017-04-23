@@ -1,10 +1,12 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <header class="main-header">
  <!-- Logo -->
  <a href="/index.html" class="logo">
    <!-- mini logo for sidebar mini 50x50 pixels -->
-   <span class="logo-mini"><b>${(systemSubName)!'DCM'}</b></span>
+   <span class="logo-mini"><b>${systemSubName}</b></span>
    <!-- logo for regular state and mobile devices -->
-   <span class="logo-lg"><b>${(systemName)!'数据采集系统'}</b></span>
+   <span class="logo-lg"><b>${systemName}</b></span>
  </a>
 
  <!-- Header Navbar -->
@@ -15,7 +17,7 @@
    <div class="navbar-custom-menu">
      <ul class="nav navbar-nav">
        <!-- Notifications Menu -->
-       <li class="dropdown notifications-menu">
+       <%--<li class="dropdown notifications-menu">
          <!-- Menu toggle button -->
          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
            <i class="fa fa-bell-o"></i>
@@ -35,13 +37,13 @@
            </li>
            <li class="footer"><a href="#"><i class="fa fa-angle-double-down"></i>查看全部</a></li>
          </ul>
-       </li>
+       </li>--%>
        <!-- User Account Menu -->
        <li class="dropdown user user-menu">
          <!-- Menu Toggle Button -->
-         <a href="/system/me/page.html" class="dropdown-toggle" data-toggle="tooltip" title="Admnin" data-placement="bottom">
-           <img src="${(me.userImg)!}" class="user-image" alt="User Image">
-           <span class="hidden-xs">${(me.userName)!'游客'}</span>
+         <a href="/system/me/page" class="dropdown-toggle" data-toggle="tooltip" title="Admnin" data-placement="bottom">
+           <img src="${(me.userImg)}" class="user-image" alt="User Image">
+           <span class="hidden-xs">${me.userName}</span>
          </a>
        </li>
        <li>

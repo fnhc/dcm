@@ -1,35 +1,37 @@
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
-  <#include "/common/head.html">
+	<%@include file="/WEB-INF/views/common/head.jsp" %>
   <style type="text/css">
   	.has-feedback .form-control{
   		height: 50px;
   	}
   	.form-control-feedback {
-    	top: 8px;important!
+    	top: 8px !important ;
     }
   </style>
   <body class="hold-transition login-page">
   <div class="login-box">
 	  <div class="login-logo">
-	    <b>${(systemName)!'数据采集系统'}</b>
+	    <b>数据采集系统</b>
 	  </div>
 	  <!-- /.login-logo -->
 	  <form action="/login/doLogin" data-validator-option="{theme:'bootstrap', timely:2, theme:'simple_bottom'}" method="post">
 	  <div class="login-box-body">
 	      <p class="login-box-msg">请输入用户名和密码登录</p>
-	      <#if error??>
-	      	<div  class="alert alert-danger alert-dismissible">
-		       <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> ${error!}</h4>
-		    </div>
-	      </#if>
+		  <c:if test="${error != null}">
+			  <div  class="alert alert-danger alert-dismissible">
+				  <h4 style="margin-bottom: 0px;"><i class="fa fa-exclamation-triangle"></i> ${error}</h4>
+			  </div>
+		  </c:if>
+
 	      <div class="form-group has-feedback mg">
-	        <input type="hidden" name="return_url" value="${return_url!}">
-	        <input type="text" class="form-control"  name="userName" placeholder="用户名" data-rule="用户名:required;username;">
+	        <input type="hidden" name="return_url" value="${return_url}">
+	        <input type="text" class="form-control"  name="userName" placeholder="用户名" data-rule="用户名:required;username;" value="admin">
 	        <span class="glyphicon glyphicon-user form-control-feedback"></span>
 	      </div>
 	      <div class="form-group has-feedback mg">
-	        <input type="password" class="form-control" name="password"  placeholder="密码"  data-rule="密码:required;password;">
+	        <input type="password" class="form-control" name="password"  placeholder="密码"  data-rule="密码:required;password;" value="123456">
 	        <span class="glyphicon glyphicon-lock form-control-feedback" ></span>
 	      </div>
 	      <div class="form-group has-feedback">
@@ -69,7 +71,7 @@
 <!-- jQuery 2.1.4 -->
 <script src="/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
-<script src="/bootstrap/js/bootstrap.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.js"></script>
 <!-- iCheck 1.0.1 -->
 <script src="/plugins/iCheck/icheck.min.js"></script>
 <!-- nice-validator-1.0.8 -->

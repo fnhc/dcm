@@ -128,16 +128,15 @@
 	<!-- 通知 -->
 	<tx:advice id="txAdvice" transaction-manager="transactionManager">
 		<tx:attributes>
-			<!-- 传播行为 -->
-			<tx:method name="save*" propagation="REQUIRED" />
-			<tx:method name="insert*" propagation="REQUIRED" />
-			<tx:method name="add*" propagation="REQUIRED" />
-			<tx:method name="create*" propagation="REQUIRED" />
-			<tx:method name="delete*" propagation="REQUIRED" />
-			<tx:method name="update*" propagation="REQUIRED" />
-			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
-			<tx:method name="select*" propagation="SUPPORTS" read-only="true" />
-			<tx:method name="get*" propagation="SUPPORTS" read-only="true" />
+			<!-- 把名称为 find、statistic、query 开头的方法配置为只读事物 -->
+			<tx:method name="find*"       no-rollback-for="Exception"  read-only="true"  isolation="READ_COMMITTED" propagation="REQUIRED"/>
+			<tx:method name="select*"       no-rollback-for="Exception"  read-only="true"  isolation="READ_COMMITTED" propagation="REQUIRED"/>
+			<tx:method name="get*"       no-rollback-for="Exception"  read-only="true"  isolation="READ_COMMITTED" propagation="REQUIRED"/>
+			<tx:method name="statistic*"  no-rollback-for="Exception"  read-only="true"  isolation="READ_COMMITTED" propagation="REQUIRED"/>
+			<tx:method name="query*"      no-rollback-for="Exception"  read-only="true"  isolation="READ_COMMITTED" propagation="REQUIRED"/>
+
+			<!-- 把名称为除 find、statistic、query 开头的方法以外的所有方法配置为读写事物 -->
+			<tx:method name="*" rollback-for="Throwable" read-only="false" propagation="REQUIRED"/>
 		</tx:attributes>
 	</tx:advice>
 	<!-- 切面 -->

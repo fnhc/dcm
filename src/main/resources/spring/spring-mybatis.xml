@@ -14,44 +14,32 @@
         <property name="url" value="${db.url}"/>
         <property name="username" value="${db.username}"/>
         <property name="password" value="${db.password}"/>
-        <property name="initialSize" value="${db.initialSize}"/>
-        <!-- 初始化连接数 -->
-        <property name="maxActive" value="${db.maxActive}"/>
-        <!-- 最大连接数量 -->
-        <property name="minIdle" value="${db.minIdle}"/>
-        <!-- 最小空闲连接 -->
-        <property name="testWhileIdle" value="${db.testWhileIdle}"/>
-        <!-- 是否要进行检测 -->
-        <property name="validationQuery" value="${db.validationQuery}"/>
-        <!-- 进行检测一个连接是有效的SQL语句，比如oracle是select 1 from dual 而 mysql是 select 1 -->
 
-        <property name="timeBetweenEvictionRunsMillis" value="${db.timeBetweenEvictionRunsMillis}"/>
-        <!-- 每隔多少时间检测一次，比如每半小时检测一次，总不能总是检测，这会对性能产生影响 -->
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="1" />
+        <property name="minIdle" value="1" />
+        <property name="maxActive" value="${db.maxActive}" />
 
-        <property name="removeAbandoned" value="${db.removeAbandoned}"/>
-        <!-- 超过removeAbandonedTimeout时间后，是否进行没用连接（废弃）的回收 -->
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000" />
 
-        <property name="removeAbandonedTimeout" value="${db.removeAbandonedTimeout}"/>
-        <!-- 超过时间限制，回收没有用(废弃)的连接，默认300秒 -->
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
 
-        <property name="maxWait" value="${db.maxWait}"/>
-        <!-- 最大超时等待时间,单位毫秒 -->
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
 
-        <property name="minEvictableIdleTimeMillis" value="${db.minEvictableIdleTimeMillis}"/>
-        <!-- 一个数据库连接连空闲少时间之后，我们认为其应该不再适用了(可能下一次就会失效了)，应该移除并重新建立连接了 -->
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
 
-        <!-- 关闭abanded连接时输出错误日志 -->
-        <property name="logAbandoned" value="true" />
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
 
-        <!-- 开启Druid的监控统计功能 -->
+        <!-- 配置监控统计拦截的filters -->
         <property name="filters" value="stat" />
-        <!--<property name="filters" value="mergeStat" /> -->
-        <!-- Oracle连接是获取字段注释 -->
-        <property name="connectProperties">
-            <props>
-                <prop key="remarksReporting">true</prop>
-            </props>
-        </property>
     </bean>
 
     <bean id="sqlSessionFactory" class="com.baomidou.mybatisplus.spring.MybatisSqlSessionFactoryBean">

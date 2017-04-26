@@ -5,6 +5,13 @@
     <%@include file="/WEB-INF/views/common/head.jsp" %>
     <!-- bootstrap-table -->
     <link rel="stylesheet" href="/plugins/bootstrap-table/bootstrap-table.min.css">
+
+    <!-- bootstrap-table -->
+    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+    <script src="/js/system/log/logList.js"></script>
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -27,24 +34,21 @@
                             <div class="box-header">
                                 <form class="form-inline"  action="/system/log/list/1.html" method="post">
                                     <div class="form-group">
-                                        <input type="text" name="daterange" value="${daterange}" class="form-control date" id="daterange" placeholder="开始日期  - 结束日期" style="width: 228px;">
+                                        <input id="dateRangeId" type="text" name="daterange" value="${daterange}" class="form-control date" placeholder="开始日期  - 结束日期" style="width: 228px;">
                                     </div>
                                     <div class="input-group">
-                                        <input type="text" name="search" value="${search}" class="form-control" placeholder="Search">
+                                        <input id="searchKeyId" type="text" name="search" value="${search}" class="form-control" placeholder="日志操作">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                                            <a href="/system/log/list/1.html" class="btn btn-default"><i class="fa fa-refresh"></i></a>
+                                            <button id="queryBtnId" type="button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> 查询</button>
                                         </div>
                                     </div>
-                                    <div class="input-group pull-right">
-                                        <button type="button" class="btn btn-primary btn-flat" onclick="exportTo('日志数据');"><i class="fa fa-file-excel-o"></i> 导出</button>
-                                    </div>
+
                                 </form>
                             </div>
-                            <div class="box-body">
 
-                                <table id="systemLogTableId" class="table table-bordered table-hover">
+                            <div class="box-body table-responsive no-padding">
 
+                                <table id="systemLogTableId" class="table table-hover">
                                 </table>
                             </div><!-- /.box-body -->
 
@@ -58,12 +62,7 @@
         <div class="control-sidebar-bg"></div>
     </div>
 
-    <%@include file="/WEB-INF/views/common/js.jsp" %>
-    <!-- bootstrap-table -->
-    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <%--<%@include file="/WEB-INF/views/common/js.jsp" %>--%>
 
-
-    <script src="/js/system/log/list.js"></script>
 </body>
 </html>

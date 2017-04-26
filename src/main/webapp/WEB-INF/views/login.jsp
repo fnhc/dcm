@@ -38,7 +38,8 @@
 	      	<div class="row">
 	      		<div class="col-lg-4">
 	      			<div class="form-group has-feedback mg">
-			         	<input type="text" class="form-control" name="captcha" placeholder="验证码" data-rule="验证码:required;length(5);" size="5" >
+						<%--打开验证码--%>
+			         	<input type="text" class="form-control" name="captcha" placeholder="验证码" data-rule="验证码:required;length(5);" size="5" value="12345">
 			         	<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
 			        </div>
 	      		</div>
@@ -68,8 +69,8 @@
   <!-- /.login-box-body -->
 </div>
 <!-- REQUIRED JS SCRIPTS -->
-<!-- jQuery 2.1.4 -->
-<script src="/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<!-- jQuery 2.2.3 -->
+<script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <!-- Bootstrap 3.3.5 -->
 <script src="/plugins/bootstrap/js/bootstrap.js"></script>
 <!-- iCheck 1.0.1 -->

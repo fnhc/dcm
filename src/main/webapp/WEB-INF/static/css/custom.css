@@ -1,0 +1,19 @@
+/* 覆盖app中 login-box ,register-box */
+.login-box,
+.register-box {
+    width: 460px;
+    margin: 7% auto;
+}
+
+html,
+body {
+    min-height: 100%;
+    font-family: '微软雅黑' !important;
+}
+
+/*一键去除所有圆角效果*/
+/** {*/
+    /*-webkit-border-radius: 0 !important;*/
+    /*-moz-border-radius: 0 !important;*/
+    /*border-radius: 0 !important;*/
+/*}*/

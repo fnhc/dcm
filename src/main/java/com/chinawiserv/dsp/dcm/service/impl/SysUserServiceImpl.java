@@ -38,7 +38,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public void insertUser(SysUser user, String[] roleIds) {
         // TODO Auto-generated method stub
         user.setCreateTime(new Date());
-        user.setPassword(CommonUtil.MD5(user.getPassword()));
+        user.setPassword(CommonUtil.string2MD5(user.getPassword()));
         //保存用户
         userMapper.insert(user);
         //绑定角色
@@ -74,7 +74,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public SysUser login(String userName, String password) {
-        return this.selectOne(new EntityWrapper<SysUser>().eq("user_name", userName).eq("password", CommonUtil.MD5(password)));
+        return this.selectOne(new EntityWrapper<SysUser>().eq("user_name", userName).eq("password", CommonUtil.string2MD5(password)));
     }
 
     @Override

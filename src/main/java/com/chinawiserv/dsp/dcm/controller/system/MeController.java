@@ -44,7 +44,7 @@ public class MeController extends BaseController{
     	}
     	
     	SysUser user = sysUserService.selectById(TokenUtil.getToken(request).getUid());
-    	if(!user.getPassword().equals(CommonUtil.MD5(password))){
+    	if(!user.getPassword().equals(CommonUtil.string2MD5(password))){
     		model.addAttribute("msg","旧密码输入错误.");
     		model.addAttribute("act","2");
     		return "system/me/page";
@@ -56,7 +56,7 @@ public class MeController extends BaseController{
     		return "system/me/page";
     	}
     	
-    	user.setPassword(CommonUtil.MD5(newpassword));
+    	user.setPassword(CommonUtil.string2MD5(newpassword));
     	sysUserService.updateById(user);
     	
     	model.addAttribute("info","密码修改成功.");

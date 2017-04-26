@@ -25,8 +25,8 @@ public class TokenUtil {
 	
 	/**
 	 * 清理Token
-	 * @param token
 	 * @param request
+	 * @param response
 	 */
 	public static void clearLogin(HttpServletRequest request,HttpServletResponse response){
 		request.getSession().removeAttribute("token");
@@ -41,14 +41,12 @@ public class TokenUtil {
 			clearLogin(request, response);
 			response.sendRedirect("/login?return_url="+URLEncoder.encode(request.getRequestURL().toString(),"UTF-8"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	/**
 	 * 获取Token
-	 * @param token
 	 * @param request
 	 * @return
 	 */

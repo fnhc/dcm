@@ -1,6 +1,6 @@
 var urlPrefix = "";
 var specialReg = new RegExp("['\"]+");  //特殊字符的正则表达式
-function init(tempUrlPrefix) {
+function initGlobalCustom(tempUrlPrefix) {
     if (tempUrlPrefix) urlPrefix = tempUrlPrefix;
     /*
      * **************************************
@@ -1406,6 +1406,10 @@ function init(tempUrlPrefix) {
                         moment(date).startOf('days'),
                         moment(date).endOf('days')
                     ],
+                    "昨天": [
+                        moment(date).subtract(1, 'days').startOf('days'),
+                        moment(date).subtract(1, 'days').endOf('days')
+                    ],
                     "最近7天": [
                         moment(date).subtract(7, 'days').startOf('days'),
                         moment(date).endOf('days')
@@ -1432,7 +1436,7 @@ function init(tempUrlPrefix) {
                     "toLabel": "到",
                     "customRangeLabel": "自定义",
                     "daysOfWeek": [
-                        "天",
+                        "日",
                         "一",
                         "二",
                         "三",
@@ -1456,7 +1460,9 @@ function init(tempUrlPrefix) {
                     ],
                     "firstDay": 1
                 },
-                "opens": "left",//时间选择器打开的位置
+                "alwaysShowCalendars": true,
+                "autoUpdateInput":false,
+                "opens": "right",//时间选择器打开的位置
                 "drops": "down",//是向下还是向上打开
                 "buttonClasses": "btn btn-sm",//按钮的样式
                 "applyClass": "btn-success",//确认按钮的样式

@@ -28,40 +28,46 @@
 	<!-- 开启spring mvc的注解 -->
 	<mvc:annotation-driven />
 
-	<!-- freemarker的配置 -->
-	<!--<bean id="freemarkerConfig"-->
-		  <!--class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">-->
-		<!--<property name="templateLoaderPath" value="/WEB-INF/views/" />-->
-		<!--<property name="defaultEncoding" value="utf-8" />-->
-		<!--<property name="freemarkerSettings">-->
-			<!--<props>-->
-				<!--<prop key="template_update_delay">10</prop>-->
-				<!--<prop key="locale">zh_CN</prop>-->
-				<!--<prop key="datetime_format">yyyy-MM-dd</prop>-->
-				<!--<prop key="date_format">yyyy-MM-dd</prop>-->
-				<!--<prop key="number_format">#.##</prop>-->
-			<!--</props>-->
-		<!--</property>-->
-	<!--</bean>-->
+	<!-- 内容协商视图解析器；根据客户端不同的请求决定不同的view进行响应 -->
+	<!-- 会自动根据解析的contentType来决定使用哪个视图解析器（默认使用整个web应用中的viewResolver -->
+	<bean id="contentNegotiatingViewResolver"
+		  class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<!-- 内容协商管理器 用于决定media type -->
+		<property name="contentNegotiationManager" ref="contentNegotiationManager"></property>
+		<property name="viewResolvers" ref="internalResourceViewResolver"></property>
+	</bean>
 
-	<!--&lt;!&ndash;视图解析器 &ndash;&gt;-->
-	<!--<bean id="viewResolver"-->
-		  <!--class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">-->
-		<!--<property name="viewClass"-->
-				  <!--value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"></property>-->
-		<!--<property name="suffix" value=".html" />-->
-		<!--<property name="contentType" value="text/html;charset=utf-8" />-->
-		<!--<property name="exposeRequestAttributes" value="true" />-->
-		<!--<property name="exposeSessionAttributes" value="true" />-->
-		<!--<property name="exposeSpringMacroHelpers" value="true" />-->
-		<!--<property name="order" value="1" />-->
-	<!--</bean>-->
+	<!-- 内容协商管理配置，检查扩展名、检查Parameter、检查Accept Header -->
+	<bean id="contentNegotiationManager"
+		  class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<!-- 是否启用扩展名支持，默认就是true -->
+		<property name="favorPathExtension" value="true" />
 
-	<bean id="defaultViewResolver"
-		  class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-		  >
-		<property name="viewClass"
-				  value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 是否启用参数支持，默认就是true -->
+		<property name="favorParameter" value="true" />
+
+		<!-- 是否忽略掉accept header，默认就是false -->
+		<property name="ignoreAcceptHeader" value="false" />
+
+		<!-- 如果启用参数支持，这里指定参数名称，favorParameter是true时起作用 -->
+		<property name="parameterName" value="format" />
+
+		<!--扩展名到mimeType的映射；favorPathExtension, favorParameter是true时起作用 -->
+		<property name="mediaTypes">
+			<map>
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="application/xml" />
+				<entry key="html" value="text/html" />
+				<entry key="htm" value="text/html" />
+			</map>
+		</property>
+		<!-- 默认的content type -->
+		<property name="defaultContentType" value="text/html" />
+	</bean>
+
+	<!-- 自动匹配视图 -->
+	<bean id="internalResourceViewResolver"
+		  class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="contentType" value="text/html" />
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
@@ -70,6 +76,7 @@
 	<!-- 资源映射 -->
 	<mvc:resources location="/WEB-INF/static/app/" mapping="/app/**" />
 	<mvc:resources location="/WEB-INF/static/js/" mapping="/js/**" />
+	<mvc:resources location="/WEB-INF/static/css/" mapping="/css/**" />
 	<mvc:resources location="/WEB-INF/static/images/" mapping="/images/**" />
 	<mvc:resources location="/WEB-INF/static/plugins/"
 				   mapping="/plugins/**" />
@@ -95,8 +102,49 @@
 					</list>
 				</property>
 			</bean>
+			<!-- 配置Fastjson支持 -->
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter4">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json</value>
+					</list>
+				</property>
+				<!-- FastJsonConfig -->
+				<property name="fastJsonConfig" ref="fastJsonConfig" />
+			</bean>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
+
+	<bean id="fastJsonConfig" class="com.alibaba.fastjson.support.config.FastJsonConfig">
+		<!-- Default charset -->
+		<property name="charset" value="UTF-8" />
+		<!-- Default dateFormat -->
+		<property name="dateFormat" value="yyyy-MM-dd HH:mm:ss" />
+		<!-- Feature -->
+		<!--<property name="features">-->
+			<!--<list>-->
+				<!--<value>Your feature</value>-->
+			<!--</list>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; SerializerFeature &ndash;&gt;-->
+		<!--<property name="serializerFeatures">-->
+			<!--<list>-->
+				<!--<value>Your serializer feature</value>-->
+			<!--</list>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; Global SerializeFilter &ndash;&gt;-->
+		<!--<property name="serializeFilters">-->
+			<!--<list>-->
+				<!--<ref bean="Your serializer filter"/>-->
+			<!--</list>-->
+		<!--</property>-->
+		<!--&lt;!&ndash; Class Level SerializeFilter &ndash;&gt;-->
+		<!--<property name="classSerializeFilters">-->
+			<!--<map>-->
+				<!--<entry key="Your filter class" value-ref="Your serializer filter"/>-->
+			<!--</map>-->
+		<!--</property>-->
+	</bean>
 
 	<!-- 拦截器 -->
 	<mvc:interceptors>

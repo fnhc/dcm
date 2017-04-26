@@ -17,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,13 +51,12 @@ public class SysDeptController extends BaseController {
     @Permission("listDept")
     @RequestMapping("/list")
     @ResponseBody
-    public PageResult list(String search, Model model){
+    public PageResult list(String searchKey){
         Page<SysDept> page = getPage();
         // 查询分页
         EntityWrapper<SysDept> ew = new EntityWrapper<SysDept>();
-        if(StringUtils.isNotBlank(search)){
-            ew.like("dept_name",search);
-            model.addAttribute("search",search);
+        if(StringUtils.isNotBlank(searchKey)){
+            ew.like("dept_name", searchKey);
         }
         Page<SysDept> pageData = sysDeptService.selectPage(page, ew);
 
@@ -71,7 +69,7 @@ public class SysDeptController extends BaseController {
     @Permission("addDept")
     @RequestMapping("/add")
     public  String add(Model model){
-        return "system/dept/add";
+        return "system/dept/deptAdd";
     }
 
     /**
@@ -80,10 +78,10 @@ public class SysDeptController extends BaseController {
     @Permission("addDept")
     @Log("创建部门")
     @RequestMapping("/doAdd")
-    public  String doAdd(SysDept dept,String[] roleId){
+    public String doAdd(SysDept dept,String[] roleId){
 
         sysDeptService.insert(dept);
-        return redirectTo("/system/dept/list");
+        return "system/dept/deptList";
     }
     /**
      * 删除部门

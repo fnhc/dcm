@@ -134,19 +134,19 @@ var checkedBgColor = "#f5f5f5",
 		});
 	});
 	
-	/**
-	 * 导出报表
-	 */
-    window.exportTo = function(fileName) {
-    	var date = new Date();
-		$(".table").table2excel({
-			exclude: ".noExl",
-			name: "Excel Document Name",
-			filename: fileName,
-			exclude_img: true,
-			exclude_links: true,
-			exclude_inputs: true
-		});
-	}
+	// /**
+	//  * 导出报表
+	//  */
+    // window.exportTo = function(fileName) {
+    	// var date = new Date();
+	// 	$(".table").table2excel({
+	// 		exclude: ".noExl",
+	// 		name: "Excel Document Name",
+	// 		filename: fileName,
+	// 		exclude_img: true,
+	// 		exclude_links: true,
+	// 		exclude_inputs: true
+	// 	});
+	// }
 	
 })(jQuery, window);

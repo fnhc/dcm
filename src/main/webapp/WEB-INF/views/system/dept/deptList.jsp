@@ -28,19 +28,16 @@
                                 <div class="box-header">
                                     <%--<#if permissions?seq_contains('addDept')>--%>
                                         <div class="input-group">
-                                            <a class="btn btn-primary" href="/system/dept/add.html"><i class="fa fa-plus"></i> 创建部门</a>
+                                            <a class="btn btn-primary  btn-flat" href="/system/dept/add"><i class="fa fa-plus"></i> 创建部门</a>
                                         </div>
                                     <%--</#if>--%>
                                     <div class="input-group">
-                                        <input type="text" name="search" value="${search}" class="form-control" placeholder="Search">
+                                        <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="部门名称">
                                         <div class="input-group-btn">
-                                            <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                                            <a href="/system/dept/list" class="btn btn-default"><i class="fa fa-refresh"></i></a>
+                                            <button id="queryBtnId" type="button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> 查询</button>
                                         </div>
                                     </div>
-                                    <div class="input-group pull-right">
-                                        <button type="button" class="btn btn-primary btn-flat" onclick="exportTo('部门数据');"><i class="fa fa-file-excel-o"></i> 导出</button>
-                                    </div>
+
                                 </div><!-- /.box-header -->
                             </form>
 

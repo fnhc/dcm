@@ -37,7 +37,8 @@ jQuery(document).ready(function () {
             valign: 'middle',
             sortable: false ,
             formatter : function (value) {
-                return '<a class="btn btn-primary btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'">编辑</a>';
+                return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'"><i class="fa fa-pencil-square-o"></i> 编辑</a>' +
+                    ' <a class="btn btn-danger btn-flat btn-xs" data-tiggle="ajax" data-submit-url="/system/dept/delete?id=${(dept.id)!}" data-confirm="您确定要删除该条记录吗?"><i class="fa fa-times"></i> 删除</a>';
             }
         }]
     });
@@ -48,9 +49,8 @@ jQuery(document).ready(function () {
     });
 
     function setParams() {
-        var dateRangeVal = $('#dateRangeId').val();
         var searchKeyVal = $('#searchKeyId').val();
-        paramsObj = {searchKey : searchKeyVal , dateRange : dateRangeVal};
+        paramsObj = {searchKey : searchKeyVal};
     }
 
     function query() {

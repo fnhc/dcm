@@ -28,10 +28,10 @@
                             <div class="box-header">
                                 <form class="form-inline"  action="/system/log/list/1.html" method="post">
                                     <div class="form-group">
-                                        <input id="dateRangeId" type="text" name="daterange" value="${daterange}" class="form-control date" placeholder="开始日期  - 结束日期" style="width: 228px;">
+                                        <input id="dateRangeId" type="text" name="daterange" class="form-control date" placeholder="开始日期  至 结束日期" style="width: 228px;">
                                     </div>
                                     <div class="input-group">
-                                        <input id="searchKeyId" type="text" name="search" value="${search}" class="form-control" placeholder="日志操作">
+                                        <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="日志操作">
                                         <div class="input-group-btn">
                                             <button id="queryBtnId" type="button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> 查询</button>
                                         </div>

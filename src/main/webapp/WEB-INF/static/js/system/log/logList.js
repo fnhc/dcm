@@ -1,10 +1,10 @@
-jQuery(document).ready(function () {
+$(document).ready(function () {
     "use strict";
 
     var tableSelector = '#systemLogTableId';
     var paramsObj = {};
 
-    jQuery(tableSelector).bootstrapTable({
+    $(tableSelector).bootstrapTable({
         url: '/system/log/list',
         pagination : true ,
         sidePagination : 'server',
@@ -49,12 +49,18 @@ jQuery(document).ready(function () {
             valign: 'middle',
             sortable: false ,
             formatter : function (value) {
-                return '<a class="btn btn-primary btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'">查看参数</a>';
+                return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'">查看参数</a>';
             }
         }]
     });
 
-    jQuery('#queryBtnId').click(function () {
+    $('#dateRangeId').customDateRangePicker();
+
+    $('#dateRangeId').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('YYYY/MM/DD') + ' - ' + picker.endDate.format('YYYY/MM/DD'));
+    });
+
+    $('#queryBtnId').click(function () {
         setParams();
         query();
     });
@@ -70,8 +76,7 @@ jQuery(document).ready(function () {
         $(tableSelector).data("bootstrap.table").refresh();
     }
 
-    //todo remove
-    $(function () {
+    /*$(function () {
         var now = new Date();
 
         $('.date').daterangepicker({
@@ -171,7 +176,7 @@ jQuery(document).ready(function () {
             now.setMonth(now.getMonth()-beforeMonth);
             return now;
         }
-    });
+    });*/
 });
 
 

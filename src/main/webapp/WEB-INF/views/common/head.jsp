@@ -17,7 +17,7 @@
 <!-- Select2 -->
 <link rel="stylesheet" href="/plugins/select2/select2.min.css">
 <!-- daterange picker -->
-<link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker-bs3.css">
+<link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker.css">
 <link rel="stylesheet" href="/plugins/iCheck/all.css">
 <!-- bootstrap-table -->
 <link rel="stylesheet" href="/plugins/bootstrap-table/bootstrap-table.min.css">
@@ -61,5 +61,14 @@
 <script src="/app/js/app.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="/app/js/demo.js"></script>
+
+
 <!-- 自定义系统初始化话JS -->
+<script src="/js/custom/global_custom.js"></script>
 <script src="/app/js/init.js"></script>
+
+<script type="text/javascript">
+    //todo
+    var urlPrefix = '';
+    initGlobalCustom(urlPrefix);
+</script>

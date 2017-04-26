@@ -19,6 +19,8 @@
 <!-- daterange picker -->
 <link rel="stylesheet" href="/plugins/daterangepicker/daterangepicker-bs3.css">
 <link rel="stylesheet" href="/plugins/iCheck/all.css">
+<!-- bootstrap-table -->
+<link rel="stylesheet" href="/plugins/bootstrap-table/bootstrap-table.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="/app/css/AdminLTE.css">
 <link rel="stylesheet" href="/app/css/skins/skin-blue.css">
@@ -50,6 +52,10 @@
 <script src="/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- jquery.cookie -->
 <script src="/plugins/jquery.cookie.js"></script>
+
+<!-- bootstrap-table -->
+<script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+<script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 
 <!-- AdminLTE App -->
 <script src="/app/js/app.js"></script>

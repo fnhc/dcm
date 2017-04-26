@@ -19,8 +19,8 @@ public class MonitorController extends BaseController{
 	 * 系统监控列表
 	 */
 	@Permission("monitorList")
-    @RequestMapping("/list")
+    @RequestMapping("")
     public  String list(Model model){
-		return "system/monitor/list";
+		return "system/monitor/monitorList";
     } 
 }

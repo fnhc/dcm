@@ -3,12 +3,6 @@
 <html>
 <head>
     <%@include file="/WEB-INF/views/common/head.jsp" %>
-    <!-- bootstrap-table -->
-    <link rel="stylesheet" href="/plugins/bootstrap-table/bootstrap-table.min.css">
-
-    <!-- bootstrap-table -->
-    <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 
     <script src="/js/system/log/logList.js"></script>
 

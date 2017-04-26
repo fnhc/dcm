@@ -38,19 +38,20 @@ public class SysLogController extends BaseController{
     @Autowired
     private ISysLogService sysLogService;
 
-    /**
-     * 分页查询日志
-     */
+
     @Permission("listLog")
     @RequestMapping("")
     public  String init(HttpServletRequest request, HttpServletResponse response, Model model){
         return "system/log/logList";
     }
 
+    /**
+     * 分页查询日志
+     */
     @Permission("listLog")
     @RequestMapping("/list")
     @ResponseBody
-    public PageResult list(@RequestParam Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String searchKey, String dateRange){
+    public PageResult list(String searchKey, String dateRange){
         Page<SysLog> page = getPage();
         if (StringUtils.isBlank(request.getParameter("sortName"))) {
             page.setOrderByField("create_time");

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcm.common.anno.Log;
 import com.chinawiserv.dsp.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcm.common.bean.Response;
+import com.chinawiserv.dsp.dcm.common.bean.response.PageResult;
 import com.chinawiserv.dsp.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcm.entity.SysDept;
 import com.chinawiserv.dsp.dcm.service.ISysDeptService;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -36,15 +40,20 @@ public class SysDeptController extends BaseController {
     @Autowired
     private ISysDeptService sysDeptService;
 
+    @Permission("listDept")
+    @RequestMapping("")
+    public  String init(HttpServletRequest request, HttpServletResponse response, Model model){
+        return "system/dept/deptList";
+    }
+
     /**
      * 分页查询部门
      */
     @Permission("listDept")
-    @RequestMapping("/list/{pageNumber}")
-    public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, Model model){
-
-        Page<SysDept> page = getPage(pageNumber,pageSize);
-        model.addAttribute("pageSize", pageSize);
+    @RequestMapping("/list")
+    @ResponseBody
+    public PageResult list(String search, Model model){
+        Page<SysDept> page = getPage();
         // 查询分页
         EntityWrapper<SysDept> ew = new EntityWrapper<SysDept>();
         if(StringUtils.isNotBlank(search)){
@@ -52,8 +61,8 @@ public class SysDeptController extends BaseController {
             model.addAttribute("search",search);
         }
         Page<SysDept> pageData = sysDeptService.selectPage(page, ew);
-        model.addAttribute("pageData", pageData);
-        return "system/dept/list";
+
+        return new PageResult(pageData);
     }
 
     /**
@@ -74,7 +83,7 @@ public class SysDeptController extends BaseController {
     public  String doAdd(SysDept dept,String[] roleId){
 
         sysDeptService.insert(dept);
-        return redirectTo("/system/dept/list/1.html");
+        return redirectTo("/system/dept/list");
     }
     /**
      * 删除部门
@@ -107,7 +116,7 @@ public class SysDeptController extends BaseController {
     @RequestMapping("/doEdit")
     public  String doEdit(SysDept dept,Model model){
         sysDeptService.updateById(dept);
-        return redirectTo("/system/dept/list/1.html");
+        return redirectTo("/system/dept/list");
     }
 
 

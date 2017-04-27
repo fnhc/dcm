@@ -49,8 +49,8 @@ $(document).ready(function () {
             valign: 'middle',
             sortable: false ,
             formatter : function (value) {
-               return '<a class="btn btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/${log.id}.html" >查看参数</a>' ;
-                // return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'">查看参数</a>';
+                var editBtn = "<a class='btn btn-primary btn-flat btn-xs' href='#' onclick='javascript:queryLogDetail(\"" + value + "\")'><i class='fa fa-pencil-square-o'></i> 查看参数</a>";
+               return editBtn ;
             }
         }]
     });
@@ -74,5 +74,19 @@ $(document).ready(function () {
     }
 
 });
+
+function queryLogDetail(id) {
+    var url = '/system/log/params/'+ id ;
+
+    $.post(url, function(str){
+        layer.open({
+            type: 1,
+            title : '查看参数',
+            area: ['300px', '180px'],
+            fixed: false, //不固定
+            content: str //注意，如果str是object，那么需要字符拼接。
+        });
+    });
+}
 
 

@@ -17,10 +17,10 @@ public class HandleResult implements Serializable {
 	/**
 	 * 返回具体内容
 	 */
-	private HashMap<String, Object> map;
+	private HashMap<String, Object> content;
 	
 	public HandleResult() {
-		this.map = new HashMap<String, Object>();
+		this.content = new HashMap<String, Object>();
 		this.state = true;
 		this.msg = "";
 	}
@@ -32,14 +32,14 @@ public class HandleResult implements Serializable {
 	}
 
 	public void put(String key, Object value) {
-		if (map != null) {
-			map.put(key, value);
+		if (content != null) {
+			content.put(key, value);
 		}
 	}
 	
 	public Object get(String key) {
-		if (map != null) {
-			return map.get(key);
+		if (content != null) {
+			return content.get(key);
 		}
 		else {
 			return null;
@@ -62,11 +62,11 @@ public class HandleResult implements Serializable {
 		this.msg = msg;
 	}
 
-	public HashMap<String, Object> getMap() {
-		return map;
+	public HashMap<String, Object> getContent() {
+		return content;
 	}
 
-	public void setMap(HashMap<String, Object> map) {
-		this.map = map;
+	public void setContent(HashMap<String, Object> content) {
+		this.content = content;
 	}
 }

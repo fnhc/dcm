@@ -25,6 +25,12 @@ public class HandleResult implements Serializable {
 		this.msg = "";
 	}
 
+	public HandleResult success(String msg){
+		this.state = true;
+		this.msg = msg;
+		return this;
+	}
+
 	public HandleResult error(String errorMsg){
 		this.state = false;
 		this.msg = errorMsg;

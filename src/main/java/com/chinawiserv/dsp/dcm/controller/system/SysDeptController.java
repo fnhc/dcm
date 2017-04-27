@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcm.common.anno.Log;
 import com.chinawiserv.dsp.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcm.common.bean.Response;
+import com.chinawiserv.dsp.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcm.common.bean.response.PageResult;
 import com.chinawiserv.dsp.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcm.entity.SysDept;
@@ -90,9 +91,9 @@ public class SysDeptController extends BaseController {
     @Log("删除部门")
     @RequestMapping("/delete")
     @ResponseBody
-    public Response delete(String id){
+    public HandleResult delete(String id){
         sysDeptService.deleteById(id);
-        return new Response().success();
+        return new HandleResult().success("删除成功");
     }
 
     /**
@@ -114,6 +115,7 @@ public class SysDeptController extends BaseController {
     @RequestMapping("/doEdit")
     public  String doEdit(SysDept dept,Model model){
         sysDeptService.updateById(dept);
+        //todo
         return redirectTo("/system/dept/list");
     }
 

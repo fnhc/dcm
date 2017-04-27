@@ -83,6 +83,20 @@ function editDept(id) {
     });
 }
 
-function deleteDept(value) {
-    //todo /system/dept/delete?id=${(dept.id)!}
+function deleteDept(id) {
+    //todo
+    layer.confirm('您『确定』删除当前选中的所有记录吗？', {icon: 3, title:'提示'}, function(index){
+        var parameter = {id: id};
+        jQuery.post("/system/dept/delete",
+            parameter,
+            function (result) {
+                layer.alert(result.msg);
+                //todo
+                var tableSelector = '#systemDeptTableId';
+                $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
+                $(tableSelector).data("bootstrap.table").refresh();
+            });
+
+        layer.close(index);
+    });
 }

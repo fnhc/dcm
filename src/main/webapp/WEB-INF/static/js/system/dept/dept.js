@@ -37,8 +37,14 @@ jQuery(document).ready(function () {
             valign: 'middle',
             sortable: false ,
             formatter : function (value) {
-                return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'"><i class="fa fa-pencil-square-o"></i> 编辑</a>' +
-                    ' <a class="btn btn-danger btn-flat btn-xs" data-tiggle="ajax" data-submit-url="/system/dept/delete?id=${(dept.id)!}" data-confirm="您确定要删除该条记录吗?"><i class="fa fa-times"></i> 删除</a>';
+                var editBtn = "<a class='btn btn-primary btn-flat btn-xs' href='#' onclick='javascript:editDept(\"" + value + "\")'><i class='fa fa-pencil-square-o'></i> 编辑</a>";
+                var deleteBtn = "<a class='btn btn-danger btn-flat btn-xs' href='#' onclick='javascript:deleteDept(\"" + value + "\")'><i class='fa fa-times'></i> 删除</a>";
+
+
+
+            return editBtn + OPERATION_SEPARATOR +  deleteBtn ;
+                // return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'" onclick="edit()"><i class="fa fa-pencil-square-o"></i> 编辑</a>' +
+                //     ' <a class="btn btn-danger btn-flat btn-xs" data-tiggle="ajax" data-submit-url="/system/dept/delete?id=${(dept.id)!}" data-confirm="您确定要删除该条记录吗?"><i class="fa fa-times"></i> 删除</a>';
             }
         }]
     });
@@ -57,6 +63,17 @@ jQuery(document).ready(function () {
         $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
         $(tableSelector).data("bootstrap.table").refresh();
     }
+
 });
 
 
+//todo
+function editDept(value) {
+    // editfs('编辑窗口' , '/system/log/params') ;
+    update('编辑窗口','/system/log/params', value);
+    // layer.alert(value);
+}
+
+function deleteDept(value) {
+    layer.alert(value);
+}

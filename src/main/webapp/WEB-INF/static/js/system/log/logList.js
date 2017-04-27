@@ -49,7 +49,8 @@ $(document).ready(function () {
             valign: 'middle',
             sortable: false ,
             formatter : function (value) {
-                return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'">查看参数</a>';
+               return '<a class="btn btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/${log.id}.html" >查看参数</a>' ;
+                // return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'">查看参数</a>';
             }
         }]
     });

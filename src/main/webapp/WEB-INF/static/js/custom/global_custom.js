@@ -1,5 +1,11 @@
 var urlPrefix = "";
 var specialReg = new RegExp("['\"]+");  //特殊字符的正则表达式
+
+/**
+ * 操作分隔符，常量
+ * @type {string}
+ */
+var OPERATION_SEPARATOR = ' ';
 function initGlobalCustom(tempUrlPrefix) {
     if (tempUrlPrefix) urlPrefix = tempUrlPrefix;
     /*
@@ -10,7 +16,7 @@ function initGlobalCustom(tempUrlPrefix) {
     /**
      *  增加验证规则:my_email
      */
-    $.validator.addMethod("my_email", function (value, element, params) {
+/*    $.validator.addMethod("my_email", function (value, element, params) {
         var emailReg = /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i;
         if (params && (value = $.trim(value)) && !value.match(emailReg)) {
             $.validator.messages.my_email = "邮箱格式不正确！";
@@ -18,20 +24,20 @@ function initGlobalCustom(tempUrlPrefix) {
         }
         return true;
     }, $.validator.messages.my_email);
-    /**
+    /!**
      *  增加验证规则:notEqualTo
      *  参数是一个html选择器对象
-     */
+     *!/
     $.validator.addMethod("notEqualTo", function (value, element, target) {
         var isEqual = false;
         if (target && $(target)) isEqual = value == $(target).val();
         return !isEqual;
     }, "请输入不同的内容！");
 
-    /**
+    /!**
      * 增加验证规则:exists_in_db_check
      * rangelength(默认长度6-12),checkExistsUrl(如果要检查是否存在,传入验证的url),tableName(从哪张表查),column(哪个字段),excludes(除开某些值不判断)，extraCondtions(额外的判断条件,object对象{columnName: columnValue})
-     */
+     *!/
     $.validator.addMethod("exists_in_db_check", function (value, element, params) {
         var rangelength = [6, 12];
         var checkExistsUrl = "checkExistsInDB.action";
@@ -91,10 +97,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.exists_in_db_check);
 
-    /**
+    /!**
      * 增加验证规则:username_check
      *
-     */
+     *!/
     $.validator.addMethod("username_check", function (value, element, params) {
         if (params == true && (value = $.trim(value))) {
             var reg = /^[A-Za-z0-9]+$/g;
@@ -106,10 +112,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.username_check);
 
-    /**
+    /!**
      * 增加验证规则:byte_length_check
      * 参数length
-     */
+     *!/
     $.validator.addMethod("byte_length_check", function (value, element, params) {
         var limitLength = params['length'] && typeof params['length'] == 'number' ? params['length'] : 10;
         if (limitLength > 0 && (value = $.trim(value))) {
@@ -129,10 +135,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.byte_length_check);
 
-    /**
+    /!**
      * 增加验证规则:password
      * level密码强度级别,1 > 2 > 3 > 0(默认0), rangelength(默认长度6-12)
-     */
+     *!/
     $.validator.addMethod("password_check", function (value, element, params) {
         var level = 0;
         var rangelength = [6, 12];
@@ -171,10 +177,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.password_check);
 
-    /**
+    /!**
      * 增加验证规则:phone_number_check
      * 参数type(cellPhone:手机号，tellPhone:电话号)
-     */
+     *!/
     $.validator.addMethod("phone_number_check", function (value, element, params) {
         var type = 'cellPhone';
         if (params) {
@@ -191,10 +197,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.phone_number_check);
 
-    /**
+    /!**
      * 增加验证规则:unionpaycardsnum_check
      * 参数：错误消息
-     */
+     *!/
     $.validator.addMethod("unionpaycardsnum_check", function (value, element, params) {
         var errorMsg = params ? params : "银行卡号格式不正确！";
         if (value = $.trim(value)) {
@@ -207,10 +213,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.unionpaycardsnum_check);
 
-    /**
+    /!**
      * 增加验证规则:keywords_check,检查是否有重复关键字
      * 参数length
-     */
+     *!/
     $.validator.addMethod("keywords_check", function (value, element, params) {
         var length = params['length'] && typeof params['length'] == 'number' ? params['length'] : 10;
         if (length > 0 && (value = $.trim(value))) {
@@ -238,10 +244,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.keywords_check);
 
-    /**
+    /!**
      * 增加验证规则:val_from_source_check 根据值来源的值来验证
      * 参数source: 值来源 rules: 规则  messages: 错误消息
-     */
+     *!/
     $.validator.addMethod("val_from_source_check", function (value, element, params) {
         var source = params['source'] ? params['source'] : element;
         var rules = params['rules'] ? params['rules'] : {};
@@ -256,10 +262,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.val_from_source_check);
 
-    /**
+    /!**
      * 增加验证规则:specialCharCheck
      *
-     */
+     *!/
     $.validator.addMethod("specialCharCheck", function (value, element, params) {
         if (params == true && (value = $.trim(value))) {
             if (specialReg.test(value)) {
@@ -270,10 +276,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.specialCharCheck);
 
-    /**
+    /!**
      * 增加验证规则:customRegexCheck
      *
-     */
+     *!/
     $.validator.addMethod("customRegexCheck", function (value, element, params) {
         var customRegex = new RegExp(params['regex']);
         if (!customRegex.test(value)) {
@@ -284,10 +290,10 @@ function initGlobalCustom(tempUrlPrefix) {
         return true;
     }, $.validator.messages.customRegexCheck);
 
-    /**
+    /!**
      * 增加验证规则:dataBaseRegexCheck,检测是否有不符合数据库要求的表名或字段名的命名规则
      *
-     */
+     *!/
     $.validator.addMethod("dataBaseRegexCheck", function (value, element, params) {
         if(params==true &&(value = $.trim(value))){
             if(value.indexOf(" ")!= -1){
@@ -302,7 +308,7 @@ function initGlobalCustom(tempUrlPrefix) {
         }
 
         return true;
-    }, $.validator.messages.dataBaseRegexCheck);
+    }, $.validator.messages.dataBaseRegexCheck);*/
     /*
      * **************************************
      *              扩展方法
@@ -1384,18 +1390,19 @@ function initGlobalCustom(tempUrlPrefix) {
             });
         },
         customDateRangePicker: function (options, format, nowDate, callback) {
-            format = format ? format : "YYYY-MM-DD HH:mm:ss";
+            // format = format ? format : "YYYY-MM-DD HH:mm:ss";
+            format = format ? format : "YYYY-MM-DD";
             options = options && typeof options == 'object' ? options : {};
             var date = nowDate ? nowDate : new Date();
             options = $.extend({
                 "singleDatePicker": false,//true 单个时间 false 时间范围
                 "showDropdowns": true,//(boolean) 年和月是否显示下拉选择
                 "showWeekNumbers": true,//(boolean) 是否显示当前周为一年当中的第几周
-                "timePicker": true,//(boolean) 是否显示时间选择
-                "timePicker24Hour": true,//(boolean) 如果显示时间选择,那么是否以24小时制方式显示小时
-                "timePickerIncrement": 1,//(boolean) 如果显示时间选择,那么小时以多少的增长从0到24;
-                "timePickerSeconds": true,//是否显示秒
-                "autoApply": false,//是否自动确定,如果否,则需要手动确定时间选择
+                // "timePicker": true,//(boolean) 是否显示时间选择
+                // "timePicker24Hour": true,//(boolean) 如果显示时间选择,那么是否以24小时制方式显示小时
+                // "timePickerIncrement": 1,//(boolean) 如果显示时间选择,那么小时以多少的增长从0到24;
+                // "timePickerSeconds": true,//是否显示秒
+                // "autoApply": false,//是否自动确定,如果否,则需要手动确定时间选择
                 /*"startDate": null,//设置初始化起始时间
                  "endDate": null,//设置初始化结束时间
                  "dateLimit": {//设置对时间范围的限制,前提singleDatePicker为false,即不是单个时间时有效
@@ -1474,7 +1481,16 @@ function initGlobalCustom(tempUrlPrefix) {
             }
             $(this).after('<span class="fa fa-calendar form-control-feedback" style="line-height: ' + iconLineHeight + 'px" aria-hidden="true"></span>');
             if (options.singleDatePicker == false) $(this).addClass("daterangepicker_input_control");
-            $(this).daterangepicker(options, callback);
+
+            if (callback) {
+                $(this).daterangepicker(options, callback);
+            } else {
+                $(this).daterangepicker(options);
+
+                $(this).on('apply.daterangepicker', function(ev, picker) {
+                    $(this).val(picker.startDate.format(format) + ' ~ ' + picker.endDate.format(format));
+                });
+            }
         },
         customSelectPicker: function (opt, multiNum, dropdownDataRenderer) {
             if (multiNum) $(this).attr("multiple", true);
@@ -1818,3 +1834,21 @@ function initGlobalCustom(tempUrlPrefix) {
         }
     });
 }
+
+$(function(){
+    //select2
+    $(".select2").select2();
+    //iCheck for checkbox and radio inputs
+    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+        checkboxClass: 'icheckbox_minimal-blue',
+        radioClass: 'iradio_minimal-blue'
+    });
+    // Custom theme
+    $.validator.setTheme('bootstrap', {
+        validClass: 'has-success',
+        invalidClass: 'has-error',
+        bindClassTo: '.form-group',
+        formClass: 'n-default n-bootstrap',
+        msgClass: 'n-right'
+    });
+});

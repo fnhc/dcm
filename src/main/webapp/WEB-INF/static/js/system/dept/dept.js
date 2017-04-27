@@ -40,11 +40,7 @@ jQuery(document).ready(function () {
                 var editBtn = "<a class='btn btn-primary btn-flat btn-xs' href='#' onclick='javascript:editDept(\"" + value + "\")'><i class='fa fa-pencil-square-o'></i> 编辑</a>";
                 var deleteBtn = "<a class='btn btn-danger btn-flat btn-xs' href='#' onclick='javascript:deleteDept(\"" + value + "\")'><i class='fa fa-times'></i> 删除</a>";
 
-
-
             return editBtn + OPERATION_SEPARATOR +  deleteBtn ;
-                // return '<a class="btn btn-primary btn-flat btn-xs" data-tiggle="ajaxmodel" data-title="参数" data-url="/system/log/params/'+value+'" onclick="edit()"><i class="fa fa-pencil-square-o"></i> 编辑</a>' +
-                //     ' <a class="btn btn-danger btn-flat btn-xs" data-tiggle="ajax" data-submit-url="/system/dept/delete?id=${(dept.id)!}" data-confirm="您确定要删除该条记录吗?"><i class="fa fa-times"></i> 删除</a>';
             }
         }]
     });
@@ -68,12 +64,25 @@ jQuery(document).ready(function () {
 
 
 //todo
-function editDept(value) {
-    // editfs('编辑窗口' , '/system/log/params') ;
-    update('编辑窗口','/system/log/params', value);
-    // layer.alert(value);
+function editDept(id) {
+    // update('编辑窗口','/system/dept/edit' , id , null , null , true);
+    layer.open({
+        type: 2,
+        title : '编辑部门',
+        area: ['600px', '350px'],
+        fixed: false, //不固定
+        maxmin: false,
+        content: '/system/dept/edit/' + id ,
+        btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
+        yes : function () {
+
+        } ,
+        btn2 : function () {
+
+        }
+    });
 }
 
 function deleteDept(value) {
-    layer.alert(value);
+    //todo /system/dept/delete?id=${(dept.id)!}
 }

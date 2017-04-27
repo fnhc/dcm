@@ -104,7 +104,7 @@ public class SysDeptController extends BaseController {
         SysDept dept = sysDeptService.selectById(id);
 
         model.addAttribute("dept",dept);
-        return "system/dept/edit";
+        return "system/dept/deptEdit";
     }
     /**
      * 执行编辑

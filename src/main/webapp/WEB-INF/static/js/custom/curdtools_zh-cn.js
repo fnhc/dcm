@@ -68,22 +68,26 @@ function addTreeNode(title,addurl,gname) {
  * @param addurl//目标页面地址
  * @param id//主键字段
  */
-function update(title,url, id,width,height,isRestful) {
+function update(title, url, id, width, height, isRestful) {
 	gridname=id;
-	// var rowsData = $('#'+id).datagrid('getSelections');
-	var rowsData = $('#'+id).bootstrapTable('getSelections');
-	if (!rowsData || rowsData.length==0) {
-		tip('请选择编辑项目');
-		return;
-	}
-	if (rowsData.length>1) {
-		tip('请选择一条记录再编辑');
-		return;
-	}
+	// var rowsData = $('#'+id).bootstrapTable('getSelections');
+	// if (!rowsData || rowsData.length==0) {
+	// 	tip('请选择编辑项目');
+	// 	return;
+	// }
+	// if (rowsData.length>1) {
+	// 	tip('请选择一条记录再编辑');
+	// 	return;
+	// }
+
 	if(isRestful!='undefined'&&isRestful){
-		url += '/'+rowsData[0].id;
+		url += '/'+id;
 	}else{
-		url += '&id='+rowsData[0].id;
+        if (url.indexOf("?") == -1 ) {
+            url += '?id='+id;
+        } else {
+            url += '&id='+id;
+        }
 	}
 	createwindow(title,url,width,height);
 }
@@ -266,53 +270,19 @@ function deluploadify(url, id) {
 function confirm(url, content,name) {
 	createdialog('提示信息 ', content, url,name);
 }
-/**
- * 提示信息
- */
-function tip_old(msg) {
-	$.dialog.setting.zIndex = getzIndex(true);
-	$.dialog.tips(msg, 1);
-}
+
 /**
  * 提示信息
  */
 function tip(msg) {
-	try{
-		$.dialog.setting.zIndex = getzIndex(true);
-		$.messager.show({
-			title : '提示信息',
-			msg : msg,
-			timeout : 1000 * 6
-		});
-	}catch(e){
-		alertTipTop(msg,'10%');
-	}
-}
-
-function alertTipTop(msg,top,title) {
-	// $.dialog.setting.zIndex = getzIndex(true);
-	title = title?title:"提示信息";
-	$.dialog({
-			title:title,
-			// zIndex: getzIndex(),
-			icon:'tips.gif',
-			top:top,
-			content: msg
-		});
+    layer.alert(msg, {title : '提示信息' , icon: 0});
 }
 
 /**
  * 提示信息像alert一样
  */
 function alertTip(msg,title) {
-	$.dialog.setting.zIndex = getzIndex(true);
-	title = title?title:"提示信息";
-	$.dialog({
-			title:title,
-			zIndex: getzIndex(),
-			icon:'tips.gif',
-			content: msg
-		});
+    layer.alert(msg, {title : '提示信息' , icon: 0});
 }
 /**
  * 创建添加或编辑窗口
@@ -1043,39 +1013,7 @@ function popClick(obj,name,url) {
 			});
 		}
 }
-/**
- * Jeecg Excel 导出
- * 代入查询条件
- */
-function JeecgExcelExport(url,datagridId){
-	var queryParams = $('#'+datagridId).datagrid('options').queryParams;
-	$('#'+datagridId+'tb').find('*').each(function() {
-	    queryParams[$(this).attr('name')] = $(this).val();
-	});
-	var params = '&';
-	$.each(queryParams, function(key, val){
-		params+='&'+key+'='+val;
-	}); 
-	var fields = '&field=';
-	$.each($('#'+ datagridId).datagrid('options').columns[0], function(i, val){
-		if(val.field != 'opt'){
-			fields+=val.field+',';
-		}
-	}); 
-	window.location.href = url+ encodeURI(fields+params);
-}
-/**
- * 自动完成的解析函数
- * @param data
- * @returns {Array}
- */
-function jeecgAutoParse(data){
-	var parsed = [];
-    	$.each(data.rows,function(index,row){
-    		parsed.push({data:row,result:row,value:row.id});
-    	});
-			return parsed;
-}
+
 
 /**
  * 更新跳转新页面

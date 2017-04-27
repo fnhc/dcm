@@ -57,6 +57,9 @@
 <script src="/plugins/bootstrap-table/bootstrap-table.min.js"></script>
 <script src="/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
 
+<!-- layer -->
+<script src="/plugins/layer/layer.js"></script>
+
 <!-- AdminLTE App -->
 <script src="/app/js/app.js"></script>
 <!-- AdminLTE for demo purposes -->
@@ -65,6 +68,7 @@
 
 <!-- 自定义系统初始化话JS -->
 <script src="/js/custom/global_custom.js"></script>
+<script src="/js/custom/curdtools_zh-cn.js"></script>
 <script src="/app/js/init.js"></script>
 
 <script type="text/javascript">

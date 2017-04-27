@@ -66,7 +66,7 @@ public class SysLogController extends BaseController{
         }
         //日期查询
         if(StringUtils.isNotBlank(dateRange)){
-            String[] dateRangeArr = StringUtils.split(dateRange, "-");
+            String[] dateRangeArr = StringUtils.split(dateRange, "~");
             ew.addFilter(" create_time >= {0}", dateRangeArr[0].trim().replaceAll("/","-") + " 00:00:00");
             ew.addFilter(" create_time <= {0}", dateRangeArr[1].trim().replaceAll("/","-") + " 23:59:59");
         }

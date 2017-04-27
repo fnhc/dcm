@@ -28,7 +28,7 @@
                             <div class="box-header">
                                 <form class="form-inline"  action="/system/log/list/1.html" method="post">
                                     <div class="form-group">
-                                        <input id="dateRangeId" type="text" name="daterange" class="form-control date" placeholder="开始日期  至 结束日期" style="width: 228px;">
+                                        <input id="dateRangeId" type="text" name="daterange" class="form-control date" readonly placeholder="开始日期 ~ 结束日期" style="width: 228px;">
                                     </div>
                                     <div class="input-group">
                                         <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="日志操作">

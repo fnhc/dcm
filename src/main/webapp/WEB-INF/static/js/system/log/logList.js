@@ -59,7 +59,7 @@ $(document).ready(function () {
 
     $('#queryBtnId').click(function () {
         setParams();
-        query();
+        reloadTable();
     });
 
     function setParams() {
@@ -68,7 +68,7 @@ $(document).ready(function () {
         paramsObj = {searchKey : searchKeyVal , dateRange : dateRangeVal};
     }
 
-    function query() {
+    function reloadTable() {
         $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
         $(tableSelector).data("bootstrap.table").refresh();
     }

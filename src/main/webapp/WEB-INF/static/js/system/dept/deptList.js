@@ -47,7 +47,7 @@ jQuery(document).ready(function () {
 
     jQuery('#queryBtnId').click(function () {
         setParams();
-        query();
+        reloadTable();
     });
 
     function setParams() {
@@ -57,47 +57,21 @@ jQuery(document).ready(function () {
 
 });
 
-
-function query() {
+function reloadTable() {
     $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
     $(tableSelector).data("bootstrap.table").refresh();
 }
 
-//todo
-function editDept(id) {
-    update('编辑窗口','/system/dept/edit' , id , null , null , true);
+function addDept() {
+    add('新增部门','/system/dept/add');
+}
 
-    // var index = layer.open({
-    //     type: 2,
-    //     title : '编辑部门',
-    //     area: ['600px', '350px'],
-    //     fixed: false, //不固定
-    //     maxmin: false,
-    //     content: '/system/dept/edit/' + id ,
-    //     btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
-    //     yes : function () {
-    //
-    //     } ,
-    //     btn2 : function () {
-    //
-    //     }
-    // });
+function editDept(id) {
+    update('编辑部门','/system/dept/edit' , id , null , null , true);
 }
 
 function deleteDept(id) {
-    //todo
-    layer.confirm('您『确定』删除当前选中的所有记录吗？', {icon: 3, title:'提示'}, function(index){
-        var parameter = {id: id};
-        jQuery.post("/system/dept/delete",
-            parameter,
-            function (result) {
-                layer.alert(result.msg);
-                //todo
-                var tableSelector = '#systemDeptTableId';
-                $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
-                $(tableSelector).data("bootstrap.table").refresh();
-            });
-
-        layer.close(index);
-    });
+    var url = "/system/dept/delete";
+    var parameter = {id: id};
+    delObj(url , parameter) ;
 }

@@ -22,20 +22,20 @@ try {
  * @param flag true: 不增量(因为 tip提示经常使用 zIndex, 所以如果是 tip的话 ,则不增量)
  * @returns
  */
-function getzIndex(flag){
-	var zindexNumber = getCookie("ZINDEXNUMBER");
-	if(zindexNumber == null){
-		zindexNumber = 2010;
-		setCookie("ZINDEXNUMBER",zindexNumber);
-		//zindexNumber = 1980;
-	}else{
-		if(zindexNumber < 2010){
-			zindexNumber = 2010;
-		}
-		var n = flag?zindexNumber:parseInt(zindexNumber) + parseInt(10);
-		setCookie("ZINDEXNUMBER",n);
-	}
-	return zindexNumber;
+function getzIndex(flag) {
+    var zindexNumber = getCookie("ZINDEXNUMBER");
+    if (zindexNumber == null) {
+        zindexNumber = 2010;
+        setCookie("ZINDEXNUMBER", zindexNumber);
+        //zindexNumber = 1980;
+    } else {
+        if (zindexNumber < 2010) {
+            zindexNumber = 2010;
+        }
+        var n = flag ? zindexNumber : parseInt(zindexNumber) + parseInt(10);
+        setCookie("ZINDEXNUMBER", n);
+    }
+    return zindexNumber;
 } 
 
 /**
@@ -43,9 +43,9 @@ function getzIndex(flag){
  * @param title 编辑框标题
  * @param addurl//目标页面地址
  */
-function add(title,addurl,gname,width,height) {
-	gridname=gname;
-	createwindow(title, addurl,width,height);
+function add(title, addurl, gname, width, height) {
+    gridname = gname;
+    createWindow(title, addurl, width, height);
 }
 /**
  * 树列表添加事件打开窗口
@@ -57,7 +57,7 @@ function addTreeNode(title,addurl,gname) {
 		addurl += '&id='+rowid;
 	}
 	gridname=gname;
-	createwindow(title, addurl);
+	createWindow(title, addurl);
 }
 /**
  * 更新事件打开窗口
@@ -77,7 +77,7 @@ function update(title, url, id, width, height, isRestful) {
             url += '&id='+id;
         }
 	}
-	createwindow(title,url,width,height);
+	createWindow(title,url,width,height);
 }
 
 /**
@@ -112,7 +112,7 @@ function detail(title,url, id,width,height) {
 		return;
 	}
     url += '&load=detail&id='+rowsData[0].id;
-	createdetailwindow(title,url,width,height);
+	createDetailWindow(title,url,width,height);
 }
 
 /**
@@ -165,7 +165,7 @@ function deleteALLSelect(title,url,gname) {
  * @param addurl
  * @param saveurl
  */
-function createdetailwindow(title, addurl,width,height) {
+function createDetailWindow(title, addurl, width, height) {
 	width = width?width:700;
 	height = height?height:400;
 	if(width=="100%" || height=="100%"){
@@ -218,9 +218,8 @@ function editfs(title,url) {
 	openwindow(title,url,name,800,500);
 }
 // 删除调用函数
-function delObj(url,name) {
-	gridname=name;
-	createdialog('删除确认 ', '确定删除该记录吗 ?', url,name);
+function delObj(url,parameter) {
+    createdialog('删除确认', '您『确定』删除当前选中的所有记录吗？', url, parameter);
 }
 
 // 删除调用函数
@@ -280,7 +279,7 @@ function alertTip(msg,title) {
  * @param addurl
  * @param saveurl
  */
-function createwindow(title, addurl,width,height) {
+function createWindow(title, addurl, width, height) {
 	width = width?width:700;
 	height = height?height:400;
 	if(width=="100%" || height=="100%"){
@@ -301,27 +300,26 @@ function createwindow(title, addurl,width,height) {
         btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
-            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-            iframeWin.method();
+            // var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+            // iframeWin.method();
             // console.log(body.html()) //得到iframe页的body内容
-            // body.find('input').val('Hi，我是从父页来的');
+            // body.find('input').val('Hi');
 
+			//todo 验证通过后，才能提交
+            // var form = body.find( "form:first" );
             var obj = body.find(":submit").get(0);
             if (obj) {
                 obj.click();
             }
             else  {
+            	//todo
                 alert("温馨提示，页未包含包含提交按钮！");
             }
 
             parent.layer.close(index);
-
             //刷新主页面
-            query();
-        },
-        btn2 : function () {
-
-    	}
+            reloadTable();
+        }
     };
 
 	if(typeof(windowapi) == 'undefined'){
@@ -517,13 +515,13 @@ function openwindow(title, url,name, width, height) {
  * @param content
  * @param url
  */
-function createdialog(title, content, url,name) {
-	$.dialog.setting.zIndex = getzIndex(true);
-	$.dialog.confirm(content, function(){
-		doSubmit(url,name);
-		rowid = '';
-	}, function(){
-	});
+function createdialog(title, content, url, parameter) {
+	// $.dialog.setting.zIndex = getzIndex(true);
+    layer.confirm(content, {icon: 3, title:title}, function(index){
+        doSubmit(url,parameter);
+        layer.close(index);
+    });
+
 }
 /**
  * 执行保存
@@ -572,10 +570,9 @@ function search() {
  * @param url
  * @param index
  */
-function doSubmit(url,name,data) {
-	gridname=name;
-	//--author：JueYue ---------date：20140227---------for：把URL转换成POST参数防止URL参数超出范围的问题
-	var paramsData = data;
+function doSubmit(url, parameter) {
+	var paramsData = parameter;
+	//把URL转换成POST参数防止URL参数超出范围的问题
 	if(!paramsData){
 		paramsData = new Object();
 		if (url.indexOf("&") != -1) {
@@ -587,7 +584,7 @@ function doSubmit(url,name,data) {
 			}
 		}      
 	}
-	//--author：JueYue ---------date：20140227---------for：把URL转换成POST参数防止URL参数超出范围的问题
+
 	$.ajax({
 		async : false,
 		cache : false,
@@ -596,14 +593,13 @@ function doSubmit(url,name,data) {
 		url : url,// 请求的action路径
 		error : function() {// 请求失败处理函数
 		},
-		success : function(data) {
-			var d = $.parseJSON(data);
-			if (d.success) {
-				var msg = d.msg;
-				tip(msg);
-				reloadTable();
+		success : function(result) {
+			if (result.state) {
+                reloadTable();
+                var msg = result.msg;
+                tip(msg);
 			} else {
-				tip(d.msg);
+				tip(result.msg);
 			}
 		}
 	});

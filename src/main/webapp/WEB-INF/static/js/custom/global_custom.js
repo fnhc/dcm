@@ -1837,12 +1837,12 @@ function initGlobalCustom(tempUrlPrefix) {
 
 $(function(){
     //select2
-    $(".select2").select2();
-    //iCheck for checkbox and radio inputs
-    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-        checkboxClass: 'icheckbox_minimal-blue',
-        radioClass: 'iradio_minimal-blue'
-    });
+    // $(".select2").select2();
+    // //iCheck for checkbox and radio inputs
+    // $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+    //     checkboxClass: 'icheckbox_minimal-blue',
+    //     radioClass: 'iradio_minimal-blue'
+    // });
     // Custom theme
     $.validator.setTheme('bootstrap', {
         validClass: 'has-success',

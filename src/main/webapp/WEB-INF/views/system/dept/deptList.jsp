@@ -3,7 +3,7 @@
 <html>
 <head>
     <%@include file="/WEB-INF/views/common/head.jsp" %>
-    <script src="/js/system/dept/dept.js"></script>
+    <script src="/js/system/dept/deptList.js"></script>
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -28,7 +28,7 @@
                                 <div class="box-header">
                                     <%--<#if permissions?seq_contains('addDept')>--%>
                                         <div class="input-group">
-                                            <a class="btn btn-primary  btn-flat" href="/system/dept/add"><i class="fa fa-plus"></i> 创建部门</a>
+                                            <a class="btn btn-primary  btn-flat" onclick="javascript:addDept()" > <i class="fa fa-plus"></i> 创建部门</a>
                                         </div>
                                     <%--</#if>--%>
                                     <div class="input-group">

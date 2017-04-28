@@ -16,6 +16,8 @@
         <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
         <!-- Bootstrap 3.3.5 -->
         <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <!-- nice-validator-1.0.8 -->
+        <script src="/plugins/nice-validator-1.0.8/jquery.validator.js?local=zh-CN"></script>
 
         <script src="/js/system/dept/deptEdit.js"></script>
 </head>

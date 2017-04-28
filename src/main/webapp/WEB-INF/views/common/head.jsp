@@ -68,7 +68,7 @@
 
 <!-- 自定义系统初始化话JS -->
 <script src="/js/custom/global_custom.js"></script>
-<script src="/js/custom/curdtools_zh-cn.js"></script>
+<script src="/js/custom/curdtools.js"></script>
 <script src="/app/js/init.js"></script>
 
 <script type="text/javascript">

@@ -43,7 +43,7 @@
     </listener>
 
     <listener>
-        <listener-class>com.chinawiserv.dsp.dcm.common.util.SpringUtil</listener-class>
+        <listener-class>com.chinawiserv.dsp.dcs.dcm.common.util.SpringUtil</listener-class>
     </listener>
 
     <servlet>
@@ -59,17 +59,6 @@
         <servlet-name>springServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-
-    <!--<servlet>-->
-        <!--<servlet-name>validateCodeServlet</servlet-name>-->
-        <!--<servlet-class>-->
-            <!--com.chinawiserv.dcm.servlet.ValidateCodeServlet-->
-        <!--</servlet-class>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>validateCodeServlet</servlet-name>-->
-        <!--<url-pattern>/validatecode</url-pattern>-->
-    <!--</servlet-mapping>-->
 
     <!--<listener>-->
         <!--<display-name>recordSession</display-name>-->

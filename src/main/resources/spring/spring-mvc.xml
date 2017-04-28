@@ -16,7 +16,7 @@
 	   default-lazy-init="false">
 
 	<!-- 配置注解扫描的包路径 -->
-	<context:component-scan base-package="com.chinawiserv.dsp.dcm.*" >
+	<context:component-scan base-package="com.chinawiserv.dsp.dcs.dcm.*" >
 	</context:component-scan>
 
 	<!-- 开启aop，对类代理 -->
@@ -152,13 +152,13 @@
 		<!-- 登录拦截器 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<bean class="com.chinawiserv.dsp.dcm.interceptor.LoginInterceptor" />
+			<bean class="com.chinawiserv.dsp.dcs.dcm.interceptor.LoginInterceptor" />
 		</mvc:interceptor>
 
 		<!-- 权限拦截器 -->
 		<mvc:interceptor>
 			<mvc:mapping path="/**" />
-			<bean class="com.chinawiserv.dsp.dcm.interceptor.PermissionInterceptor">
+			<bean class="com.chinawiserv.dsp.dcs.dcm.interceptor.PermissionInterceptor">
 				<property name="permissionService" ref="permissionServiceImpl"></property>
 			</bean>
 		</mvc:interceptor>
@@ -190,7 +190,7 @@
 	<!-- 切面 -->
 	<aop:config>
 		<aop:advisor advice-ref="txAdvice"
-					 pointcut="execution(* com.chinawiserv.dsp.dcm.service.impl.*.*(..))" />
+					 pointcut="execution(* com.chinawiserv.dsp.dcs..dcm.service.impl.*.*(..))" />
 	</aop:config>
 
 </beans>

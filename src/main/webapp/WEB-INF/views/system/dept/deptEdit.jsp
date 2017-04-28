@@ -17,6 +17,7 @@
         <!-- Bootstrap 3.3.5 -->
         <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
 
+        <script src="/js/system/dept/deptEdit.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <section class="content">
@@ -37,10 +38,10 @@
                                 <textarea class="form-control" name="deptDesc" rows="3" placeholder="请输入描述，最多300个字符 ..." >${(dept.deptDesc)}</textarea>
                             </div>
                         </div><!-- /.box-body -->
-                        <%--<div class="box-footer">--%>
-                        <%--<button type="submit" class="btn btn-success"><i class="fa fa-save"></i>  提 交</button>--%>
-                        <%--<a  class="btn btn-default" href="/system/dept/list"><i class="fa fa-close"></i>  取消</a>--%>
-                        <%--</div>--%>
+                        <div class="box-footer">
+                            <%--<button type="submit" class="btn btn-success"><i class="fa fa-save"></i>  提 交</button>--%>
+                            <input type="submit" style="display:none;"/>
+                        </div>
                     </form>
                 </div>
             </div>

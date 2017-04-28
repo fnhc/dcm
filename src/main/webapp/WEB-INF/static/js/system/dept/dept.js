@@ -1,7 +1,7 @@
+var tableSelector = '#systemDeptTableId';
+
 jQuery(document).ready(function () {
     "use strict";
-
-    var tableSelector = '#systemDeptTableId';
     var paramsObj = {};
 
     jQuery(tableSelector).bootstrapTable({
@@ -55,32 +55,33 @@ jQuery(document).ready(function () {
         paramsObj = {searchKey : searchKeyVal};
     }
 
-    function query() {
-        $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
-        $(tableSelector).data("bootstrap.table").refresh();
-    }
-
 });
 
 
+function query() {
+    $(tableSelector).data("bootstrap.table").options.pageNumber = 1;
+    $(tableSelector).data("bootstrap.table").refresh();
+}
+
 //todo
 function editDept(id) {
-    // update('编辑窗口','/system/dept/edit' , id , null , null , true);
-    layer.open({
-        type: 2,
-        title : '编辑部门',
-        area: ['600px', '350px'],
-        fixed: false, //不固定
-        maxmin: false,
-        content: '/system/dept/edit/' + id ,
-        btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
-        yes : function () {
+    update('编辑窗口','/system/dept/edit' , id , null , null , true);
 
-        } ,
-        btn2 : function () {
-
-        }
-    });
+    // var index = layer.open({
+    //     type: 2,
+    //     title : '编辑部门',
+    //     area: ['600px', '350px'],
+    //     fixed: false, //不固定
+    //     maxmin: false,
+    //     content: '/system/dept/edit/' + id ,
+    //     btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
+    //     yes : function () {
+    //
+    //     } ,
+    //     btn2 : function () {
+    //
+    //     }
+    // });
 }
 
 function deleteDept(id) {

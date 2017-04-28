@@ -38,9 +38,6 @@ function getzIndex(flag){
 	return zindexNumber;
 } 
 
-function upload(curform) {
-	upload();
-}
 /**
  * 添加事件打开窗口
  * @param title 编辑框标题
@@ -69,16 +66,7 @@ function addTreeNode(title,addurl,gname) {
  * @param id//主键字段
  */
 function update(title, url, id, width, height, isRestful) {
-	gridname=id;
-	// var rowsData = $('#'+id).bootstrapTable('getSelections');
-	// if (!rowsData || rowsData.length==0) {
-	// 	tip('请选择编辑项目');
-	// 	return;
-	// }
-	// if (rowsData.length>1) {
-	// 	tip('请选择一条记录再编辑');
-	// 	return;
-	// }
+    gridname = id;
 
 	if(isRestful!='undefined'&&isRestful){
 		url += '/'+id;
@@ -95,10 +83,10 @@ function update(title, url, id, width, height, isRestful) {
 /**
  * 如果页面是详细查看页面，无效化所有表单元素，只能进行查看
  */
+//todo
 $(function(){
 	if(location.href.indexOf("load=detail")!=-1){
 		$(":input").attr("disabled","true");
-		//$(":input").attr("style","border:0;border-bottom:1 solid black;background:white;");
 	}
 });
 
@@ -234,6 +222,7 @@ function delObj(url,name) {
 	gridname=name;
 	createdialog('删除确认 ', '确定删除该记录吗 ?', url,name);
 }
+
 // 删除调用函数
 function confuploadify(url, id) {
 		$.dialog.setting.zIndex = getzIndex(true);
@@ -298,47 +287,51 @@ function createwindow(title, addurl,width,height) {
 		width = window.top.document.body.offsetWidth;
 		height =window.top.document.body.offsetHeight-100;
 	}
-    //--author：JueYue---------date：20140427---------for：弹出bug修改,设置了zindex()函数
+
+	var option = {
+        zIndex: getzIndex(),
+        title:title,
+        opacity : 0.3,
+        cache:false,
+        type: 2,
+        area: [width, height],
+        fixed: false, //不固定
+        maxmin: false,
+        content: addurl ,
+        btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
+        yes: function(index, layero){
+            var body = layer.getChildFrame('body', index);
+            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+            iframeWin.method();
+            // console.log(body.html()) //得到iframe页的body内容
+            // body.find('input').val('Hi，我是从父页来的');
+
+            var obj = body.find(":submit").get(0);
+            if (obj) {
+                obj.click();
+            }
+            else  {
+                alert("温馨提示，页未包含包含提交按钮！");
+            }
+
+            parent.layer.close(index);
+
+            //刷新主页面
+            query();
+        },
+        btn2 : function () {
+
+    	}
+    };
+
 	if(typeof(windowapi) == 'undefined'){
-		$.dialog({
-			content: 'url:'+addurl,
-			lock : true,
-			zIndex: getzIndex(),
-			width:width,
-			height:height,
-			title:title,
-			opacity : 0.3,
-			cache:false,
-		    ok: function(){
-		    	iframe = this.iframe.contentWindow;
-				saveObj();
-				return false;
-		    },
-		    cancelVal: '关闭',
-		    cancel: true /*为true等价于function(){}*/
-		});
+        layer.open(option);
 	}else{
-		W.$.dialog({
-			content: 'url:'+addurl,
-			lock : true,
-			width:width,
-			zIndex:getzIndex(),
-			height:height,
-			parent:windowapi,
-			title:title,
-			opacity : 0.3,
-			cache:false,
-		    ok: function(){
-		    	iframe = this.iframe.contentWindow;
-				saveObj();
-				return false;
-		    },
-		    cancelVal: '关闭',
-		    cancel: true /*为true等价于function(){}*/
+        $.extend(option , {
+            parent:windowapi
 		});
+		W.layer.open(option);
 	}
-    //--author：JueYue---------date：20140427---------for：弹出bug修改,设置了zindex()函数
-	
 }
 /**
  * 创建上传页面窗口
@@ -539,6 +532,7 @@ function createdialog(title, content, url,name) {
  * @param gridname
  */
 function saveObj() {
+	//todo
 	$('#btn_sub', iframe.document).click();
 }
 
@@ -567,7 +561,7 @@ function ajaxSubForm(url) {
  * @param gridname
  */
 function search() {
-
+	//todo
 	$('#btn_sub', iframe.document).click();
 	iframe.search();
 }

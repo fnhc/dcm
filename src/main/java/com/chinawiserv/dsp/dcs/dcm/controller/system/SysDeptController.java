@@ -79,10 +79,10 @@ public class SysDeptController extends BaseController {
     @Permission("addDept")
     @Log("创建部门")
     @RequestMapping("/doAdd")
-    public String doAdd(SysDept dept,String[] roleId){
-
+    @ResponseBody
+    public HandleResult doAdd(SysDept dept,String[] roleId){
         sysDeptService.insert(dept);
-        return "system/dept/deptList";
+        return new HandleResult().success("创建部门成功");
     }
     /**
      * 删除部门

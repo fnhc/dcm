@@ -298,27 +298,66 @@ function createWindow(title, addurl, width, height) {
         maxmin: false,
         content: addurl ,
         btn: ['<i class="fa fa-save"></i> 提交', '<i class="fa fa-close"></i> 取消'],
+        success: function(layero, index){
+            var body = layer.getChildFrame('body', index);
+            var form = body.find( "form:first" );
+
+            form.validator({
+                valid: function(form) {
+                	//todo
+                }
+            });
+        },
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
-            // var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-            // iframeWin.method();
+            //todo
             // console.log(body.html()) //得到iframe页的body内容
-            // body.find('input').val('Hi');
 
-			//todo 验证通过后，才能提交
-            // var form = body.find( "form:first" );
-            var obj = body.find(":submit").get(0);
-            if (obj) {
-                obj.click();
-            }
-            else  {
-            	//todo
-                alert("温馨提示，页未包含包含提交按钮！");
-            }
+            var form = body.find( "form:first" );
 
-            parent.layer.close(index);
-            //刷新主页面
-            reloadTable();
+            // 检查表单
+            if (form.isValid()) {
+                // do something
+				tip("isValid true");
+
+                //验证通过后，才能提交
+                var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+
+                if ($.isFunction(iframeWin.beforeSubmit)) {
+                    if (!iframeWin.beforeSubmit(form)) {
+                        return ;
+                    }
+                }
+
+                // var me = this;
+                // // 提交表单之前，hold住表单，防止重复提交
+                // me.holdSubmit(true);
+
+				var action = form.attr("action");
+				var method = form.attr("method") || 'post';
+
+                $.ajax({
+                    url: action,
+                    data: $(form).serialize(),
+                    type: method,
+                    success: function(data){
+                        console.log(data);
+
+                        tip(data.msg);
+
+                        parent.layer.close(index);
+                        //刷新主页面
+                        reloadTable();
+
+                        // 提交表单成功后，释放hold
+                        // me.holdSubmit(false);
+                    }
+                });
+
+            } else {
+                tip("isValid false");
+			}
+
         }
     };
 
@@ -331,6 +370,16 @@ function createWindow(title, addurl, width, height) {
 		W.layer.open(option);
 	}
 }
+
+/**
+ * 提交之前，可重写此方法以获取额外参数设置与数据校验
+ * @param form
+ * @returns {boolean}
+ */
+// function beforeSubmit(form) {
+// 	return true ;
+// }
+
 /**
  * 创建上传页面窗口
  * 

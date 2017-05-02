@@ -75,7 +75,7 @@
 <script src="/plugins/bootstrap/js/bootstrap.js"></script>
 <!-- iCheck 1.0.1 -->
 <script src="/plugins/iCheck/icheck.min.js"></script>
-<!-- nice-validator-1.0.8 -->
-<script src="/plugins/nice-validator-1.0.8/jquery.validator.js?local=zh-CN"></script>
+<!-- nice-validator -->
+<script src="/plugins/nice-validator/jquery.validator.js?local=zh-CN"></script>
 </body>
 </html>

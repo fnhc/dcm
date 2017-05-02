@@ -2,24 +2,9 @@
 
 <html>
 <head>
-    <%--<%@include file="/WEB-INF/views/common/head.jsp" %>--%>
-        <!-- Bootstrap 3.3.5 -->
-        <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.css">
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css">
-        <link rel="stylesheet" href="/plugins/iCheck/all.css">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="/app/css/AdminLTE.css">
-        <link rel="stylesheet" href="/app/css/skins/skin-blue.css">
+    <%@include file="/WEB-INF/views/common/head.jsp" %>
 
-        <!-- jQuery 2.2.3 -->
-        <script src="/plugins/jQuery/jquery-2.2.3.min.js"></script>
-        <!-- Bootstrap 3.3.5 -->
-        <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
-        <!-- nice-validator-1.0.8 -->
-        <script src="/plugins/nice-validator-1.0.8/jquery.validator.js?local=zh-CN"></script>
-
-        <script src="/js/system/dept/deptEdit.js"></script>
+    <script src="/js/system/dept/deptEdit.js"></script>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <section class="content">

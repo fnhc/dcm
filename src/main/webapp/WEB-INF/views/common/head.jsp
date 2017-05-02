@@ -14,6 +14,8 @@
 <link rel="stylesheet" href="/plugins/font-awesome/css/font-awesome.min.css">
 <!-- jquery-confirm -->
 <link rel="stylesheet" href="/plugins/jquery-confirm/jquery-confirm.min.css">
+<!-- nice-validator -->
+<link rel="stylesheet" href="/plugins/nice-validator/jquery.validator.css">
 <!-- Select2 -->
 <link rel="stylesheet" href="/plugins/select2/select2.min.css">
 <!-- daterange picker -->
@@ -41,8 +43,11 @@
 <script src="/plugins/bootstrap/js/bootstrap.min.js"></script>
 <!-- iCheck 1.0.1 -->
 <script src="/plugins/iCheck/icheck.min.js"></script>
-<!-- nice-validator-1.0.8 -->
-<script src="/plugins/nice-validator-1.0.8/jquery.validator.js?local=zh-CN"></script>
+<!-- nice-validator -->
+<script src="/plugins/nice-validator/jquery.validator.js"></script>
+<script src="/plugins/nice-validator/local/zh-CN.js"></script>
+<!--jquery-form  -->
+<script src="/plugins/jquery-form/jquery.form.js"></script>
 <!--jquery-confirm  -->
 <script src="/plugins/jquery-confirm/jquery-confirm.min.js"></script>
 <!-- Select2 -->

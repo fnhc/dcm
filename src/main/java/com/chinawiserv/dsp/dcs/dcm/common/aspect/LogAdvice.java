@@ -2,9 +2,9 @@ package com.chinawiserv.dsp.dcs.dcm.common.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.bean.Token;
-import com.chinawiserv.dsp.dcs.dcm.common.util.TokenUtil;
+import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysLog;
+import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -49,13 +49,13 @@ public class LogAdvice {
 		Method method = methodSignature.getMethod();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();  
 		Log log =  method.getAnnotation(Log.class);
-		Token st = TokenUtil.getToken(request);
+		SysUser loginUser = ShiroUtils.getLoginUser();
 		if(log != null){
 			SysLog sysLog  =new SysLog();
 			sysLog.setCreateTime(new Date());
 			sysLog.setTitle(log.value());
-			sysLog.setUserId((st != null )? st.getUid() : "systemUserId");
-			sysLog.setUserName((st != null )? st.getUname() : "system");
+			sysLog.setUserId((loginUser != null )? loginUser.getId() : "systemUserId");
+			sysLog.setUserName((loginUser != null )? loginUser.getUserName() : "system");
 			sysLog.setUrl(request.getRequestURI().toString());
 			sysLog.setParams(JSON.toJSONString(request.getParameterMap()));
 			sysLogService.insert(sysLog);

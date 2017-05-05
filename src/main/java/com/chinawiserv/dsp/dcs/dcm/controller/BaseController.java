@@ -4,21 +4,18 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.SessionGlobal;
-import com.chinawiserv.dsp.dcs.dcm.common.bean.Token;
 import com.chinawiserv.dsp.dcs.dcm.common.util.HttpUtil;
-import com.chinawiserv.dsp.dcs.dcm.common.util.TokenUtil;
+import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
 import com.google.common.base.CaseFormat;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -34,45 +31,46 @@ public class BaseController {
 	 */
 	private static final int DEFAULT_PAGE_SIZE = 15;
 
-	@Autowired
-	protected HttpServletRequest request;
+	//todo remove
+//	@Autowired
+//	protected HttpServletRequest request;
 
 //	@Autowired
 //	protected HttpServletResponse response;
 
-	@Autowired
-	protected HttpSession session;
+//	@Autowired
+//	protected HttpSession session;
 
-	@Autowired
-	protected ServletContext application;
+//	@Autowired
+//	protected ServletContext application;
 
 
 	/**
 	 * 返回登录 Token
 	 */
-	protected Token getSSOToken() {
-		Token tk = TokenUtil.getToken(request);
-		if ( tk == null ) {
-			throw new RuntimeException("-1,The user does not exist, please relogin.");
-		}
-		return tk;
-	}
+//	protected SysUser getSSOToken() {
+//		SysUser loginUser = ShiroUtils.getLoginUser();
+//		if ( loginUser == null ) {
+//			throw new RuntimeException("-1,The user does not exist, please relogin.");
+//		}
+//		return loginUser;
+//	}
 
 
 	/**
 	 * 是否为 post 请求
 	 */
-	protected boolean isPost() {
-		return HttpUtil.isPost(request);
-	}
-
-
-	/**
-	 * 是否为 get 请求
-	 */
-	protected boolean isGet() {
-		return HttpUtil.isGet(request);
-	}
+//	protected boolean isPost() {
+//		return HttpUtil.isPost(request);
+//	}
+//
+//
+//	/**
+//	 * 是否为 get 请求
+//	 */
+//	protected boolean isGet() {
+//		return HttpUtil.isGet(request);
+//	}
 
 	/**
 	 * <p>
@@ -112,7 +110,7 @@ public class BaseController {
 	 * @return
 	 */
 	//todo remove
-	protected <T> Page<T> getPage() {
+	protected <T> Page<T> getPage(HttpServletRequest request) {
 		String pageNumberStr = request.getParameter("pageNumber");
 		String pageSizeStr = request.getParameter("pageSize");
 		String sortName = request.getParameter("sortName");
@@ -164,9 +162,9 @@ public class BaseController {
 	 *            转换对象
 	 * @return
 	 */
-	protected String toJson( Object object ) {
-		return JSON.toJSONString(object, SerializerFeature.BrowserCompatible);
-	}
+//	protected String toJson( Object object ) {
+//		return JSON.toJSONString(object, SerializerFeature.BrowserCompatible);
+//	}
 
 
 	/**
@@ -179,108 +177,42 @@ public class BaseController {
 	 *            序列化特点
 	 * @return
 	 */
-	protected String toJson( Object object, String format ) {
-		if ( format == null ) {
-			return toJson(object);
-		}
-		return JSON.toJSONStringWithDateFormat(object, format, SerializerFeature.WriteDateUseDateFormat);
-	}
+//	protected String toJson( Object object, String format ) {
+//		if ( format == null ) {
+//			return toJson(object);
+//		}
+//		return JSON.toJSONStringWithDateFormat(object, format, SerializerFeature.WriteDateUseDateFormat);
+//	}
 
 
-	//**************todo ***********************
+	//************** todo ***********************
 	//todo
 	/**
 	 * 获取回话对象
-	 * @param request 请求对象
 	 * @return 回话对象
 	 */
-	protected SessionGlobal getSessionGlobal(HttpServletRequest request) {
+	protected SessionGlobal getSessionGlobal() {
 		SessionGlobal sessionGlobal = null;
-		if (request != null) {
-			HttpSession session = request.getSession();
-			if (session != null) {
-				Object obj = session.getAttribute(SessionGlobal.SESSIONGLOBAL);
-				if (obj != null && obj instanceof SessionGlobal) {
-					sessionGlobal = (SessionGlobal)obj;
-				}
-			}
+		Object obj = ShiroUtils.getSessionAttribute(SessionGlobal.SESSIONGLOBAL);
+		if (obj != null && obj instanceof SessionGlobal) {
+			sessionGlobal = (SessionGlobal)obj;
 		}
 		return sessionGlobal;
 	}
 
-	protected HttpSession getSession(HttpServletRequest request) {
-		if (request != null) {
-			return request.getSession();
-		}
-		else {
-			return null;
-		}
-	}
-
-	/**
-	 * 从Session中获取对象
-	 * @param key  键
-	 * @return 获取到的对象
-	 * @author Allen Zhang
-	 */
-	protected Object getObjFromSession(String key, HttpServletRequest request) {
-		Object obj = null;
-		if (request != null && key != null) {
-			HttpSession session = request.getSession();
-			if (session != null) {
-				obj = session.getAttribute(key);
-			}
-		}
-		return obj;
-	}
-
-	/**
-	 * 从回话中删除对象
-	 * @param key
-	 * @param request
-	 */
-	protected void removeObjFromSession(String key, HttpServletRequest request) {
-		if (request != null && key != null) {
-			HttpSession session = request.getSession();
-			if (session != null) {
-				session.removeAttribute(key);
-			}
-		}
-	}
-
-	/**
-	 * 保存对象到 Session 里
-	 * @param key 键
-	 * @param obj 待保存对象
-	 */
-	protected void putToSession(String key, Object obj, HttpServletRequest request) {
-		if (request != null) {
-			HttpSession session = request.getSession();
-			if (session != null) {
-				session.setAttribute(key, obj);
-			}
-		}
-	}
-
 	/**
 	 * 清楚回话信息
-	 * @param request 请求对象
 	 */
-	protected void clearSession(HttpServletRequest request) {
-		if (request != null) {
-			HttpSession session = request.getSession();
-			if (session != null) {
-				session.removeAttribute(SessionGlobal.SESSIONGLOBAL);
-			}
-		}
+	protected void removeSessionGlobal() {
+		ShiroUtils.removeSessionAttribute(SessionGlobal.SESSIONGLOBAL);
 	}
 
 	/**
 	 * 从 Session 里 取 用户信息关（AccountId）
 	 * @return 用户信息关（AccountId）
 	 */
-	public String getAccountIdFromSession(HttpServletRequest request) {
-		SessionGlobal sessionGlobal = this.getSessionGlobal(request);
+	public String getAccountIdFromSession() {
+		SessionGlobal sessionGlobal = this.getSessionGlobal();
 		if (sessionGlobal != null) {
 			return sessionGlobal.getAccountId();
 		}
@@ -291,11 +223,10 @@ public class BaseController {
 
 	/**
 	 * 从 Session 里 取 部门id（AccountId）
-	 * @param request
 	 * @return
 	 */
-	public String getDepartmentIdFromSession(HttpServletRequest request) {
-		SessionGlobal sessionGlobal = this.getSessionGlobal(request);
+	public String getDepartmentIdFromSession() {
+		SessionGlobal sessionGlobal = this.getSessionGlobal();
 		if (sessionGlobal != null) {
 			return sessionGlobal.getDepartmentId();
 		}
@@ -308,8 +239,8 @@ public class BaseController {
 	 * 从 Session 里 取 用户信息关（LoginName）
 	 * @return 用户信息关（LoginName）
 	 */
-	public String getLoginNameFromSession(HttpServletRequest request) {
-		SessionGlobal sessionGlobal = this.getSessionGlobal(request);
+	public String getLoginNameFromSession() {
+		SessionGlobal sessionGlobal = this.getSessionGlobal();
 		if (sessionGlobal != null) {
 			return sessionGlobal.getLoginName();
 		}
@@ -322,8 +253,8 @@ public class BaseController {
 	 * 从 Session 里 取 用户信息关（RealName）
 	 * @return 用户信息关（RealName）
 	 */
-	public String getRealNameFromSession(HttpServletRequest request) {
-		SessionGlobal sessionGlobal = this.getSessionGlobal(request);
+	public String getRealNameFromSession() {
+		SessionGlobal sessionGlobal = this.getSessionGlobal();
 		if (sessionGlobal != null) {
 			return sessionGlobal.getRealName();
 		}

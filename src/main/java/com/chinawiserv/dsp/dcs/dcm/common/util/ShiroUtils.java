@@ -29,13 +29,32 @@ public class ShiroUtils {
 	public static String getUserId() {
 		return getLoginUser().getId();
 	}
-	
+
+	/**
+	 * 保存对象到 Session 里
+	 * @param key
+	 * @param value
+	 */
 	public static void setSessionAttribute(Object key, Object value) {
 		getSession().setAttribute(key, value);
 	}
 
+	/**
+	 * 从Session中获取对象
+	 * @param key
+	 * @return
+	 */
 	public static Object getSessionAttribute(Object key) {
 		return getSession().getAttribute(key);
+	}
+
+	/**
+	 * 从回话中删除对象
+	 * @param key
+	 * @return
+	 */
+	public static Object removeSessionAttribute(Object key) {
+		return getSession().removeAttribute(key);
 	}
 
 	public static boolean isLogin() {

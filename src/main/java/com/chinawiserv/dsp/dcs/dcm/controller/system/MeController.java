@@ -2,7 +2,6 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
 import com.chinawiserv.dsp.dcs.dcm.common.util.CommonUtil;
 import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
-import com.chinawiserv.dsp.dcs.dcm.common.util.TokenUtil;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysUserService;
@@ -42,8 +41,8 @@ public class MeController extends BaseController{
     		model.addAttribute("act","2");
     		return "system/me/page";
     	}
-    	
-    	SysUser user = sysUserService.selectById(TokenUtil.getToken(request).getUid());
+		SysUser loginUser = ShiroUtils.getLoginUser();
+    	SysUser user = sysUserService.selectById(loginUser.getId());
     	if(!user.getPassword().equals(CommonUtil.string2MD5(password))){
     		model.addAttribute("msg","旧密码输入错误.");
     		model.addAttribute("act","2");

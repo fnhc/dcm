@@ -11,6 +11,7 @@ import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysSettingService;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysUserService;
 import com.google.code.kaptcha.servlet.KaptchaExtend;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
@@ -19,14 +20,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
+
 /**
  * 登录控制器
  * @author Gaojun.Zhou
@@ -66,7 +71,13 @@ public class LoginController extends BaseController {
 	 * 执行登录
 	 */
     @RequestMapping(value = "/doLogin",method=RequestMethod.POST)
-    public  String doLogin(String userName,String password, String captcha,String return_url,Model model){
+    public  String doLogin(HttpServletRequest request , @RequestParam Map<String , Object> paramMap , Model model){
+        String userName = MapUtils.getString(paramMap , "userName");
+        String password = MapUtils.getString(paramMap , "password");
+        String captcha = MapUtils.getString(paramMap , "captcha");
+        String return_url = MapUtils.getString(paramMap , "return_url");
+
+
 		//todo 打开验证码
 //		if(StringUtils.isBlank(userName) || StringUtils.isBlank(password) ||  StringUtils.isBlank(captcha)){
 //			model.addAttribute("error", "用户名/密码/验证码不能为空.");
@@ -91,7 +102,7 @@ public class LoginController extends BaseController {
 			UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
 			subject.login(token);
 
-			loginSuccess();
+			loginSuccess(paramMap);
 
 			/**
 			 * 记录登录日志
@@ -139,8 +150,9 @@ public class LoginController extends BaseController {
 
 	/**
 	 *
-	 */
-	private void loginSuccess(){
+     * @param paramMap
+     */
+	private void loginSuccess(Map<String, Object> paramMap){
 	    SysUser currentLoginUser = ShiroUtils.getLoginUser();
 	    /**
 	     * 加载全局非登录访问常量
@@ -158,11 +170,12 @@ public class LoginController extends BaseController {
 	    /**
 	     * 资源和当前选中菜单
 	     */
-	    String res = request.getParameter("res");
+
+	    String res = MapUtils.getString(paramMap , "res");
 	    if (StringUtils.isNotBlank(res)) {
 		    ShiroUtils.setSessionAttribute("res", res);
 	    }
-	    String cur = request.getParameter("cur");
+	    String cur = MapUtils.getString(paramMap , "cur");
 	    if (StringUtils.isNotBlank(cur)) {
 		    ShiroUtils.setSessionAttribute("cur", cur);
 	    }
@@ -186,15 +199,7 @@ public class LoginController extends BaseController {
 	 * @throws IOException 
 	 */
     @RequestMapping(value = "/logout")
-    public void logout(HttpServletResponse response) throws IOException{
-//		Token st = TokenUtil.getToken(request);
-//
-//		SysUser sysUser = new SysUser();
-//		sysUser.setId(st.getUid());
-//		sysUser.setUserName(st.getUname());
-//
-//		TokenUtil.clearLogin(request, response);
-
+    public void logout(HttpServletRequest request , HttpServletResponse response) throws IOException{
 		SysUser sysUser = ShiroUtils.getLoginUser();
 		ShiroUtils.logout();
 		response.sendRedirect("/login");
@@ -206,7 +211,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping("/captcha")
 	@ResponseBody
-    public  void captcha(HttpServletResponse response) throws ServletException, IOException{
+    public  void captcha(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		KaptchaExtend kaptchaExtend =  new KaptchaExtend();
 		kaptchaExtend.captcha(request, response);
     }

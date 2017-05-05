@@ -23,8 +23,6 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
 
 	@Override
 	public void addAuth(String roleId, String[] menuIds) {
-		// TODO Auto-generated method stub
-		
 		/**
 		 * 删除原有权限
 		 */

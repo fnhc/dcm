@@ -36,7 +36,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public void insertUser(SysUser user, String[] roleIds) {
-        // TODO Auto-generated method stub
         user.setCreateTime(new Date());
         user.setPassword(CommonUtil.string2MD5(user.getPassword()));
         //保存用户
@@ -55,7 +54,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public void updateUser(SysUser sysUser, String[] roleIds) {
-        // TODO Auto-generated method stub
         sysUser.setPassword(null);
         //更新用户
         userMapper.updateById(sysUser);

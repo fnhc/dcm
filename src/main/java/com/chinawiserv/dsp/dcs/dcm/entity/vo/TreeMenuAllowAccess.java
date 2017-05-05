@@ -13,10 +13,6 @@ import java.util.List;
  */
 public class TreeMenuAllowAccess implements Serializable{
 
-	/**
-	* @Fields serialVersionUID : TODO()
-	*/
-	
 	private static final long serialVersionUID = 1L;
 	
 	/**

@@ -3,7 +3,7 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysRole;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
@@ -92,9 +92,9 @@ public class SysUserController extends BaseController {
     @RequiresPermissions("deleteUser")
     @RequestMapping("/delete")
     @ResponseBody
-    public Response delete(String id){
+    public HandleResult delete(String id){
         sysUserService.delete(id);
-        return new Response().success();
+        return new HandleResult().success("删除用户成功");
     }
 
     /**

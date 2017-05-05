@@ -12,10 +12,6 @@ import java.util.List;
  */
 public class TreeMenu implements Serializable{
 
-	/**
-	* @Fields serialVersionUID : TODO()
-	*/
-	
 	private static final long serialVersionUID = 1L;
 	/**
 	 * 菜单

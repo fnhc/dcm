@@ -73,7 +73,8 @@
 $("#dir").on('change',function(){
 	var pid = $(this).val();
 	 $.post('/system/menu/json?_dc='+new Date().getTime(),{pid:pid},function(response){
-		if(response.meta && response.meta.success){
+		//todo
+	     if(response.meta && response.meta.success){
 			$("#pid").empty();
 			$("#pid").select2({
 				data:response.data

@@ -3,7 +3,7 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysRole;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysRoleMenu;
@@ -116,9 +116,9 @@ public class SysRoleController extends BaseController{
     @Log("删除角色")
     @RequestMapping("/delete")
     @ResponseBody
-    public Response delete(String id){
+    public HandleResult delete(String id){
         sysRoleService.deleteById(id);
-        return new Response().success();
+        return new HandleResult().success("删除角色成功");
     }
 
     /**
@@ -128,9 +128,9 @@ public class SysRoleController extends BaseController{
     @Log("批量删除角色")
     @RequestMapping("/deleteBatch")
     @ResponseBody
-    public Response deleteBatch(@RequestParam("id[]") List<String> ids){
+    public HandleResult deleteBatch(@RequestParam("id[]") List<String> ids){
         sysRoleService.deleteBatchIds(ids);
-        return new Response().success();
+        return new HandleResult().success("批量删除角色成功");
     }
 
     /**

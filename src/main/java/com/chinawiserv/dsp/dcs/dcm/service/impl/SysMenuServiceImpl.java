@@ -47,15 +47,13 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 	@Cacheable(value = "permissionCache", key = "#uid")
 	@Override
 	public List<String> selectMenuIdsByuserId(String uid) {
-		// TODO Auto-generated method stub
 		return sysMenuMapper.selectMenuIdsByuserId(uid);
 	}
 
 	@Override
 	public List<TreeMenu> selectTreeMenuByMenuIdsAndPid(final List<String> menuIds,
 			String pid) {
-		// TODO Auto-generated method stub
-		
+
 		EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
 		ew.orderBy("sort", true);
 		ew.addFilter("pid = {0} ", pid);
@@ -80,7 +78,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 	@Cacheable(value = "menuCache", key = "#uid")
 	@Override
 	public List<TreeMenu> selectTreeMenuByUserId(String uid) {
-		// TODO Auto-generated method stub
 		/**
 		 * 当前用户二级菜单权限
 		 */

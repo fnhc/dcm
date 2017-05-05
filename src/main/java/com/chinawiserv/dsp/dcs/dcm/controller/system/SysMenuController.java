@@ -4,19 +4,20 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysMenu;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -167,9 +168,9 @@ public class SysMenuController extends BaseController {
     @Log("删除菜单")
     @RequestMapping("/delete")
     @ResponseBody
-    public Response delete(String id){
+    public HandleResult delete(String id){
         sysMenuService.deleteById(id);
-        return new Response().success();
+        return new HandleResult().success("删除菜单成功");
     }
 
     /**

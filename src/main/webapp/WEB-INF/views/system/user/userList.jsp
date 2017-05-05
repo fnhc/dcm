@@ -3,8 +3,7 @@
 <html>
 <head>
     <%@include file="/WEB-INF/views/common/head.jsp" %>
-
-    <script src="/js/system/log/logList.js"></script>
+    <script src="/js/system/dept/deptList.js"></script>
 
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -16,7 +15,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    <small>系统管理 > 日志查询</small>
+                    <small>系统管理 > 用户管理</small>
                 </h1>
             </section>
             <!-- Main content -->
@@ -25,24 +24,26 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="box">
-                            <div class="box-header">
-                                <form class="form-inline"  action="/system/log/list/1.html" method="post">
-                                    <div class="form-group">
-                                        <input id="dateRangeId" type="text" name="daterange" class="form-control date" readonly placeholder="开始日期 ~ 结束日期" style="width: 228px;">
-                                    </div>
+                            <form action="/system/dept/list" method="post" class="form-inline">
+                                <div class="box-header">
+                                    <%--<#if permissions?seq_contains('addDept')>--%>
+                                        <div class="input-group">
+                                            <a class="btn btn-primary  btn-flat" onclick="javascript:addDept()" > <i class="fa fa-plus"></i> 创建部门</a>
+                                        </div>
+                                    <%--</#if>--%>
                                     <div class="input-group">
-                                        <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="日志操作">
+                                        <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="部门名称">
                                         <div class="input-group-btn">
                                             <button id="queryBtnId" type="button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> 查询</button>
                                         </div>
                                     </div>
 
-                                </form>
-                            </div>
+                                </div><!-- /.box-header -->
+                            </form>
 
                             <div class="box-body table-responsive no-padding">
+                                <table id="systemDeptTableId" class="table table-hover">
 
-                                <table id="systemLogTableId" class="table table-hover">
                                 </table>
                             </div><!-- /.box-body -->
 

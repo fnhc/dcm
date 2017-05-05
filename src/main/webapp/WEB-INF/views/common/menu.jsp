@@ -47,3 +47,7 @@
  </section>
  <!-- /.sidebar -->
 </aside>
+
+<script type="text/javascript">
+
+</script>

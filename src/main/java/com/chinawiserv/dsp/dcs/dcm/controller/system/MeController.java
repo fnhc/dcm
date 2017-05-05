@@ -1,6 +1,7 @@
 package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
 import com.chinawiserv.dsp.dcs.dcm.common.util.CommonUtil;
+import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
 import com.chinawiserv.dsp.dcs.dcm.common.util.TokenUtil;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
@@ -25,8 +26,7 @@ public class MeController extends BaseController{
 	
     @RequestMapping("/page")
     public  String page(Model model){
-    	
-    	SysUser sysUser = sysUserService.selectById(TokenUtil.getToken(request).getUid());
+    	SysUser sysUser = ShiroUtils.getLoginUser();
     	model.addAttribute("sysUser", sysUser);
 		return "system/me/page";
     } 

@@ -3,7 +3,6 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysRole;
@@ -15,13 +14,14 @@ import com.chinawiserv.dsp.dcs.dcm.service.ISysUserRoleService;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysUserService;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -51,7 +51,7 @@ public class SysUserController extends BaseController {
     /**
      * 分页查询用户
      */
-    @Permission("listUser")
+    @RequiresPermissions("listUser")
     @RequestMapping("/list/{pageNumber}")
     public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, Model model){
         if(StringUtils.isNotBlank(search)){
@@ -66,7 +66,7 @@ public class SysUserController extends BaseController {
     /**
      * 新增用户
      */
-    @Permission("addUser")
+    @RequiresPermissions("addUser")
     @RequestMapping("/add")
     public  String add(Model model){
         model.addAttribute("roleList", sysRoleService.selectList(null));
@@ -78,7 +78,7 @@ public class SysUserController extends BaseController {
      * 执行新增
      */
     @Log("创建用户")
-    @Permission("addUser")
+    @RequiresPermissions("addUser")
     @RequestMapping("/doAdd")
     public  String doAdd(SysUser user,String[] roleId){
 
@@ -89,7 +89,7 @@ public class SysUserController extends BaseController {
      * 删除用户
      */
     @Log("删除用户")
-    @Permission("deleteUser")
+    @RequiresPermissions("deleteUser")
     @RequestMapping("/delete")
     @ResponseBody
     public Response delete(String id){
@@ -101,7 +101,7 @@ public class SysUserController extends BaseController {
      * 编辑用户
      */
     @RequestMapping("/edit/{id}")
-    @Permission("editUser")
+    @RequiresPermissions("editUser")
     public  String edit(@PathVariable String id,Model model){
         SysUser sysUser = sysUserService.selectById(id);
 
@@ -121,7 +121,7 @@ public class SysUserController extends BaseController {
      * 执行编辑
      */
     @Log("编辑用户")
-    @Permission("editUser")
+    @RequiresPermissions("editUser")
     @RequestMapping("/doEdit")
     public  String doEdit(SysUser sysUser,String[] roleId,Model model){
         sysUserService.updateUser(sysUser,roleId);

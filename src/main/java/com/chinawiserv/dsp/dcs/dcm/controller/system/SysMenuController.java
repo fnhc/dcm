@@ -3,13 +3,13 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysMenu;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +47,7 @@ public class SysMenuController extends BaseController {
     /**
      * 分页查询菜单
      */
-    @Permission("listMenu")
+    @RequiresPermissions("listMenu")
     @RequestMapping("/list/{pageNumber}")
     public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, Model model){
 
@@ -82,7 +82,7 @@ public class SysMenuController extends BaseController {
     /**
      * 增加菜单
      */
-    @Permission("addMenu")
+    @RequiresPermissions("addMenu")
     @RequestMapping("/add")
     public String add(Model model){
 
@@ -97,7 +97,7 @@ public class SysMenuController extends BaseController {
     /**
      * 添加目录
      */
-    @Permission("addMenu")
+    @RequiresPermissions("addMenu")
     @Log("创建目录菜单")
     @RequestMapping("/doAddDir")
     public String doAddDir(SysMenu sysMenu,Model model){
@@ -111,7 +111,7 @@ public class SysMenuController extends BaseController {
     /**
      * 添加菜单
      */
-    @Permission("addMenu")
+    @RequiresPermissions("addMenu")
     @Log("创建菜单")
     @RequestMapping("/doAddMenu")
     public String doAddMenu(SysMenu sysMenu,Model model){
@@ -122,7 +122,7 @@ public class SysMenuController extends BaseController {
     /**
      * 编辑菜单
      */
-    @Permission("editMenu")
+    @RequiresPermissions("editMenu")
     @RequestMapping("/edit/{id}")
     public String edit(@PathVariable String id,Model model){
         SysMenu sysMenu =sysMenuService.selectById(id);
@@ -152,7 +152,7 @@ public class SysMenuController extends BaseController {
     /**
      * 执行编辑菜单
      */
-    @Permission("editMenu")
+    @RequiresPermissions("editMenu")
     @Log("编辑菜单")
     @RequestMapping("/doEdit")
     public String doEdit(SysMenu sysMenu,Model model){
@@ -163,7 +163,7 @@ public class SysMenuController extends BaseController {
     /**
      * 执行编辑菜单
      */
-    @Permission("deleteMenu")
+    @RequiresPermissions("deleteMenu")
     @Log("删除菜单")
     @RequestMapping("/delete")
     @ResponseBody
@@ -208,7 +208,7 @@ public class SysMenuController extends BaseController {
         return "{\"ok\":\"资源名称很棒.\"}";
     }
 
-    @Permission("addMenu")
+    @RequiresPermissions("addMenu")
     @Log("新增功能菜单")
     @RequestMapping("/doAddAction")
     public String doAddAction(SysMenu sysMenu,Model model){

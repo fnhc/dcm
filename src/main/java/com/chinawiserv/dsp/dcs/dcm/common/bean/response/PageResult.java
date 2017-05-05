@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 
 import java.util.HashMap;
 
-public class PageResult extends ListResult<HashMap<String, Object>> {
+public class PageResult<T> extends ListResult<T> {
 
 	private static final long serialVersionUID = -8304845128694340426L;
 
@@ -13,7 +13,7 @@ public class PageResult extends ListResult<HashMap<String, Object>> {
 	 */
 	private int total;
 
-	public PageResult(Page page) {
+	public PageResult(Page<T> page) {
 		setRows(page.getRecords());
 		setTotal(page.getTotal());
 	}

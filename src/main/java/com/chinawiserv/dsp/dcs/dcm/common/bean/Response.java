@@ -4,6 +4,7 @@ package com.chinawiserv.dsp.dcs.dcm.common.bean;
  * @author Administrator
  *
  */
+//todo remove
 public class Response {
 
 	private static final String OK = "ok";

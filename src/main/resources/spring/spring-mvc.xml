@@ -147,23 +147,23 @@
 	</bean>
 
 	<!-- 拦截器 -->
-	<mvc:interceptors>
+	<!--<mvc:interceptors>-->
 
-		<!-- 登录拦截器 -->
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<bean class="com.chinawiserv.dsp.dcs.dcm.interceptor.LoginInterceptor" />
-		</mvc:interceptor>
+		<!--&lt;!&ndash; 登录拦截器 &ndash;&gt;-->
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/**" />-->
+			<!--<bean class="com.chinawiserv.dsp.dcs.dcm.interceptor.LoginInterceptor" />-->
+		<!--</mvc:interceptor>-->
 
-		<!-- 权限拦截器 -->
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<bean class="com.chinawiserv.dsp.dcs.dcm.interceptor.PermissionInterceptor">
-				<property name="permissionService" ref="permissionServiceImpl"></property>
-			</bean>
-		</mvc:interceptor>
+		<!--&lt;!&ndash; 权限拦截器 &ndash;&gt;-->
+		<!--<mvc:interceptor>-->
+			<!--<mvc:mapping path="/**" />-->
+			<!--<bean class="com.chinawiserv.dsp.dcs.dcm.interceptor.PermissionInterceptor">-->
+				<!--<property name="permissionService" ref="permissionServiceImpl"></property>-->
+			<!--</bean>-->
+		<!--</mvc:interceptor>-->
 
-	</mvc:interceptors>
+	<!--</mvc:interceptors>-->
 
 	<!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>-->
 

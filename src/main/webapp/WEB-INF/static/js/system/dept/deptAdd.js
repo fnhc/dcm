@@ -2,7 +2,17 @@
  * Created by zhanf on 2017/4/28.
  */
 
-function beforeSubmit(form) {
-    console.log("自定义验证");
+function runBeforeSubmit(form) {
+    console.log("runBeforeSubmit");
     return true ;
+}
+
+function runAfterSubmitSuccess(response) {
+    console.log("runAfterSubmitSuccess");
+    //刷新主页面
+    parent.reloadTable();
+}
+
+function runAfterSubmit(response) {
+    console.log("runAfterSubmit");
 }

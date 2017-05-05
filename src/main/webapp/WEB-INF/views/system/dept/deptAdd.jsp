@@ -6,7 +6,7 @@
 
     <script src="/js/system/dept/deptAdd.js"></script>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body>
 <section class="content">
     <div class="row">
         <div class="col-md-12">

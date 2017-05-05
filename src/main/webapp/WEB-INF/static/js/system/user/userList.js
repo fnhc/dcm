@@ -67,7 +67,7 @@ function addDept() {
 }
 
 function editDept(id) {
-    update('编辑部门','/system/dept/edit' , id );
+    update('编辑部门','/system/dept/edit' , id , null , null , true);
 }
 
 function deleteDept(id) {

@@ -45,7 +45,8 @@ public class ExceptionLogAdvice {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("className", jp.getTarget().getClass().getName());
 		map.put("methodName", method.getName());
-		map.put("args",JSON.toJSONString(jp.getArgs(), SerializerFeature.BrowserCompatible));
+		//todo fixme
+//		map.put("args",JSON.toJSONString(jp.getArgs(), SerializerFeature.BrowserCompatible));
 		map.put("errorMsg",e.getMessage());
 		logger.error(map.toString());
 	}

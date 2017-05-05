@@ -102,8 +102,6 @@
     <div class="control-sidebar-bg"></div>
 </div>
 
-<%@include file="/WEB-INF/views/common/js.jsp" %>
-
 <script src="/plugins/bootstrap-fileinput/js/fileinput.min.js"></script>
 <script src="/plugins/bootstrap-fileinput/js/locales/zh.js"></script>
 <script>

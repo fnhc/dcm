@@ -114,7 +114,7 @@ public class MpGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return "D:\\tep\\gcode\\page\\" + tableInfo.getEntityName() + "List.jsp";
+                return "D:\\tmp\\gcode\\page\\" + tableInfo.getEntityName() + "List.jsp";
             }
         });
         cfg.setFileOutConfigList(focList);

@@ -3,7 +3,6 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysRole;
@@ -14,13 +13,14 @@ import com.chinawiserv.dsp.dcs.dcm.entity.vo.TreeMenuAllowAccess;
 import com.chinawiserv.dsp.dcs.dcm.service.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -68,7 +68,7 @@ public class SysRoleController extends BaseController{
     /**
      * 分页查询角色
      */
-    @Permission("listRole")
+    @RequiresPermissions("listRole")
     @RequestMapping("/list/{pageNumber}")
     public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, Model model){
 
@@ -90,7 +90,7 @@ public class SysRoleController extends BaseController{
     /**
      * 新增角色
      */
-    @Permission("addRole")
+    @RequiresPermissions("addRole")
     @RequestMapping("/add")
     public  String add(Model model){
         return "system/role/add";
@@ -99,7 +99,7 @@ public class SysRoleController extends BaseController{
     /**
      * 执行新增角色
      */
-    @Permission("addRole")
+    @RequiresPermissions("addRole")
     @Log("创建角色")
     @RequestMapping("/doAdd")
     public  String doAdd(SysRole role){
@@ -112,7 +112,7 @@ public class SysRoleController extends BaseController{
     /**
      * 删除角色
      */
-    @Permission("deleteRole")
+    @RequiresPermissions("deleteRole")
     @Log("删除角色")
     @RequestMapping("/delete")
     @ResponseBody
@@ -124,7 +124,7 @@ public class SysRoleController extends BaseController{
     /**
      * 批量删除角色
      */
-    @Permission("deleteBatchRole")
+    @RequiresPermissions("deleteBatchRole")
     @Log("批量删除角色")
     @RequestMapping("/deleteBatch")
     @ResponseBody
@@ -136,7 +136,7 @@ public class SysRoleController extends BaseController{
     /**
      * 编辑角色
      */
-    @Permission("editRole")
+    @RequiresPermissions("editRole")
     @RequestMapping("/edit/{id}")
     public  String edit(@PathVariable String id,Model model){
         SysRole sysRole = sysRoleService.selectById(id);
@@ -147,7 +147,7 @@ public class SysRoleController extends BaseController{
     /**
      * 执行编辑角色
      */
-    @Permission("editRole")
+    @RequiresPermissions("editRole")
     @Log("编辑角色")
     @RequestMapping("/doEdit")
     public  String doEdit(SysRole sysRole,Model model){
@@ -158,7 +158,7 @@ public class SysRoleController extends BaseController{
     /**
      * 权限
      */
-    @Permission("authRole")
+    @RequiresPermissions("authRole")
     @RequestMapping("/auth/{id}")
     public  String auth(@PathVariable String id,Model model){
 
@@ -182,7 +182,7 @@ public class SysRoleController extends BaseController{
     /**
      * 权限
      */
-    @Permission("authRole")
+    @RequiresPermissions("authRole")
     @Log("角色分配权限")
     @RequestMapping("/doAuth")
     public  String doAuth(String roleId,String[] mid,RedirectAttributes redirectAttributes){

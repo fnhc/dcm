@@ -109,8 +109,6 @@
     <div class="control-sidebar-bg"></div>
 </div>
 
-<%@include file="common/js.jsp" %>
-
 </body>
 </html>
 

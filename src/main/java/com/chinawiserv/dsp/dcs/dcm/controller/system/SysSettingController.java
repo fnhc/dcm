@@ -2,11 +2,11 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysSetting;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysSettingService;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +38,7 @@ public class SysSettingController extends BaseController{
     /**
      * 查询系统设置
      */
-    @Permission("listSetting")
+    @RequiresPermissions("listSetting")
     @RequestMapping("/page")
     public  String page(Model model){
 
@@ -47,7 +47,7 @@ public class SysSettingController extends BaseController{
         return "system/setting/page";
     }
 
-    @Permission("doSetting")
+    @RequiresPermissions("doSetting")
     @Log("更新系统设置")
     @RequestMapping("/doSetting")
     public String doSetting(String[] id,String[] sysValue,Model model,RedirectAttributes redirectAttributes){

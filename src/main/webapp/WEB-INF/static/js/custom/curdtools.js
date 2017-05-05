@@ -310,21 +310,16 @@ function createWindow(title, addurl, width, height) {
         },
         yes: function(index, layero){
             var body = layer.getChildFrame('body', index);
-            //todo
-            // console.log(body.html()) //得到iframe页的body内容
-
             var form = body.find( "form:first" );
 
             // 检查表单
             if (form.isValid()) {
-                // do something
-				tip("isValid true");
-
                 //验证通过后，才能提交
                 var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
 
-                if ($.isFunction(iframeWin.beforeSubmit)) {
-                    if (!iframeWin.beforeSubmit(form)) {
+                //runBeforeSubmit: 提交之前，可重写此方法以获取额外参数设置与数据校验
+                if ($.isFunction(iframeWin.runBeforeSubmit)) {
+                    if (!iframeWin.runBeforeSubmit(form)) {
                         return ;
                     }
                 }
@@ -340,14 +335,23 @@ function createWindow(title, addurl, width, height) {
                     url: action,
                     data: $(form).serialize(),
                     type: method,
-                    success: function(data){
-                        console.log(data);
+                    success: function(response) {
 
-                        tip(data.msg);
+                        if (response.state) {
+                            if ($.isFunction(iframeWin.runAfterSubmitSuccess)) {
+                                iframeWin.runAfterSubmitSuccess(response);
+                            }
 
-                        parent.layer.close(index);
-                        //刷新主页面
-                        reloadTable();
+                            parent.layer.close(index);
+                            tip(response.msg);
+                        } else {
+                            tip(response.msg);
+                        }
+
+                        //todo
+                        if ($.isFunction(iframeWin.runAfterSubmit)) {
+                            iframeWin.runAfterSubmit(response);
+                        }
 
                         // 提交表单成功后，释放hold
                         // me.holdSubmit(false);
@@ -355,7 +359,7 @@ function createWindow(title, addurl, width, height) {
                 });
 
             } else {
-                tip("isValid false");
+                tip("表单校验未通过，请检查输入。");
 			}
 
         }
@@ -370,15 +374,6 @@ function createWindow(title, addurl, width, height) {
 		W.layer.open(option);
 	}
 }
-
-/**
- * 提交之前，可重写此方法以获取额外参数设置与数据校验
- * @param form
- * @returns {boolean}
- */
-// function beforeSubmit(form) {
-// 	return true ;
-// }
 
 /**
  * 创建上传页面窗口

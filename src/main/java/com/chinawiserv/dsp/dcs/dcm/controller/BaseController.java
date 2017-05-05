@@ -8,6 +8,7 @@ import com.chinawiserv.dsp.dcs.dcm.common.bean.Token;
 import com.chinawiserv.dsp.dcs.dcm.common.util.HttpUtil;
 import com.chinawiserv.dsp.dcs.dcm.common.util.TokenUtil;
 import com.google.common.base.CaseFormat;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
@@ -86,11 +87,31 @@ public class BaseController {
 		return new Page<T>(pageNumber, pageSize);
 	}
 
+	protected <T> Page<T> getPage(Map<String , Object> paramMap) {
+		int pageNumber = MapUtils.getIntValue(paramMap , "pageNumber" , 1) ;
+		int pageSize = MapUtils.getIntValue(paramMap , "pageSize" , DEFAULT_PAGE_SIZE) ;
+
+		String sortName = MapUtils.getString(paramMap , "sortName");
+		String sortOrder = MapUtils.getString(paramMap , "sortOrder");
+
+		Page<T> page = new Page<T>(pageNumber , pageSize);
+		if (StringUtils.isNotBlank(sortName)) {
+			String sortNameUnderline = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, sortName);
+			page.setOrderByField(sortNameUnderline);
+		}
+
+		if (StringUtils.isNotBlank(sortOrder)) {
+			page.setAsc(!"desc".equalsIgnoreCase(sortOrder));
+		}
+
+		return page;
+	}
 	/**
 	 * <p>
 	 * 获取分页对象
 	 * @return
 	 */
+	//todo remove
 	protected <T> Page<T> getPage() {
 		String pageNumberStr = request.getParameter("pageNumber");
 		String pageSizeStr = request.getParameter("pageSize");

@@ -2,12 +2,13 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.PageResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysLog;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysLogService;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 /**
@@ -39,25 +41,28 @@ public class SysLogController extends BaseController{
     private ISysLogService sysLogService;
 
 
-    @Permission("listLog")
+    @RequiresPermissions("listLog")
     @RequestMapping("")
-    public  String init(HttpServletRequest request, HttpServletResponse response, Model model){
+    public  String init(Model model){
         return "system/log/logList";
     }
 
     /**
      * 分页查询日志
      */
-    @Permission("listLog")
+    @RequiresPermissions("listLog")
     @RequestMapping("/list")
     @ResponseBody
-    public PageResult list(String searchKey, String dateRange){
-        Page<SysLog> page = getPage();
-        if (StringUtils.isBlank(request.getParameter("sortName"))) {
+    public PageResult list(@RequestParam Map<String , Object> paramMap){
+        Page<SysLog> page = getPage(paramMap);
+
+        if (!paramMap.containsKey("sortName")) {
             page.setOrderByField("create_time");
             page.setAsc(false);
         }
 
+        String searchKey = MapUtils.getString(paramMap , "searchKey");
+        String dateRange = MapUtils.getString(paramMap , "dateRange");
         // 查询分页
         EntityWrapper<SysLog> ew = new EntityWrapper<SysLog>();
         if(StringUtils.isNotBlank(searchKey)){
@@ -80,7 +85,7 @@ public class SysLogController extends BaseController{
      */
     @RequestMapping("/params/{id}")
     @ResponseBody
-    public String params(@PathVariable String id,Model model){
+    public String params(@PathVariable String id){
         SysLog sysLog = sysLogService.selectById(id);
         return sysLog.getParams();
     }

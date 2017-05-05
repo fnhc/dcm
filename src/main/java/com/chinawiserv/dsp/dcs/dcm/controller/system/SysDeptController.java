@@ -3,14 +3,15 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.PageResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysDept;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysDeptService;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +19,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 /**
@@ -34,26 +37,28 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/system/dept")
+//todo 将所有的XXX修改为真实值
 public class SysDeptController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ISysDeptService sysDeptService;
 
-    @Permission("listDept")
+    @RequiresPermissions("listDept")
     @RequestMapping("")
-    public  String init(HttpServletRequest request, HttpServletResponse response, Model model){
+    public  String init(HttpServletRequest request, HttpServletResponse response){
         return "system/dept/deptList";
     }
 
     /**
      * 分页查询部门
      */
-    @Permission("listDept")
+    @RequiresPermissions("listDept")
     @RequestMapping("/list")
     @ResponseBody
-    public PageResult list(String searchKey){
-        Page<SysDept> page = getPage();
+    public PageResult list(@RequestParam Map<String , Object> paramMap){
+        Page<SysDept> page = getPage(paramMap);
+        String searchKey = MapUtils.getString(paramMap , "searchKey");
         // 查询分页
         EntityWrapper<SysDept> ew = new EntityWrapper<SysDept>();
         if(StringUtils.isNotBlank(searchKey)){
@@ -67,31 +72,33 @@ public class SysDeptController extends BaseController {
     /**
      * 新增部门
      */
-    @Permission("addDept")
+    @RequiresPermissions("addDept")
     @RequestMapping("/add")
-    public  String add(Model model){
+    public  String add(){
         return "system/dept/deptAdd";
     }
 
     /**
      * 执行新增
      */
-    @Permission("addDept")
+    @RequiresPermissions("addDept")
     @Log("创建部门")
     @RequestMapping("/doAdd")
     @ResponseBody
-    public HandleResult doAdd(SysDept dept,String[] roleId){
+    public HandleResult doAdd(SysDept dept){
+        //todo 设置创建人，创建时间
         sysDeptService.insert(dept);
         return new HandleResult().success("创建部门成功");
     }
     /**
      * 删除部门
      */
-    @Permission("deleteDept")
+    @RequiresPermissions("deleteDept")
     @Log("删除部门")
     @RequestMapping("/delete")
     @ResponseBody
-    public HandleResult delete(String id){
+    public HandleResult delete(@RequestParam String id){
+        //todo 设置更新人，更新时间
         sysDeptService.deleteById(id);
         return new HandleResult().success("删除成功");
     }
@@ -99,9 +106,9 @@ public class SysDeptController extends BaseController {
     /**
      * 编辑部门
      */
-    @Permission("editDept")
-    @RequestMapping("/edit/{id}")
-    public  String edit(@PathVariable String id,Model model){
+    @RequiresPermissions("editDept")
+    @RequestMapping("/edit")
+    public  String edit(@RequestParam String id,Model model){
         SysDept dept = sysDeptService.selectById(id);
 
         model.addAttribute("dept",dept);
@@ -110,13 +117,14 @@ public class SysDeptController extends BaseController {
     /**
      * 执行编辑
      */
-    @Permission("editDept")
+    @RequiresPermissions("editDept")
     @Log("编辑部门")
     @RequestMapping("/doEdit")
-    public  String doEdit(SysDept dept,Model model){
+    @ResponseBody
+    public  HandleResult doEdit(SysDept dept,Model model){
+        //todo 设置更新人，更新时间
         sysDeptService.updateById(dept);
-        //todo
-        return redirectTo("/system/dept/list");
+        return new HandleResult().success("编辑部门成功");
     }
 
 

@@ -1,7 +1,7 @@
 package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Permission;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ public class MonitorController extends BaseController{
 	/**
 	 * 系统监控列表
 	 */
-	@Permission("monitorList")
+	@RequiresPermissions("monitorList")
     @RequestMapping("")
     public  String list(Model model){
 		return "system/monitor/monitorList";

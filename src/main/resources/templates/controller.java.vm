@@ -1,13 +1,29 @@
 package ${package.Controller};
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.PageResult;
+import ${package.Entity}.${entity};
+import ${package.Service}.${table.serviceName};
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 #if(${superControllerClassPackage})
 import ${superControllerClassPackage};
 #end
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * <p>
@@ -19,10 +35,97 @@ import ${superControllerClassPackage};
  */
 @Controller
 @RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityPath}")
+//todo 将所有的XXX修改为真实值
 #if(${superControllerClass})
 public class ${table.controllerName} extends ${superControllerClass} {
 #else
 public class ${table.controllerName} {
 #end
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private ${table.serviceName} service;
+
+    @RequiresPermissions("listXXX")
+    @RequestMapping("")
+    public  String init(Model model){
+		//todo
+    	return "XXX/XXX/XXXList";
+    }
+
+    /**
+     * 分页查询${table.comment}
+     */
+    @RequiresPermissions("listXXX")
+    @RequestMapping("/list")
+    @ResponseBody
+    public PageResult list(@RequestParam Map<String , Object> paramMap){
+		Page<${entity}> page = getPage(paramMap);
+		// 查询分页
+		EntityWrapper<${entity}> ew = new EntityWrapper<${entity}>();
+
+		Page<${entity}> pageData = service.selectPage(page, ew);
+
+		return new PageResult(pageData);
+    }
+
+    /**
+     * 新增${table.comment}
+     */
+    @RequiresPermissions("addXXX")
+    @RequestMapping("/add")
+    public  String add(){
+		return "XXX/XXX/XXXAdd";
+    }
+
+    /**
+     * 执行新增
+     */
+    @RequiresPermissions("addXXX")
+    @Log("创建${table.comment}")
+    @RequestMapping("/doAdd")
+    @ResponseBody
+    public HandleResult doAdd(${entity} entity){
+		//todo 设置创建人，创建时间
+    	service.insert(entity);
+		return new HandleResult().success("创建${table.comment}成功");
+    }
+
+    /**
+     * 删除${table.comment}
+     */
+    @RequiresPermissions("deleteXXX")
+    @Log("删除${table.comment}")
+    @RequestMapping("/delete")
+    @ResponseBody
+    public HandleResult delete(@RequestParam String id){
+		//todo 设置更新人，更新时间
+    	service.deleteById(id);
+		return new HandleResult().success("删除${table.comment}成功");
+    }
+
+    /**
+     * 编辑${table.comment}
+     */
+    @RequiresPermissions("editXXX")
+    @RequestMapping("/edit")
+    public  String edit(@RequestParam String id,Model model){
+        ${entity} entity = service.selectById(id);
+
+		model.addAttribute("entity",entity);
+		return "XXX/XXX/XXXEdit";
+    }
+
+    /**
+     * 执行编辑
+     */
+    @RequiresPermissions("editXXX")
+    @Log("编辑${table.comment}")
+    @RequestMapping("/doEdit")
+    @ResponseBody
+    public  HandleResult doEdit(${entity} entity,Model model){
+		//todo 设置更新人，更新时间
+    	service.updateById(entity);
+		return new HandleResult().success("编辑${table.comment}成功");
+    }
 }

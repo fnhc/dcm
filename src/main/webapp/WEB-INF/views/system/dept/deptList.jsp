@@ -57,6 +57,5 @@
         <div class="control-sidebar-bg"></div>
     </div>
 
-    <%@include file="/WEB-INF/views/common/js.jsp" %>
 </body>
 </html>

@@ -1,17 +1,8 @@
 package com.chinawiserv.dsp.dcs.dcm.controller;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.chinawiserv.dsp.dcs.dcm.common.util.CommonUtil;
 import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
-import com.chinawiserv.dsp.dcs.dcm.common.util.SpringUtil;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysSetting;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
 import com.chinawiserv.dsp.dcs.dcm.entity.vo.TreeMenu;
@@ -19,9 +10,9 @@ import com.chinawiserv.dsp.dcs.dcm.service.ISysLogService;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysSettingService;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysUserService;
+import com.google.code.kaptcha.servlet.KaptchaExtend;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.code.kaptcha.servlet.KaptchaExtend;
-import com.chinawiserv.dsp.dcs.dcm.common.anno.Login;
-import com.chinawiserv.dsp.dcs.dcm.common.bean.Token;
-import com.chinawiserv.dsp.dcs.dcm.common.enums.Action;
-import com.chinawiserv.dsp.dcs.dcm.common.util.TokenUtil;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.List;
 /**
  * 登录控制器
  * @author Gaojun.Zhou
@@ -63,7 +55,6 @@ public class LoginController extends BaseController {
 	 * 登录页面
 	 * @throws UnsupportedEncodingException 
 	 */
-	@Login(action=Action.Skip)
 	@RequestMapping(value={"","/","/index"})
 	public String login(String return_url,Model model) throws UnsupportedEncodingException{
 		String index = "/index";
@@ -74,7 +65,6 @@ public class LoginController extends BaseController {
 	/**
 	 * 执行登录
 	 */
-	@Login(action=Action.Skip)
     @RequestMapping(value = "/doLogin",method=RequestMethod.POST)
     public  String doLogin(String userName,String password, String captcha,String return_url,Model model){
 		//todo 打开验证码
@@ -147,7 +137,10 @@ public class LoginController extends BaseController {
 		return redirectTo("/index");
     }
 
-    private void loginSuccess(){
+	/**
+	 *
+	 */
+	private void loginSuccess(){
 	    SysUser currentLoginUser = ShiroUtils.getLoginUser();
 	    /**
 	     * 加载全局非登录访问常量
@@ -192,8 +185,7 @@ public class LoginController extends BaseController {
 	 * @return
 	 * @throws IOException 
 	 */
-	@Login(action=Action.Skip)
-    @RequestMapping(value = "/logout")  
+    @RequestMapping(value = "/logout")
     public void logout(HttpServletResponse response) throws IOException{
 //		Token st = TokenUtil.getToken(request);
 //
@@ -212,12 +204,10 @@ public class LoginController extends BaseController {
     /**
      * 验证码
      */
-	@Login(action=Action.Skip)
     @RequestMapping("/captcha")
 	@ResponseBody
     public  void captcha(HttpServletResponse response) throws ServletException, IOException{
 		KaptchaExtend kaptchaExtend =  new KaptchaExtend();
-		//todo xxxx
 		kaptchaExtend.captcha(request, response);
     }
 }

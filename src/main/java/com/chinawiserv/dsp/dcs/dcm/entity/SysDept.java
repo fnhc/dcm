@@ -1,7 +1,6 @@
 package com.chinawiserv.dsp.dcs.dcm.entity;
 
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -17,7 +16,7 @@ import java.io.Serializable;
  * @since 2017-04-16
  */
 @TableName("sys_dept")
-public class SysDept extends Model<SysDept> {
+public class SysDept implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -60,11 +59,6 @@ public class SysDept extends Model<SysDept> {
 
 	public void setDeptDesc(String deptDesc) {
 		this.deptDesc = deptDesc;
-	}
-
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
 	}
 
 }

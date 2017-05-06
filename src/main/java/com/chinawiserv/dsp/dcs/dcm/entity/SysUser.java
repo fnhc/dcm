@@ -1,13 +1,12 @@
 package com.chinawiserv.dsp.dcs.dcm.entity;
 
-import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -18,7 +17,7 @@ import java.io.Serializable;
  * @since 2017-04-16
  */
 @TableName("sys_user")
-public class SysUser extends Model<SysUser> {
+public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -125,11 +124,6 @@ public class SysUser extends Model<SysUser> {
 
 	public void setDeptId(String deptId) {
 		this.deptId = deptId;
-	}
-
-	@Override
-	protected Serializable pkVal() {
-		return this.id;
 	}
 
 }

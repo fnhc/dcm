@@ -25,5 +25,9 @@ public final class SystemConst {
 
 
     /***********************************************************/
+    /**
+     * 默认分页大小
+     */
+    public static final int DEFAULT_PAGE_SIZE = 15;
 
 }

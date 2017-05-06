@@ -23,8 +23,28 @@ public class ShiroUtils {
 		return (SysUser)SecurityUtils.getSubject().getPrincipal();
 	}
 
+	/**
+	 * 从 Session 里 取 当前登录用户Id
+	 * @return
+	 */
 	public static String getLoginUserId() {
 		return getLoginUser().getId();
+	}
+
+	/**
+	 * 从 Session 里 取 当前登录用户名
+	 * @return
+	 */
+	public static String getLoginUserName() {
+		return getLoginUser().getUserName();
+	}
+
+	/**
+	 * 从 Session 里 取 当前登录用户组织机构Id
+	 * @return
+	 */
+	public static String getLoginUserDeptId() {
+		return getLoginUser().getDeptId();
 	}
 
 	/**

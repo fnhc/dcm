@@ -3,8 +3,8 @@ package com.chinawiserv.dsp.dcs.dcm.controller.system;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
-import com.chinawiserv.dsp.dcs.dcm.common.bean.Response;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.ListResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
 import com.chinawiserv.dsp.dcs.dcm.entity.SysMenu;
 import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
@@ -178,7 +178,7 @@ public class SysMenuController extends BaseController {
      */
     @RequestMapping("/json")
     @ResponseBody
-    public Response json(String pid){
+    public ListResult json(String pid){
         EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
         ew.orderBy("sort");
         ew.addFilter("pid = {0} ", pid);
@@ -191,7 +191,11 @@ public class SysMenuController extends BaseController {
             map.put("text",StringUtils.join(m.getCode(),"-",m.getMenuName()));
             listMap.add(map);
         }
-        return new Response().success(listMap);
+        //todo
+        ListResult listResult = new ListResult<Map<String, Object>>();
+        listResult.addAll(listMap);
+        return listResult ;
+//        return new Response().success(listMap);
     }
 
 

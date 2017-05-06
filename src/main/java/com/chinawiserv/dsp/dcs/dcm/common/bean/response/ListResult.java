@@ -18,7 +18,7 @@ public class ListResult<T> extends HandleResult {
 		}
 	}
 	
-	public void addAll(ArrayList<T> list) {
+	public void addAll(List<T> list) {
 		if (this.rows != null) {
 			this.rows.addAll(list);
 		}

@@ -85,6 +85,12 @@ public class BaseController {
 		return new Page<T>(pageNumber, pageSize);
 	}
 
+	/**
+	 * 获取分页对象
+	 * @param paramMap
+	 * @param <T>
+	 * @return
+	 */
 	protected <T> Page<T> getPage(Map<String , Object> paramMap) {
 		int pageNumber = MapUtils.getIntValue(paramMap , "pageNumber" , 1) ;
 		int pageSize = MapUtils.getIntValue(paramMap , "pageSize" , DEFAULT_PAGE_SIZE) ;
@@ -198,13 +204,6 @@ public class BaseController {
 			sessionGlobal = (SessionGlobal)obj;
 		}
 		return sessionGlobal;
-	}
-
-	/**
-	 * 清楚回话信息
-	 */
-	protected void removeSessionGlobal() {
-		ShiroUtils.removeSessionAttribute(SessionGlobal.SESSIONGLOBAL);
 	}
 
 	/**

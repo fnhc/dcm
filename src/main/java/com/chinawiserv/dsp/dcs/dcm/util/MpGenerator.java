@@ -33,7 +33,7 @@ public class MpGenerator {
         GlobalConfig gc = new GlobalConfig();
         gc.setOutputDir("D:\\tmp\\gcode\\java\\");
         gc.setFileOverride(true);
-        gc.setActiveRecord(true);
+        gc.setActiveRecord(false);
         gc.setEnableCache(false);// XML 二级缓存
         gc.setBaseResultMap(true);// XML ResultMap
         gc.setBaseColumnList(false);// XML columList

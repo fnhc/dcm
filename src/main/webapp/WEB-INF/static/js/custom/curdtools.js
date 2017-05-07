@@ -96,6 +96,7 @@ $(function(){
  * @param addurl//目标页面地址
  * @param id//主键字段
  */
+//todo
 function detail(title,url, id,width,height) {
 	var rowsData = $('#'+id).datagrid('getSelections');
 //	if (rowData.id == '') {
@@ -122,6 +123,7 @@ function detail(title,url, id,width,height) {
  * @param gname
  * @return
  */
+//todo
 function deleteALLSelect(title,url,gname) {
 	gridname=gname;
     var ids = [];
@@ -165,6 +167,7 @@ function deleteALLSelect(title,url,gname) {
  * @param addurl
  * @param saveurl
  */
+//todo
 function createDetailWindow(title, addurl, width, height) {
 	width = width?width:700;
 	height = height?height:400;
@@ -217,7 +220,12 @@ function editfs(title,url) {
 	url += '&id='+rowid;
 	openwindow(title,url,name,800,500);
 }
-// 删除调用函数
+
+/**
+ * 删除调用函数
+ * @param url
+ * @param parameter
+ */
 function delObj(url,parameter) {
     createdialog('删除确认', '您『确定』删除当前选中的所有记录吗？', url, parameter);
 }
@@ -254,6 +262,7 @@ function deluploadify(url, id) {
 		}
 	});
 }
+
 // 普通询问操作调用函数
 function confirm(url, content,name) {
 	createdialog('提示信息 ', content, url,name);
@@ -266,12 +275,6 @@ function tip(msg) {
     layer.alert(msg, {title : '提示信息' , icon: 0});
 }
 
-/**
- * 提示信息像alert一样
- */
-function alertTip(msg,title) {
-    layer.alert(msg, {title : '提示信息' , icon: 0});
-}
 /**
  * 创建添加或编辑窗口
  * 
@@ -382,6 +385,7 @@ function createWindow(title, addurl, width, height) {
  * @param addurl
  * @param saveurl
  */
+//todo
 function openuploadwin(title, url,name,width, height) {
 	gridname=name;
 	$.dialog({
@@ -447,6 +451,7 @@ function opensearchdwin(title, url, width, height) {
  * @param addurl
  * @param saveurl
  */
+//todo
 function openwindow(title, url,name, width, height) {
 	gridname=name;
 	if (typeof (width) == 'undefined'&&typeof (height) != 'undefined')
@@ -567,16 +572,6 @@ function createdialog(title, content, url, parameter) {
     });
 
 }
-/**
- * 执行保存
- * 
- * @param url
- * @param gridname
- */
-function saveObj() {
-	//todo
-	$('#btn_sub', iframe.document).click();
-}
 
 /**
  * 执行AJAX提交FORM
@@ -584,6 +579,7 @@ function saveObj() {
  * @param url
  * @param gridname
  */
+//todo
 function ajaxSubForm(url) {
 	$('#myform', iframe.document).form('submit', {
 		url : url,
@@ -596,17 +592,7 @@ function ajaxSubForm(url) {
 		}
 	});
 }
-/**
- * 执行查询
- * 
- * @param url
- * @param gridname
- */
-function search() {
-	//todo
-	$('#btn_sub', iframe.document).click();
-	iframe.search();
-}
+
 
 /**
  * 执行操作
@@ -614,6 +600,7 @@ function search() {
  * @param url
  * @param index
  */
+//todo
 function doSubmit(url, parameter) {
 	var paramsData = parameter;
 	//把URL转换成POST参数防止URL参数超出范围的问题
@@ -657,6 +644,7 @@ function doSubmit(url, parameter) {
  * @param content
  * @param index
  */
+//todo
 function exit(url, content) {
 	$.dialog.setting.zIndex = getzIndex(true);
 	$.dialog.confirm(content, function(){
@@ -791,6 +779,7 @@ function createTabId(str){
 　　　　return val;
 　　}
 // 添加标签
+//todo
 function addOneTab(subtitle, url, icon) {
 	var indexStyle = getCookie("JEECGINDEXSTYLE");
 	if(indexStyle=='sliding'||indexStyle=='bootstrap'){
@@ -1094,247 +1083,3 @@ function viewNotCreateWin(title,url, id,isRestful) {
 	}
 	window.location.href=url
 }
-
-//popup  
-//object: pobj当前操作的文本框. tablefield:对应字典TEXT,要从popup报表中获取的字段.inputnames:对应字典CODE,当前需要回填数据的文本框名称. pcode:动态报表的code
-function popupClick(pobj,tablefield,inputnames,pcode) {
-	 $.dialog.setting.zIndex = getzIndex(true);
-	 if(inputnames==""||pcode==""){
-		 alert("popup参数配置不全");
-		 return;
-	 }
-	 if(typeof(windowapi) == 'undefined'){
-		 $.dialog({
-				content: "url:cgReportController.do?popup&id="+pcode,
-				zIndex: getzIndex(),
-				lock : true,
-				title:"选择",
-				width:800,
-				height: 400,
-				cache:false,
-			    ok: function(){
-			    	iframe = this.iframe.contentWindow;
-			    	var selected = iframe.getSelectRows();
-			    	if (selected == '' || selected == null ){
-				    	alert("请选择");
-			    		return false;
-				    }else {
-				    	//对应数据库字段不为空的情况下,根据表单中字典TEXT的值来取popup的值
-				    	if(tablefield != "" && tablefield != null){
-					    	var fields = tablefield.split(",");
-					    	var inputfield = inputnames.split(",");
-					    	for(var i1=0;i1<fields.length;i1++){
-							   var str = "";
-						    	$.each( selected, function(i, n){ 
-						    		if (i==0)
-								    	str+= n[fields[i1]];
-							    	else{
-										str+= ",";
-										str+=n[fields[i1]];
-									}
-								 });
-						    	var inputname = $(pobj).attr("name"); 
-						    	var inputs = inputname.split(".");
-						    	//判断传入的this格式是否为 "AA[#index#].aa"的形式
-						    	if(str.indexOf("undefined")==-1){
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val(str);
-						    		}else{
-						    			$("input[name='"+inputfield[i1]+"']").val(str);
-						    		}
-						    	}else{
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val("");
-						    		}else{
-						    			$("input[name='"+inputfield[i1]+"']").val("");
-						    		}
-						    	}
-					    	}
-				    	}else{
-				    		//对应数据库字段为空的情况下并且字典CODE传入多个值时，根据表单中字典CODE的值从popup中来取值
-				    		var inputfield = inputnames.split(",");
-				    		if(inputfield.length>1){
-				    			for(var i1=0;i1<inputfield.length;i1++){
-									   var str = "";
-								    	$.each( selected, function(i, n){ 
-							    			if (i==0)
-							    				str+= n[inputfield[i1]];
-							    			else{
-							    				str+= ",";
-							    				str+=n[inputfield[i1]];
-							    			}
-										 });
-								    	var inputname = $(pobj).attr("name"); 
-								    	var inputs = inputname.split(".");
-								    	if(str.indexOf("undefined")==-1){
-								    		if(inputs.length>1){
-								    			var inpu = inputs[i1]+"."+inputfield[i1];
-								    			$("input[name='"+inpu+"']").val(str);
-								    		}else{
-								    			$("input[name='"+inputfield[i1]+"']").val(str);
-								    		}
-								    	}else{
-								    		if(inputs.length>1){
-								    			var inpu = inputs[i1]+"."+inputfield[i1];
-								    			$("input[name='"+inpu+"']").val("");
-								    		}else{
-								    			$("input[name='"+inputfield[i1]+"']").val("");
-								    		}
-								    	}
-							    	}
-				    		}else{
-				    			//对应数据库字段为空的情况下并且字典CODE传入一个值时，根据表单中字典TEXT的值从popup中来取值
-				    			 var str = "";
-						    	$.each( selected, function(i, n){
-							    	if (i==0)
-							    	str+= n[inputfield];
-							    	else
-						    		str+= ","+n[inputfield];
-						    	});
-						    	var inputname = $(pobj).attr("name"); 
-						    	var inputs = inputname.split(".");
-						    	if(str.indexOf("undefined")==-1){
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val(str);
-						    		}else{
-						    			$("input[name='"+inputfield+"']").val(str);
-						    		}
-						    	}else{
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val("");
-						    		}else{
-						    			$("input[name='"+inputfield+"']").val("");
-						    		}
-						    	}
-				    		}
-				    	}
-				    	return true;
-				    }
-					
-			    },
-			    cancelVal: '关闭',
-			    cancel: true // 为true等价于function(){}
-			});
-		}else{
-			$.dialog({
-				content: "url:cgReportController.do?popup&id="+pcode,
-				zIndex: getzIndex(),
-				lock : true,
-				title:"选择",
-				width:800,
-				height: 400,
-				parent:windowapi,
-				cache:false,
-			    ok: function(){
-			    	iframe = this.iframe.contentWindow;
-			    	var selected = iframe.getSelectRows();
-			    	if (selected == '' || selected == null ){
-				    	alert("请选择");
-			    		return false;
-				    }else {
-				    	//对应数据库字段不为空的情况下,根据表单中字典TEXT的值来取popup的值
-				    	if(tablefield != "" && tablefield != null){
-					    	var fields = tablefield.split(",");
-					    	var inputfield = inputnames.split(",");
-					    	for(var i1=0;i1<fields.length;i1++){
-							   var str = "";
-						    	$.each( selected, function(i, n){ 
-						    		if (i==0)
-								    	str+= n[fields[i1]];
-							    	else{
-										str+= ",";
-										str+=n[fields[i1]];
-									}
-								 });
-						    	var inputname = $(pobj).attr("name"); 
-						    	var inputs = inputname.split(".");
-						    	//判断传入的this格式是否为 "AA[#index#].aa"的形式
-						    	if(str.indexOf("undefined")==-1){
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val(str);
-						    		}else{
-						    			$("input[name='"+inputfield[i1]+"']").val(str);
-						    		}
-						    	}else{
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val("");
-						    		}else{
-						    			$("input[name='"+inputfield[i1]+"']").val("");
-						    		}
-						    	}
-					    	}
-				    	}else{
-				    		//对应数据库字段为空的情况下并且字典CODE传入多个值时，根据表单中字典CODE的值从popup中来取值
-				    		var inputfield = inputnames.split(",");
-				    		if(inputfield.length>1){
-				    			for(var i1=0;i1<inputfield.length;i1++){
-									   var str = "";
-								    	$.each( selected, function(i, n){ 
-							    			if (i==0)
-							    				str+= n[inputfield[i1]];
-							    			else{
-							    				str+= ",";
-							    				str+=n[inputfield[i1]];
-							    			}
-										 });
-								    	var inputname = $(pobj).attr("name"); 
-								    	var inputs = inputname.split(".");
-								    	if(str.indexOf("undefined")==-1){
-								    		if(inputs.length>1){
-								    			var inpu = inputs[i1]+"."+inputfield[i1];
-								    			$("input[name='"+inpu+"']").val(str);
-								    		}else{
-								    			$("input[name='"+inputfield[i1]+"']").val(str);
-								    		}
-								    	}else{
-								    		if(inputs.length>1){
-								    			var inpu = inputs[i1]+"."+inputfield[i1];
-								    			$("input[name='"+inpu+"']").val("");
-								    		}else{
-								    			$("input[name='"+inputfield[i1]+"']").val("");
-								    		}
-								    	}
-							    	}
-				    		}else{
-				    			//对应数据库字段为空的情况下并且字典CODE传入一个值时，根据表单中字典TEXT的值从popup中来取值
-				    			 var str = "";
-						    	$.each( selected, function(i, n){
-							    	if (i==0)
-							    	str+= n[inputfield];
-							    	else
-						    		str+= ","+n[inputfield];
-						    	});
-						    	var inputname = $(pobj).attr("name"); 
-						    	var inputs = inputname.split(".");
-						    	if(str.indexOf("undefined")==-1){
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val(str);
-						    		}else{
-						    			$("input[name='"+inputfield+"']").val(str);
-						    		}
-						    	}else{
-						    		if(inputs.length>1){
-						    			var inpu = inputs[i1]+"."+inputfield[i1];
-						    			$("input[name='"+inpu+"']").val("");
-						    		}else{
-						    			$("input[name='"+inputfield+"']").val("");
-						    		}
-						    	}
-				    		}
-				    	}
-				    	return true;
-				    }
-					
-			    },
-			    cancelVal: '关闭',
-			    cancel: true // 为true等价于function(){}
-			});
-		}
-	}

@@ -1,4 +1,4 @@
-package com.chinawiserv.dsp.dcs.dcm.util;
+package com.chinawiserv.dsp.dcs.dcm.common.util;
 
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -36,7 +36,7 @@ public class MpGenerator {
         gc.setActiveRecord(false);
         gc.setEnableCache(false);// XML 二级缓存
         gc.setBaseResultMap(true);// XML ResultMap
-        gc.setBaseColumnList(false);// XML columList
+        gc.setBaseColumnList(true);// XML columList
         gc.setAuthor("zhanf");
 
         // 自定义文件命名，注意 %s 会自动填充表实体属性！
@@ -67,10 +67,10 @@ public class MpGenerator {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
         // strategy.setCapitalMode(true);// 全局大写命名 ORACLE 注意
-//        strategy.setTablePrefix(new String[] { "sys_"});// 此处可以修改为您的表前缀
+        strategy.setTablePrefix(new String[] { "dcm_"});// 此处可以修改为您的表前缀
         //****
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-//         strategy.setInclude(new String[] { "test_user" }); // 需要生成的表
+         strategy.setInclude(new String[] { "sys_role" }); // 需要生成的表
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -136,7 +136,7 @@ public class MpGenerator {
         mpg.execute();
 
         // 打印注入设置
-        System.err.println(mpg.getCfg().getMap().get("abc"));
+        System.out.println(mpg.getCfg().getMap().get("abc"));
     }
 
 }

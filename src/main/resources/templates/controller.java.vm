@@ -46,7 +46,7 @@ public class ${table.controllerName} {
     @Autowired
     private ${table.serviceName} service;
 
-    @RequiresPermissions("listXXX")
+    @RequiresPermissions("XXX:XXX:list")
     @RequestMapping("")
     public  String init(Model model){
 		//todo
@@ -56,7 +56,7 @@ public class ${table.controllerName} {
     /**
      * 分页查询${table.comment}
      */
-    @RequiresPermissions("listXXX")
+    @RequiresPermissions("XXX:XXX:list")
     @RequestMapping("/list")
     @ResponseBody
     public PageResult list(@RequestParam Map<String , Object> paramMap){
@@ -72,7 +72,7 @@ public class ${table.controllerName} {
     /**
      * 新增${table.comment}
      */
-    @RequiresPermissions("addXXX")
+    @RequiresPermissions("XXX:XXX:add")
     @RequestMapping("/add")
     public  String add(){
 		return "XXX/XXX/XXXAdd";
@@ -81,7 +81,7 @@ public class ${table.controllerName} {
     /**
      * 执行新增
      */
-    @RequiresPermissions("addXXX")
+    @RequiresPermissions("XXX:XXX:add")
     @Log("创建${table.comment}")
     @RequestMapping("/doAdd")
     @ResponseBody
@@ -94,7 +94,7 @@ public class ${table.controllerName} {
     /**
      * 删除${table.comment}
      */
-    @RequiresPermissions("deleteXXX")
+    @RequiresPermissions("XXX:XXX:delete")
     @Log("删除${table.comment}")
     @RequestMapping("/delete")
     @ResponseBody
@@ -107,7 +107,7 @@ public class ${table.controllerName} {
     /**
      * 编辑${table.comment}
      */
-    @RequiresPermissions("editXXX")
+    @RequiresPermissions("XXX:XXX:edit")
     @RequestMapping("/edit")
     public  String edit(@RequestParam String id,Model model){
         ${entity} entity = service.selectById(id);
@@ -119,7 +119,7 @@ public class ${table.controllerName} {
     /**
      * 执行编辑
      */
-    @RequiresPermissions("editXXX")
+    @RequiresPermissions("XXX:XXX:edit")
     @Log("编辑${table.comment}")
     @RequestMapping("/doEdit")
     @ResponseBody

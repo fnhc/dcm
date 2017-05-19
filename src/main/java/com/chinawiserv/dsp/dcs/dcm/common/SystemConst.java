@@ -23,6 +23,18 @@ public final class SystemConst {
     public static final String RES = "res";
     public static final String CUR = "cur";
 
+    /**
+     * 数据对象的状态
+     */
+    public static final int SYS_STATUS_NORMAL = 1;
+    public static final int SYS_STATUS_DELETE = -1;
+
+    /**
+     * 菜单的类型 menu_type(1:目录 2:菜单 3:功能)
+     */
+    public static final int SYS_MENU_TYPE_CATALOG = 1;
+    public static final int SYS_MENU_TYPE_MENU = 2;
+    public static final int SYS_MENU_TYPE_FUNCTION = 3;
 
     /***********************************************************/
     /**

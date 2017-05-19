@@ -1,15 +1,14 @@
 package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.PageResult;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysDept;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysDeptService;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysDeptVo;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysDeptService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ import java.util.Map;
 
 /**
  * <p>
- * 部门表 前端控制器
+ * 组织机构表 前端控制器
  * </p>
  *
  * @author zhanf
@@ -35,42 +34,41 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/system/dept")
-//todo 将所有的XXX修改为真实值
 public class SysDeptController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ISysDeptService sysDeptService;
 
-    @RequiresPermissions("listDept")
+    @RequiresPermissions("system:dept:list")
     @RequestMapping("")
     public  String init(HttpServletRequest request, HttpServletResponse response){
+
         return "system/dept/deptList";
     }
 
     /**
-     * 分页查询部门
+     * 分页查询组织机构
      */
-    @RequiresPermissions("listDept")
+    @RequiresPermissions("system:dept:list")
     @RequestMapping("/list")
     @ResponseBody
     public PageResult list(@RequestParam Map<String , Object> paramMap){
-        Page<SysDept> page = getPage(paramMap);
-        String searchKey = MapUtils.getString(paramMap , "searchKey");
-        // 查询分页
-        EntityWrapper<SysDept> ew = new EntityWrapper<SysDept>();
-        if(StringUtils.isNotBlank(searchKey)){
-            ew.like("dept_name", searchKey);
+        PageResult pageResult = new PageResult();
+        try {
+            Page<SysDeptVo> page = sysDeptService.selectVoPage(paramMap);
+            pageResult.setPage(page);
+        } catch (Exception e) {
+            pageResult.error("分页查询组织机构出错");
+            logger.error("分页查询角色出错", e);
         }
-        Page<SysDept> pageData = sysDeptService.selectPage(page, ew);
-
-        return new PageResult(pageData);
+        return pageResult;
     }
 
     /**
-     * 新增部门
+     * 新增组织机构
      */
-    @RequiresPermissions("addDept")
+    @RequiresPermissions("system:dept:add")
     @RequestMapping("/add")
     public  String add(){
         return "system/dept/deptAdd";
@@ -79,51 +77,110 @@ public class SysDeptController extends BaseController {
     /**
      * 执行新增
      */
-    @RequiresPermissions("addDept")
-    @Log("创建部门")
+    @RequiresPermissions("system:dept:add")
+    @Log("创建组织机构")
     @RequestMapping("/doAdd")
     @ResponseBody
-    public HandleResult doAdd(SysDept dept){
-        //todo 设置创建人，创建时间
-        sysDeptService.insert(dept);
-        return new HandleResult().success("创建部门成功");
+    public HandleResult doAdd(SysDeptVo dept){
+        HandleResult handleResult = new HandleResult();
+        try {
+            sysDeptService.insertVO(dept);
+            handleResult.success("创建组织机构成功");
+        } catch (Exception e) {
+            handleResult.error("创建组织机构失败");
+            logger.error("创建组织机构失败", e);
+        }
+        return handleResult;
     }
     /**
-     * 删除部门
+     * 删除组织机构
      */
-    @RequiresPermissions("deleteDept")
-    @Log("删除部门")
+    @RequiresPermissions("system:dept:delete")
+    @Log("删除组织机构")
     @RequestMapping("/delete")
     @ResponseBody
     public HandleResult delete(@RequestParam String id){
-        //todo 设置更新人，更新时间
         sysDeptService.deleteById(id);
         return new HandleResult().success("删除成功");
     }
 
     /**
-     * 编辑部门
+     * 编辑组织机构
      */
-    @RequiresPermissions("editDept")
+    @RequiresPermissions("system:dept:edit")
     @RequestMapping("/edit")
     public  String edit(@RequestParam String id,Model model){
-        SysDept dept = sysDeptService.selectById(id);
-
-        model.addAttribute("dept",dept);
+        model.addAttribute("deptId",id);
         return "system/dept/deptEdit";
     }
+
+    /**
+     * 编辑角色
+     */
+    @RequiresPermissions("system:dept:edit")
+    @RequestMapping("/editLoad")
+    @ResponseBody
+    public  HandleResult editLoad(@RequestParam String id){
+        HandleResult handleResult = new HandleResult();
+        try {
+            SysDeptVo sysDeptVos = sysDeptService.selectVoById(id);
+            handleResult.put("vo", sysDeptVos);
+        } catch (Exception e) {
+            handleResult.error("获取组织机构信息失败");
+            logger.error("获取组织机构信息失败", e);
+        }
+        return handleResult;
+    }
+
     /**
      * 执行编辑
      */
-    @RequiresPermissions("editDept")
-    @Log("编辑部门")
+    @RequiresPermissions("system:dept:edit")
+    @Log("编辑组织机构")
     @RequestMapping("/doEdit")
     @ResponseBody
-    public  HandleResult doEdit(SysDept dept,Model model){
-        //todo 设置更新人，更新时间
-        sysDeptService.updateById(dept);
-        return new HandleResult().success("编辑部门成功");
+    public  HandleResult doEdit(SysDeptVo dept){
+        HandleResult handleResult = new HandleResult();
+        try {
+            sysDeptService.updateVO(dept);
+            handleResult.success("编辑组织机构成功");
+        } catch (Exception e) {
+            handleResult.error("编辑组织机构失败");
+            logger.error("编辑组织机构失败", e);
+        }
+        return handleResult;
     }
 
+    @RequestMapping("/checkDeptName")
+    @ResponseBody
+    public JSONObject checkRoleName(@RequestParam String deptName, String deptId){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject = sysDeptService.checkDeptName(deptName, deptId);
+        } catch (Exception e) {
+            jsonObject.put("error", "角色名验证失败");
+            logger.error("角色名验证失败", e);
+        }
+        return jsonObject;
+    }
+
+    /**
+     * 组织机构的下拉数据
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/getDeptSelectDataList")
+    @ResponseBody
+    public HandleResult getDeptSelectDataList(String userId) {
+        HandleResult handleResult = new HandleResult();
+        try {
+            JSONArray result = sysDeptService.getDeptSelectDataList();
+            handleResult.put("selectData", result);
+        } catch (Exception e) {
+            handleResult.error("获取角色名称失败");
+            logger.error("获取角色名称失败", e);
+        }
+        return handleResult;
+    }
 
 }

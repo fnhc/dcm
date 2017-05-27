@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinawiserv.dsp.dcs.dcm.mapper.system.SysSettingMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysSetting">
+		<id column="id" property="id" />
+		<result column="setting_type" property="settingType" />
+		<result column="setting_code" property="settingCode" />
+		<result column="setting_name" property="settingName" />
+		<result column="setting_value" property="settingValue" />
+		<result column="setting_desc" property="settingDesc" />
+		<result column="status" property="status" />
+		<result column="create_user_id" property="createUserId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_user_id" property="updateUserId" />
+		<result column="update_time" property="updateTime" />
+		<result column="delete_flag" property="deleteFlag" />
+	</resultMap>
+
+	<resultMap id="BaseResultMapVo" type="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysSettingVo" extends="BaseResultMap" >
+		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
+		<result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="selectVoListWhereCause">
+		<trim prefix="where" prefixOverrides="and">
+			<if test="searchKey != null">
+				AND t.setting_name like CONCAT('%',#{searchKey,jdbcType=VARCHAR},'%')
+			</if>
+
+			<if test="create_time_begin != null">
+				AND t.create_time &gt;= #{create_time_begin,jdbcType=VARCHAR}
+			</if>
+
+			<if test="create_time_end != null">
+				AND t.create_time &lt;= #{create_time_end,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</sql>
+
+	<select id="selectVo" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+		SELECT t.*,s1.user_name as create_user_name,s2.user_name as update_user_name FROM sys_setting t
+			LEFT JOIN sys_user s1 ON s1.id = t.create_user_id LEFT JOIN sys_user s2 ON s2.id = t.update_user_id
+		<include refid="selectVoListWhereCause"></include>
+	</select>
+	<select id="selectVoCount"  parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(1) FROM sys_setting t LEFT JOIN sys_user s1 ON s1.id = t.create_user_id
+			LEFT JOIN sys_user s2 ON s2.id = t.update_user_id
+		<include refid="selectVoListWhereCause"></include>
+	</select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinawiserv.dsp.dcs.dcm.mapper.system.SysLogMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysLog">
+		<id column="id" property="id" />
+		<result column="operator" property="operator" />
+		<result column="operate_time" property="operateTime" />
+		<result column="operate_type" property="operateType" />
+		<result column="operate_desc" property="operateDesc" />
+		<result column="operate_detail" property="operateDetail" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, operator, operate_time AS operateTime, operate_type AS operateType, operate_desc AS operateDesc, operate_detail AS operateDetail
+	</sql>
+
+    <select id="selectVoList" resultType="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysLogVo">
+		SELECT t.* , su.real_name FROM  sys_log t LEFT  JOIN sys_user su ON  t.operator = su.id
+		<include refid="selectVoListWhereCause"/>
+	</select>
+	
+	<sql id="selectVoListWhereCause">
+		<trim prefix="where" prefixOverrides="and">
+			<if test="searchKey != null">
+				AND t.operate_desc like CONCAT('%',#{searchKey,jdbcType=VARCHAR},'%')
+			</if>
+
+			<if test="create_time_begin != null">
+				AND t.operate_time &gt;= #{create_time_begin,jdbcType=VARCHAR}
+			</if>
+
+			<if test="create_time_end != null">
+				AND t.operate_time &lt;= #{create_time_end,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</sql>
+
+</mapper>

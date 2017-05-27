@@ -1,4 +1,4 @@
-package ${package.Entity};
+package ${package.Entity}.po.${cfg.subModuleName};
 
 #foreach($pkg in ${table.importPackages})
 import ${pkg};
@@ -6,7 +6,7 @@ import ${pkg};
 
 /**
  * <p>
- * ${table.comment}
+ * ${table.comment} Po对象
  * </p>
  *
  * @author ${author}

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinawiserv.dsp.dcs.dcm.mapper.system.SysUserMapper">
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysUser">
+		<id column="id" property="id" />
+		<result column="user_name" property="userName" />
+		<result column="real_name" property="realName" />
+		<result column="password" property="password" />
+		<result column="user_type" property="userType" />
+		<result column="telephone_number" property="telephoneNumber" />
+		<result column="cell_phone_number" property="cellPhoneNumber" />
+		<result column="email" property="email" />
+		<result column="user_img" property="userImg" />
+		<result column="user_desc" property="userDesc" />
+		<result column="dept_id" property="deptId" />
+		<result column="status" property="status" />
+		<result column="create_user_id" property="createUserId" />
+		<result column="create_time" property="createTime" />
+		<result column="update_user_id" property="updateUserId" />
+		<result column="update_time" property="updateTime" />
+		<result column="delete_flag" property="deleteFlag" />
+	</resultMap>
+	
+	<!--定义vo映射-->
+	<resultMap id="SysUserVoMap" type="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysUserVo" extends="BaseResultMap">
+	</resultMap>
+
+	<!--定义页面vo查询字段-->
+	<sql id="BaseVoSelectColumn">
+		u1.id,u1.user_name,u1.real_name,u1.user_type,u1.user_desc,u1.status,u1.create_time,u2.user_name as 'create_name',d.dept_name
+	</sql>
+
+	<!--定义vo查询语句-->
+	<sql id="VoSelectSql">
+        FROM sys_user u1
+		LEFT JOIN sys_user u2 on u2.id = u1.create_user_id
+		LEFT JOIN sys_dept d on u1.dept_id = d.id
+	</sql>
+
+	<!--定义vo查询条件-->
+	<sql id="VoWhereCase">
+		<trim prefix="where" prefixOverrides="and">
+			<if test="searchKey != null">
+				AND u1.user_name like CONCAT('%',#{searchKey,jdbcType=VARCHAR},'%')
+			</if>
+		</trim>
+	</sql>
+
+	<!--页面用户列表查询-->
+	<select id="selectVoList" resultType="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysUserVo">
+		SELECT <include refid="BaseVoSelectColumn"/>
+		       <include refid="VoSelectSql"/>
+		       <include refid="VoWhereCase"/>
+	</select>
+
+    <!--根据id查找用户-->
+	<select id="selectVoById" resultType="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysUserVo">
+	    SELECT * FROM sys_user WHERE id = #{id}
+	</select>
+
+	<select id="selectUserList" resultType="HashMap">
+		SELECT u.id,u.user_name AS userName,u.`password`,u.user_state AS userState,u.create_time AS createTime,
+		u.user_desc AS userDesc,u.user_img AS userImg,u.dept_id AS deptId,d.`dept_name` AS deptName FROM `sys_user` u
+		LEFT JOIN `sys_dept` d ON d.`id` = u.`dept_id` WHERE 1=1
+		<if test="search != null">
+			AND u.user_name LIKE CONCAT('%',#{search,jdbcType=VARCHAR},'%')
+		</if>
+		ORDER BY u.`create_time` DESC
+	</select>
+	<select id="selectVoList1" resultType="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysUserVo">
+		select u1.id,u1.user_name,u1.real_name,u1.user_type,u1.user_desc,u1.status,u1.create_time,u2.user_name as 'create_name',d.dept_name from sys_user u1
+		left join sys_user u2 on u2.id = u1.create_user_id
+		left join sys_dept d on u1.dept_id = d.id
+		${ew.sqlSegment}
+	</select>
+<!--	<resultMap id="BaseResultMapVo" type="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysUserVo" extends="BaseResultMap">
+
+	</resultMap>
+	<sql id="baseColumnVoSql">
+		t.id,t.name,t.password,t.coumn3
+	</sql>
+	<sql id="whereCause">
+		<trim prefix="where" prefixOverrides="and">
+			<if test="id != null" >
+				and t.ID = #{id,jdbcType=VARCHAR}
+			</if>
+			<if test="ids != null">
+				and t.ID in
+				<foreach collection="ids" open="(" close=")" item="item" separator=",">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+
+			<if test="sysType != null" >
+				and t.SYS_TYPE = #{sysType,jdbcType=VARCHAR}
+			</if>
+			<if test="sysTypes != null">
+				and t.SYS_TYPE in
+				<foreach collection="ids" open="(" close=")" item="item" separator=",">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</if>
+			<if test="moduleName != null" >
+				and t.MODULE_NAME = #{moduleName,jdbcType=VARCHAR}
+			</if>
+			<if test="moduleNameDesc != null" >
+				and t.MODULE_NAME_DESC = #{moduleNameDesc,jdbcType=VARCHAR}
+			</if>
+			<if test="moduleSign != null" >
+				and t.MODULE_SIGN = #{moduleSign,jdbcType=VARCHAR}
+			</if>
+			<if test="moduleUrl != null" >
+				and t.MODULE_URL = #{moduleUrl,jdbcType=VARCHAR}
+			</if>
+			<if test="moduleOrder != null" >
+				and t.MODULE_ORDER = #{moduleOrder,jdbcType=DECIMAL}
+			</if>
+		</trim>
+	</sql>
+	<sql id="voSelectSql" >
+		from sys_user t
+		left join sys_role_user sru
+	</sql>
+	<sql id="selfOrderBy">
+
+	</sql>
+
+	<select id="selectVoList" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+		select <include refid="baseColumnVoSql"/>
+		<include refid="voSelectSql"/>
+		<include refid="whereCause"/>
+		<include refid="selfOrderBy"/>
+		<include refid="com.chinawiserv.dsp.dcs.dcm.mapper.common.ICommonMapper.pagination"/>
+	</select>
+
+	<select id="selectVoCount" parameterType="java.util.Map" resultType="int">
+		select count(1)
+		<include refid="voSelectSql"/>
+		<include refid="whereCause"/>
+	</select>-->
+
+
+</mapper>

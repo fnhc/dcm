@@ -1,7 +1,9 @@
-package ${package.Service};
+package ${package.Service}.${cfg.subModuleName};
 
-import ${package.Entity}.${entity};
+import ${package.Entity}.po.${cfg.subModuleName}.${entity};
+import ${package.Entity}.vo.${cfg.subModuleName}.${entity}Vo;
 import ${superServiceClassPackage};
+import com.chinawiserv.dsp.dcs.dcm.service.common.ICommonService;
 
 /**
  * <p>
@@ -11,6 +13,6 @@ import ${superServiceClassPackage};
  * @author ${author}
  * @since ${date}
  */
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${entity}Vo> {
 	
 }

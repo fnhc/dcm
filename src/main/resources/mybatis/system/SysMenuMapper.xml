@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chinawiserv.dsp.dcs.dcm.mapper.system.SysMenuMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysMenu">
+		<id column="id" property="id" />
+		<result column="menu_name" property="menuName" />
+		<result column="pid" property="pid" />
+		<result column="url" property="url" />
+		<result column="icon" property="icon" />
+		<result column="sort" property="sort" />
+		<result column="menu_type" property="menuType" />
+        <result column="code" property="code" />
+		<result column="resource_name" property="resourceName" />
+        <result column="status" property="status" />
+        <result column="create_user_id" property="createUserId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="update_time" property="updateTime" />
+        <result column="delete_flag" property="deleteFlag" />
+	</resultMap>
+
+    <resultMap id="BaseResultMapVo" type="com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysMenuVo" extends="BaseResultMap">
+
+</resultMap>
+	
+
+    <select id="select" parameterType="java.util.Map" resultMap="BaseResultMapVo">
+        <include refid="baseSelectSql"/>
+        <include refid="whereCause"/>
+        <include refid="selfOrderBy"/>
+    </select>
+
+    <sql id="baseSelectSql" >
+        select * from `sys_menu`
+    </sql>
+
+    <sql id="whereCause">
+        <trim prefix="where" prefixOverrides="and">
+            <if test="id != null" >
+                and id = #{id,jdbcType=VARCHAR}
+            </if>
+            <if test="ids != null" >
+                and id in
+                <foreach collection="ids" open="(" close=")" item="item" separator=",">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <if test="menuName != null" >
+                and menu_name LIKE CONCAT('%', #{menuName,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="pid != null" >
+                and pid = #{pid,jdbcType=VARCHAR}
+            </if>
+            <if test="url != null" >
+                and url = #{url,jdbcType=VARCHAR}
+            </if>
+            <if test="icon != null" >
+                and icon = #{icon,jdbcType=VARCHAR}
+            </if>
+            <if test="sort != null" >
+                and sort = #{sort,jdbcType=INTEGER}
+            </if>
+            <if test="menuType != null" >
+                and menu_type = #{menuType,jdbcType=INTEGER}
+            </if>
+            <if test="code != null" >
+                and code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null" >
+                and status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="createUserId != null" >
+                and create_user_id = #{createUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="createTimeStart != null">
+                and create_time &gt;= #{createTimeStart,jdbcType=TIMESTAMP}
+            </if>
+            <if test="createTimeEnd != null">
+                and create_time &lt;= #{createTimeEnd,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUserId != null" >
+                and update_user_id = #{updateUserId,jdbcType=VARCHAR}
+            </if>
+            <if test="updateTimeStart != null">
+                and update_time &gt;= #{updateTimeStart,jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateTimeEnd != null">
+                and update_time &lt;= #{updateTimeEnd,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="selfOrderBy">
+        order by code
+    </sql>
+
+    <select id="selectMenuById" parameterType="java.lang.String" resultMap="BaseResultMapVo">
+        select * from `sys_menu` where id = #{id,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectCatalogByMenuId" parameterType="java.lang.String" resultMap="BaseResultMapVo">
+        select * from `sys_menu` where id = (select pid from `sys_menu` where id=#{id,jdbcType=VARCHAR})
+    </select>
+
+    <select id="selectCatalogByFunctionId" parameterType="java.lang.String" resultMap="BaseResultMapVo">
+        select * from `sys_menu` where id = (select pid from `sys_menu` where id=(
+            select pid from `sys_menu` where id = #{id,jdbcType=VARCHAR}))
+    </select>
+
+    <select id="selectMenusByFunctionId" parameterType="java.lang.String" resultMap="BaseResultMapVo">
+        select * from `sys_menu` where pid = (select pid from `sys_menu` where id=(
+        select pid from `sys_menu` where id = #{id,jdbcType=VARCHAR}))
+    </select>
+
+    <select id="selectMenuIdsByuserId" parameterType="java.lang.String" resultType="java.lang.String">
+
+        SELECT DISTINCT(m.resource_name) FROM `sys_user_role` ur
+        INNER JOIN `sys_role` r ON r.`id` = ur.`role_id`
+        INNER JOIN  `sys_role_menu` rm ON rm.`role_id` = ur.`role_id`
+        INNER JOIN `sys_menu` m ON m.`id` = rm.`menu_id`
+        AND ur.`user_id` = #{uid}
+        AND r.`status` = 1
+        AND m.`resource_name` IS NOT NULL
+
+    </select>
+
+</mapper>

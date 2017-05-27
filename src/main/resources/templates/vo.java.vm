@@ -1,0 +1,14 @@
+package ${package.Entity}.vo.${cfg.subModuleName};
+
+import ${package.Entity}.po.${cfg.subModuleName}.${entity};
+
+/**
+ * <p>
+ * ${table.comment} Vo对象
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+public class ${entity}Vo extends ${entity}{
+}

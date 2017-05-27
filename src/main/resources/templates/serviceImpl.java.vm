@@ -1,10 +1,13 @@
-package ${package.ServiceImpl};
+package ${package.Service}.${cfg.subModuleName}.impl;
 
-import ${package.Entity}.${entity};
-import ${package.Mapper}.${table.mapperName};
-import ${package.Service}.${table.serviceName};
+import com.baomidou.mybatisplus.plugins.Page;
+import ${package.Entity}.po.${cfg.subModuleName}.${entity};
+import ${package.Entity}.vo.${cfg.subModuleName}.${entity}Vo;
+import ${package.Mapper}.${cfg.subModuleName}.${table.mapperName};
+import ${package.Service}.${cfg.subModuleName}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
+import java.util.Map;
 
 /**
  * <p>
@@ -15,6 +18,39 @@ import org.springframework.stereotype.Service;
  * @since ${date}
  */
 @Service
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
-	
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity} , ${entity}Vo> implements ${table.serviceName} {
+    @Override
+    public boolean insertVO(${entity}Vo vo) throws Exception {
+		//todo
+		return false;
+    }
+
+    @Override
+    public boolean updateVO(${entity}Vo vo) throws Exception {
+		//todo
+		return false;
+	}
+
+    @Override
+    public boolean deleteByQuery(Map<String, Object> paramMap) throws Exception {
+		//todo
+		return false;
+	}
+
+    @Override
+    public ${entity}Vo selectVoById(String id) throws Exception {
+		return null;
+	}
+
+    @Override
+    public Page<${entity}Vo> selectVoPage(Map<String, Object> paramMap) throws Exception {
+		//todo
+		return null;
+	}
+
+    @Override
+    public int selectVoCount(Map<String, Object> paramMap) throws Exception {
+		//todo
+		return 0;
+	}
 }

@@ -4,23 +4,49 @@ jQuery(document).ready(function () {
     "use strict";
     var paramsObj = {};
 
-    jQuery(tableSelector).bootstrapTable({
+    jQuery(tableSelector).customTable({
         url: '/system/dept/list',
-        pagination : true ,
-        sidePagination : 'server',
-        queryParamsType : '',
         queryParams: function (params) {
             return $.extend(params, paramsObj);
         },
         columns: [{
-            field: 'id',
-            title: 'guid',
+            checkbox: true,
             align: 'center',
             valign: 'middle',
             sortable: false
         }, {
             field: 'deptName',
-            title: '部门名称',
+            title: '组织机构名称',
+            align: 'center',
+            valign: 'middle',
+            sortable: false
+        }, {
+            field: 'deptAlias',
+            title: '组织机构简称',
+            align: 'center',
+            valign: 'middle',
+            sortable: false
+        }, {
+            field: 'deptCode',
+            title: '组织机构编码',
+            align: 'center',
+            valign: 'middle',
+            sortable: false
+        }, {
+            field: 'deptContactMan',
+            title: '联系人',
+            align: 'center',
+            valign: 'middle',
+            sortable: false
+        }, {
+            field: 'deptContactNum',
+            title: '联系电话',
+            align: 'center',
+            valign: 'middle',
+            sortable: false
+        }, {
+            field: 'deptAddress',
+            title: '地址',
             align: 'center',
             valign: 'middle',
             sortable: false
@@ -63,11 +89,24 @@ function reloadTable() {
 }
 
 function addDept() {
-    add('新增部门','/system/dept/add');
+    // add('新增组织机构','/system/dept/add');
+
+    layer.open({
+        type: 2,
+        shade: false,
+        area: '500px',
+        maxmin: true,
+        content: '/system/dept/add',
+        zIndex: layer.zIndex, //重点1
+        success: function(layero){
+            layer.setTop(layero); //重点2
+        }
+    });
 }
 
+
 function editDept(id) {
-    update('编辑部门','/system/dept/edit' , id );
+    update('编辑组织机构','/system/dept/edit' , id );
 }
 
 function deleteDept(id) {

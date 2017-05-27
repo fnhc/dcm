@@ -4,29 +4,20 @@ $(document).ready(function () {
     var tableSelector = '#systemLogTableId';
     var paramsObj = {};
 
-    $(tableSelector).bootstrapTable({
+    $(tableSelector).customTable({
         url: '/system/log/list',
-        pagination : true ,
-        sidePagination : 'server',
-        queryParamsType : '',
         queryParams: function (params) {
             return $.extend(params, paramsObj);
         },
         columns: [{
-            field: 'id',
-            title: 'guid',
+            field: 'operateDesc',
+            title: '操作描述',
             align: 'center',
             valign: 'middle',
             sortable: false
         }, {
-            field: 'title',
-            title: '日志操作',
-            align: 'center',
-            valign: 'middle',
-            sortable: false
-        }, {
-            field: 'userName',
-            title: '用户',
+            field: 'realName',
+            title: '操作人',
             align: 'center',
             valign: 'middle',
             sortable: false
@@ -37,8 +28,8 @@ $(document).ready(function () {
             valign: 'middle',
             sortable: false
         }, {
-            field: 'createTime',
-            title: '时间',
+            field: 'operateTime',
+            title: '操作时间',
             align: 'center',
             valign: 'middle',
             sortable: true
@@ -76,9 +67,9 @@ $(document).ready(function () {
 });
 
 function queryLogDetail(id) {
-    var url = '/system/log/params/'+ id ;
+    var url = '/system/log/params';
 
-    $.post(url, function(str){
+    $.post(url,{id : id}, function(str){
         layer.open({
             type: 1,
             title : '查看参数',

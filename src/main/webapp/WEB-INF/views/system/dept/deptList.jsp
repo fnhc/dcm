@@ -15,7 +15,7 @@
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 <h1>
-                    <small>系统管理 > 部门管理</small>
+                    <small>系统管理 > 组织机构管理</small>
                 </h1>
             </section>
             <!-- Main content -->
@@ -28,11 +28,11 @@
                                 <div class="box-header">
                                     <%--<#if permissions?seq_contains('addDept')>--%>
                                         <div class="input-group">
-                                            <a class="btn btn-primary  btn-flat" onclick="javascript:addDept()" > <i class="fa fa-plus"></i> 创建部门</a>
+                                            <a class="btn btn-primary  btn-flat" onclick="javascript:addDept()" > <i class="fa fa-plus"></i> 创建组织机构</a>
                                         </div>
                                     <%--</#if>--%>
                                     <div class="input-group">
-                                        <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="部门名称">
+                                        <input id="searchKeyId" type="text" name="search" class="form-control" placeholder="组织机构名称">
                                         <div class="input-group-btn">
                                             <button id="queryBtnId" type="button" class="btn btn-primary btn-flat" ><i class="fa fa-search"></i> 查询</button>
                                         </div>

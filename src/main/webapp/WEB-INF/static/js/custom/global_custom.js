@@ -13,6 +13,14 @@ function initGlobalCustom(tempUrlPrefix) {
      *              扩展表单验证
      * **************************************
      */
+    $.validator.config({
+        rules: {
+            simpleName: [/^[-\w\u4E00-\u9FA5]{2,32}$/,"请填写2-32位汉字、数字、字母、下划线、横线"],
+            simpleCode: [/^[-\w]{2,32}$/,"请填写2-32位数字、字母、下划线、横线"],
+            address: [/^(?=.*?[\u4E00-\u9FA5])[\dA-Za-z\u4E00-\u9FA5]+/,"请填写汉字、数字、字母、横杠，必须包含汉字且不能以横杠开头"]
+        }
+    });
+
     /**
      *  增加验证规则:my_email
      */
@@ -339,37 +347,37 @@ function initGlobalCustom(tempUrlPrefix) {
         //     $("#overlay").remove();
         //     $("#pageloading").remove();
         // },
-        // commonAjax: function (options, pageloading, isLoadMsg) {
-        //     var pgloading = pageloading == false || typeof pageloading == 'object' ? pageloading : true;
-        //     var loadmsg = isLoadMsg == false ? isLoadMsg : true;
-        //     var op = {
-        //         type: "POST",
-        //         url: "",
-        //         async: true,
-        //         data: {},
-        //         dataType: "json",
-        //         beforeSend: function () {
-        //             if (pgloading) {
-        //                 if (typeof pageloading == 'object') $.showPageloading(pgloading.container, pgloading.loadingLeft, pgloading.loadingTop, pgloading.overlayLeft, pgloading.overlayTop);
-        //                 else $.showPageloading();
-        //             }
-        //         },
-        //         success: function (json) {
-        //             $.checkSessionInvalid(json);
-        //         },
-        //         error: $.ajaxError,
-        //         complete: function () {
-        //             if (pgloading) $.hidePageloading();
-        //             if (loadmsg) $.MessagePusher.loadMsgToShow();
-        //         }
-        //     };
-        //     if (options && typeof options == 'object') {
-        //         for (var key in options) {
-        //             op[key] = options[key];
-        //         }
-        //     }
-        //     $.ajax(op);
-        // },
+        commonAjax: function (options, pageloading, isLoadMsg) {
+            var pgloading = pageloading == false || typeof pageloading == 'object' ? pageloading : true;
+            var loadmsg = isLoadMsg == false ? isLoadMsg : true;
+            var op = {
+                type: "POST",
+                url: "",
+                async: true,
+                data: {},
+                dataType: "json",
+                beforeSend: function () {
+                    // if (pgloading) {
+                    //     if (typeof pageloading == 'object') $.showPageloading(pgloading.container, pgloading.loadingLeft, pgloading.loadingTop, pgloading.overlayLeft, pgloading.overlayTop);
+                    //     else $.showPageloading();
+                    // }
+                },
+                success: function (json) {
+                    $.checkSessionInvalid(json);
+                },
+                error: $.ajaxError,
+                complete: function () {
+                    // if (pgloading) $.hidePageloading();
+                    // if (loadmsg) $.MessagePusher.loadMsgToShow();
+                }
+            };
+            if (options && typeof options == 'object') {
+                for (var key in options) {
+                    op[key] = options[key];
+                }
+            }
+            $.ajax(op);
+        },
         // postRequest: function (url, parms) {
         //     var form = $("<form>");//定义一个form表单
         //     form.attr("style", "display:none");
@@ -471,37 +479,39 @@ function initGlobalCustom(tempUrlPrefix) {
         //         });
         //     }
         // },
-        // ajaxError: function (XMLHttpRequest, textStatus, errorThrown) {
-        //     $.hidePageloading();
-        //     var msg = textStatus + ": " + (errorThrown ? errorThrown : "系统错误，请重试！");
-        //     $.MessagePusher.msgs.push({type: 'error', message: msg});
-        //     $.MessagePusher.showMsgs();
-        // },
-        // checkSessionInvalid: function (json, callback) {
-        //     if (json && json['session_invalid']) {
-        //         var defualt_callback;
-        //         if(callback && typeof callback == 'function') defualt_callback = callback;
-        //         else {
-        //             defualt_callback = function () {
-        //                 var actionMsg = json["actionMsg"] ? json["actionMsg"] : "";
-        //                 var inModal = json["inModal"] ? json["inModal"] : "";
-        //                 $.postRequest(urlPrefix + "/manage/index.action", {actionMsg: actionMsg, inModal: inModal});
-        //             };
-        //         }
-        //         $.post(urlPrefix + "/login/logout_ajax.action", defualt_callback);
-        //     }else if(json && json['home_session_invalid']){
-        //         var home_callback;
-        //         if(callback && typeof callback == 'function') home_callback = callback;
-        //         else {
-        //             home_callback = function () {
-        //                 var inModal = json["inModal"] ? json["inModal"] : "";
-        //                 $.postRequest(urlPrefix + "/home.action", {inModal: inModal});
-        //             };
-        //         }
-        //         $.post(urlPrefix + "/home.action",home_callback);
-        //     }
-        //     return json['session_invalid'] == true;
-        // },
+        ajaxError: function (XMLHttpRequest, textStatus, errorThrown) {
+            var msg = textStatus + ": " + (errorThrown ? errorThrown : "系统错误，请重试！");
+            tip(msg);
+        },
+        checkSessionInvalid: function (json, callback) {
+            //todo
+            return false ;
+
+            if (json && json['session_invalid']) {
+                var defualt_callback;
+                if(callback && typeof callback == 'function') defualt_callback = callback;
+                else {
+                    defualt_callback = function () {
+                        var actionMsg = json["actionMsg"] ? json["actionMsg"] : "";
+                        var inModal = json["inModal"] ? json["inModal"] : "";
+                        $.postRequest(urlPrefix + "/manage/index.action", {actionMsg: actionMsg, inModal: inModal});
+                    };
+                }
+                $.post(urlPrefix + "/login/logout_ajax.action", defualt_callback);
+            }else if(json && json['home_session_invalid']){
+                var home_callback;
+                if(callback && typeof callback == 'function') home_callback = callback;
+                else {
+                    home_callback = function () {
+                        var inModal = json["inModal"] ? json["inModal"] : "";
+                        $.postRequest(urlPrefix + "/home.action", {inModal: inModal});
+                    };
+                }
+                $.post(urlPrefix + "/home.action",home_callback);
+            }
+
+            return json['session_invalid'] == true;
+        }
         // download: function (data) {
         //     $.commonAjax({
         //         url: urlPrefix + '/downloadCheck.action',
@@ -1328,6 +1338,7 @@ function initGlobalCustom(tempUrlPrefix) {
         customTable: function (options) {
             var options = $.extend({
                 sidePagination: 'server',
+                queryParamsType : '',
                 method: 'post',
                 url: '',
                 dataType: "json",
@@ -1345,23 +1356,23 @@ function initGlobalCustom(tempUrlPrefix) {
                 showToggle: false,
                 showPaginationSwitch: false,
                 search: false,
-                smartDisplay: true,
-                showColumns: true,
-                showRefresh: true,
-                mobileResponsive: true,
+                // smartDisplay: true,
+                // showColumns: true,
+                // showRefresh: true,
+                // mobileResponsive: true,
                 minWidth: 992,
                 minimumCountColumns: 1,
-                clickToSelect: true,
-                columns: [],
-                responseHandler: function (json) {
+                // clickToSelect: true,
+                columns: []
+                /*responseHandler: function (json) {
                     $.MessagePusher.loadMsgToShow();
                     if (!$.checkSessionInvalid(json)) {
-                        if (json && json.status) {
+                        if (json && json.state) {
                             return json;
                         }
                     }
                     return {rows: [], total: 0};
-                }
+                }*/
             }, options);
 
             if (options.height <= 0) {
@@ -1377,12 +1388,12 @@ function initGlobalCustom(tempUrlPrefix) {
                     $(this).find("tr").each(function (i, item) {
                         height += $(item).height();
                     });
-                    var minHeight = options.minHeight ? options.minHeight : (document.body.clientHeight - ($(".breadcrumb").length ? ($(".breadcrumb").height() + 25) : 0) - ($(".searchBar").length ? $(".searchBar").height() : 0) - ($("#title").length ? ($("#title").height() + 10) : 0) - ($("nav").length ? $("nav").height() : 0) - ($(".fixed-table-toolbar").length ? $(".fixed-table-toolbar").height() : 0) - 160);
+                    var minHeight = (document.body.clientHeight - ($(".breadcrumb").length ? ($(".breadcrumb").height() + 25) : 0) - ($(".searchBar").length ? $(".searchBar").height() : 0) - ($("#title").length ? ($("#title").height() + 10) : 0) - ($("nav").length ? $("nav").height() : 0) - ($(".fixed-table-toolbar").length ? $(".fixed-table-toolbar").height() : 0) - 160);
+                    var minHeight = options.minHeight ? options.minHeight : (document.body.clientHeight - ($(".breadcrumb").length ? ($(".breadcrumb").height() + 25) : 0) - ($(".box-header").length ? ($(".box-header").height()+20) : 0) - ($(".content-header").length ? ($(".content-header").height() + 10) : 0) - ($("nav").length ? $("nav").height() : 0) - ($(".fixed-table-toolbar").length ? $(".fixed-table-toolbar").height() : 0) - 180);
                     if (height >= minHeight) {
                         $(this).parent().css({"overflow-y": "hidden", height: 'auto'});
-                        $(this).parent().parent().css("margin-bottom",  "87px");
-                    }
-                    else {
+                        //$(this).parent().parent().css("margin-bottom",  "87px");
+                    }else {
                         $(this).parent().css({"overflow-y": "auto", height: minHeight});
                     }
                     $(this).parent().parent().css("padding-bottom", "0");
@@ -1390,8 +1401,8 @@ function initGlobalCustom(tempUrlPrefix) {
             });
         },
         customDateRangePicker: function (options, format, nowDate, callback) {
-            // format = format ? format : "YYYY-MM-DD HH:mm:ss";
-            format = format ? format : "YYYY-MM-DD";
+            format = format ? format : "YYYY-MM-DD HH:mm:ss";
+            // format = format ? format : "YYYY-MM-DD";
             options = options && typeof options == 'object' ? options : {};
             var date = nowDate ? nowDate : new Date();
             options = $.extend({
@@ -1580,258 +1591,300 @@ function initGlobalCustom(tempUrlPrefix) {
         //     selector.selectpicker("val", initVal);
         //     selector.data('dropdownDataRenderer', dropdownDataRenderer);
         // },
-        // customDropdownTree: function (options) {
-        //     var target = $(this);
-        //     var opt = {
-        //         dropdownWidth: null,//下拉宽度,默认与输入框宽度一样
-        //         dropdownHeight: 200,//下拉高度
-        //         multi: true,//是否多选
-        //         treeDatas: [],//本地data
-        //         url: '',//远程访问数据的url
-        //         async: true, //异步或同步方式访问url数据,默认：true 异步
-        //         initVal: '',//初始化值
-        //         split: ',',//勾选值的分隔符号
-        //         filter: {},//过滤数据
-        //         exclude:{},//过滤不需要的数据
-        //         notSaveIds:[],//不需要保存的数据id
-        //         canCheckParent: true,//是否可以选择父节点
-        //         isSaveParentVal: true,//是否保存父节点值（当canCheckParent=true时生效）
-        //         isEffertParents: false,//勾选/取消节点时是否影响父节点的勾选状态
-        //         isEffertChildren: false,//勾选/取消节点时是否影响子节点的勾选状态
-        //         onCheck: function(e, treeId, treeNode){}//勾选时回调函数
-        //     }
-        //     if (options && typeof options == 'object') $.extend(opt, options);
-        //     if(!opt.dropdownWidth) {
-        //         opt.dropdownWidth = target.width();
-        //     }
-        //     var valueHiddenId = target.attr("id") ? (target.attr("id") + "_hidden") : new Date().getTime();
-        //     var dropdownId = target.attr("id") ? (target.attr("id") + "_dropdown") : new Date().getTime();
-        //     var treeId = target.attr("id") ? (target.attr("id") + "_tree") : new Date().getTime();
-        //     opt.valueHiddenId = valueHiddenId;
-        //     opt.dropdownId = dropdownId;
-        //     opt.treeId = treeId;
-        //     target.attr("placeholder", target.attr("disabled") ? "" : "请选择");
-        //     target.attr("autocomplete", false);
-        //     target.attr("readonly", true);
-        //     target.after('<input type="hidden" id="' + opt.valueHiddenId + '"/>');
-        //     target.after('<div id="' + opt.dropdownId + '"> <ul id="' + opt.treeId + '" class="ztree"></ul> </div>');
-        //     $("#" + opt.dropdownId).css({
-        //         overflow: "auto",
-        //         display: "none",
-        //         position: "absolute",
-        //         "z-index": 9999,
-        //         width: opt.dropdownWidth,
-        //         height: opt.dropdownHeight,
-        //         left: target.position().left,
-        //         "background-color": "honeydew",
-        //         "border-radius": "2px"
-        //     });
-        //     target.renderCustomDropdownTree(opt);
-        //     target.click(function(){target._showMenu(opt);});
-        //     $(window).bind("load resize", function () {
-        //         if(target.is(':visible')) target._hideMenu(opt);
-        //     });
-        // },
-        // renderCustomDropdownTree: function(newOpt){
-        //         var target = $(this);
-        //         var opt = newOpt;
-        //         if(target.data("opt")) opt = newOpt ? $.extend(true, target.data("opt"), newOpt) : target.data("opt");
-        //         var zTree = opt.treeId ? $.fn.zTree.getZTreeObj(opt.treeId) : null;
-        //         if(zTree) zTree.destroy();
-        //         if(newOpt.url){
-        //             $.commonAjax({
-        //                 url: newOpt.url,
-        //                 async: opt.async,
-        //                 data: newOpt.param ? newOpt.param : {},
-        //                 success: function (json) {
-        //                     if (!$.checkSessionInvalid(json)) {
-        //                         if (json.status) {
-        //                             opt.treeDatas = json.rows;
-        //                             target._initCustomDropdownTree(opt);
-        //                         }
-        //                     }
-        //                 }
-        //             });
-        //         }else target._initCustomDropdownTree(opt);
-        // },
-        // _initCustomDropdownTree: function(opt){
-        //     var target = $(this);
-        //     target._initChecked(opt);
-        //     var effertNodes = "";
-        //     if(opt.isEffertParents) effertNodes += "p";
-        //     if(opt.isEffertChildren) effertNodes += "s";
-        //     var setting = {
-        //         check: {
-        //             enable: true,
-        //             chkStyle: opt.multi ? "checkbox" : "radio",
-        //             chkboxType: { "Y": effertNodes, "N":  effertNodes},
-        //             radioType: 'all'
-        //         },
-        //         view: {
-        //             dblClickExpand: false
-        //         },
-        //         data: {
-        //             simpleData: {
-        //                 enable: true
-        //             }
-        //         },
-        //         callback: {
-        //             beforeClick: function (treeId, treeNode) {
-        //                 var zTree = $.fn.zTree.getZTreeObj(opt.treeId);
-        //                 zTree.checkNode(treeNode, !treeNode.checked, true, true);
-        //                 return false;
-        //             },
-        //             onCheck: function (e, treeId, treeNode) {
-        //                 target._setValue(opt.notSaveIds);
-        //                 if(opt.onCheck && typeof opt.onCheck == 'function') opt.onCheck(e, treeId, treeNode);
-        //             }
-        //         }
-        //     };
-        //     var filteredTreeDatas = target._filterTreeDatas(opt.treeDatas, opt.filter, opt.exclude);
-        //     $.fn.zTree.init($("#"+opt.treeId), setting, filteredTreeDatas);
-        //     target.data("opt", opt);
-        //     target._setValue(opt.notSaveIds);
-        //     target.attr("title", target.val());
-        // },
-        // _filterTreeDatas: function(treeDatas, filter, exclude){
-        //     var target = $(this);
-        //     var filteredTreeDatas = [];
-        //     if(!filter || typeof filter != 'object') filter = {};
-        //     if(!exclude || typeof exclude != 'object') exclude = {};
-        //     if(treeDatas && $.isArray(treeDatas)) {
-        //         for (var i in treeDatas) {
-        //             var flag = true;
-        //             for (var k in filter) {
-        //                 if (!treeDatas[i]["data"] || treeDatas[i]["data"][k] != filter[k]) {
-        //                     flag = false;
-        //                     break;
-        //                 }
-        //             }
-        //             if (flag) {
-        //                 var children = treeDatas[i]["children"];
-        //                 if (children && $.isArray(children) && children.length > 0) {
-        //                     treeDatas[i]["children"] = target._filterTreeDatas(children, filter);
-        //                 }
-        //                 if(exclude.length>0){
-        //                     for (var k in exclude) {
-        //                         if (treeDatas[i]["data"][k] != exclude[k]) {
-        //                             filteredTreeDatas.push(treeDatas[i]);
-        //                             break;
-        //                         }
-        //                     }
-        //                 }else{
-        //                     filteredTreeDatas.push(treeDatas[i]);
-        //                 }
-        //
-        //             }
-        //         }
-        //     }
-        //     return filteredTreeDatas;
-        // },
-        // _initChecked: function (opt) {
-        //     var treeDatas = opt.treeDatas;
-        //     var initDatas = opt.initVal;
-        //     var isMulti = opt.multi;
-        //     var split = opt.split;
-        //     var canCheckParent = (opt.canCheckParent == true ||  opt.canCheckParent == false) ? opt.canCheckParent : isMulti;
-        //     var target = $(this);
-        //     var checkedCount = 0;
-        //     if (!initDatas) initDatas = [];
-        //     if (typeof initDatas == 'string') initDatas = $.strsToArray(initDatas, split);
-        //     if (treeDatas && $.isArray(treeDatas)) {
-        //         for (var i in treeDatas) {
-        //             var children = treeDatas[i]["children"];
-        //             if (children && $.isArray(children) && children.length > 0) {
-        //                 var opt1 = $.my_clone(opt);
-        //                 opt1.treeDatas = children;
-        //                 var childrenCheckedCount = target._initChecked(opt1);
-        //                 if (!canCheckParent) treeDatas[i]["nocheck"] = true;
-        //                 else{
-        //                     if ($.isArray(initDatas) && initDatas.indexOf(treeDatas[i]["id"]) >= 0) {
-        //                         treeDatas[i]["checked"] = true;
-        //                         isMulti ? checkedCount++ : checkedCount = 1;
-        //                     }
-        //                     if (childrenCheckedCount > 0) {
-        //                         if(opt.isEffertParents && !treeDatas[i]["checked"] && childrenCheckedCount == children.length) {
-        //                             treeDatas[i]["checked"] = true;
-        //                             checkedCount++;
-        //                         }
-        //                     }
-        //                 }
-        //             } else {
-        //                 if ($.isArray(initDatas) && initDatas.indexOf(treeDatas[i]["id"]) >= 0) {
-        //                     treeDatas[i]["checked"] = true;
-        //                     isMulti ? checkedCount++ : checkedCount = 1;
-        //                 }
-        //             }
-        //
-        //         }
-        //     }
-        //     return checkedCount;
-        // },
-        // getCustomDropdownTreeValue: function(){
-        //     var target = $(this);
-        //     var opt = target.data("opt");
-        //     return opt ? $("#"+opt.valueHiddenId).val() : "";
-        // },
-        // setCustomDropdownTreeValue: function(values){
-        //     var target = $(this);
-        //     var opt = target.data("opt");
-        //     if(opt) {
-        //         if (values == null || values == undefined) values = [];
-        //         if (!$.isArray(values)) values = values.split(opt.split);
-        //         var zTree = $.fn.zTree.getZTreeObj(opt.treeId);
-        //         var nodes = zTree.transformToArray(zTree.getNodes());
-        //         for (var i in nodes) {
-        //             zTree.checkNode(nodes[i], values.indexOf(nodes[i].id) > -1, true, true);
-        //         }
-        //     }
-        // },
-        // _setValue: function(notSaveIds){
-        //     var target = $(this);
-        //     var opt = target.data("opt");
-        //     var zTree = $.fn.zTree.getZTreeObj(opt.treeId),
-        //         nodes = zTree.getCheckedNodes(true),
-        //         v = "";
-        //     var names = "";
-        //     for (var i = 0, l = nodes.length; i < l; i++) {
-        //         var notNeedSave = false;
-        //         if(notSaveIds && typeof notSaveIds == 'object'){
-        //             for(var k= 0,kk=notSaveIds.length;k<kk;k++){
-        //                 if(nodes[i].id == notSaveIds[k]){
-        //                     notNeedSave = true;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         if ((!opt.isSaveParentVal && !nodes[i].isParent && !notNeedSave) || (opt.isSaveParentVal && !notNeedSave)) {
-        //             v += nodes[i].id + ",";
-        //             names += nodes[i].name + ",";
-        //         }
-        //     }
-        //     if (v.length > 0) v = v.substring(0, v.length - 1);
-        //     if (names.length > 0) names = names.substring(0, names.length - 1);
-        //     $("#"+opt.valueHiddenId).val(v);
-        //     target.val(names);
-        //     target.attr("title", target.val());
-        // },
-        // _showMenu: function (opt) {
-        //     var target = $(this);
-        //     $("#"+opt.dropdownId).css({width: target.outerWidth(), left: target.position().left});
-        //     $("#"+opt.dropdownId).slideDown("fast");
-        //     $("body").bind("mousedown", function(e){target._onBodyDown(e, opt)});
-        // },
-        // _hideMenu: function (opt) {
-        //     var target = $(this);
-        //     $("#"+opt.dropdownId).fadeOut("fast");
-        //     $("body").unbind("mousedown", function(e){target._onBodyDown(e, opt);});
-        // },
-        // _onBodyDown: function (event, opt) {
-        //     if (!(event.target.id == $(this).attr("id")
-        //         || event.target.id == opt.dropdownId || $(event.target).parents("#"+opt.dropdownId).length > 0)) {
-        //         $(this)._hideMenu(opt);
-        //     }
-        // }
+
+        //自定义向导组件
+        customSmartWizard: function (options) {
+
+            var options = $.extend({
+                selected: 0,
+                theme: 'dots',
+                transitionEffect:'fade',
+                showStepURLhash: true,
+                toolbarSettings: {toolbarPosition : 'none' }
+            } , options);
+
+            // Step show event
+            $(this).on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
+                //alert("You are on step "+stepNumber+" now");
+
+                //todo
+                var submitBtn = parent.$(".layui-layer-btn2");
+                submitBtn.hide();
+
+                if(stepPosition === 'first'){
+                    var prevBtn = parent.$(".layui-layer-btn0");
+                    prevBtn.hide();
+                }else if(stepPosition === 'final'){
+                    var nextBtn = parent.$(".layui-layer-btn1");
+                    nextBtn.hide();
+
+                    var submitBtn = parent.$(".layui-layer-btn2");
+                    submitBtn.show();
+                }else{
+                    var prevBtn = parent.$(".layui-layer-btn0");
+                    prevBtn.show();
+
+                    var nextBtn = parent.$(".layui-layer-btn1");
+                    nextBtn.show();
+                }
+
+            });
+
+            $(this).smartWizard(options);
+        },
+
+        customDropdownTree: function (options) {
+            var target = $(this);
+            var opt = {
+                dropdownWidth: null,//下拉宽度,默认与输入框宽度一样
+                dropdownHeight: 200,//下拉高度
+                multi: true,//是否多选
+                treeDatas: [],//本地data
+                url: '',//远程访问数据的url
+                async: true, //异步或同步方式访问url数据,默认：true 异步
+                initVal: '',//初始化值
+                split: ',',//勾选值的分隔符号
+                filter: {},//过滤数据
+                exclude:{},//过滤不需要的数据
+                notSaveIds:[],//不需要保存的数据id
+                canCheckParent: true,//是否可以选择父节点
+                isSaveParentVal: true,//是否保存父节点值（当canCheckParent=true时生效）
+                isEffertParents: false,//勾选/取消节点时是否影响父节点的勾选状态
+                isEffertChildren: false,//勾选/取消节点时是否影响子节点的勾选状态
+                onCheck: function(e, treeId, treeNode){}//勾选时回调函数
+            }
+            if (options && typeof options == 'object') $.extend(opt, options);
+            if(!opt.dropdownWidth) {
+                opt.dropdownWidth = target.width();
+            }
+            var valueHiddenId = target.attr("id") ? (target.attr("id") + "_hidden") : new Date().getTime();
+            var dropdownId = target.attr("id") ? (target.attr("id") + "_dropdown") : new Date().getTime();
+            var treeId = target.attr("id") ? (target.attr("id") + "_tree") : new Date().getTime();
+            opt.valueHiddenId = valueHiddenId;
+            opt.dropdownId = dropdownId;
+            opt.treeId = treeId;
+            target.attr("placeholder", target.attr("disabled") ? "" : "请选择");
+            target.attr("autocomplete", false);
+            target.attr("readonly", true);
+            target.after('<input type="hidden" id="' + opt.valueHiddenId + '"/>');
+            target.after('<div id="' + opt.dropdownId + '"> <ul id="' + opt.treeId + '" class="ztree"></ul> </div>');
+            $("#" + opt.dropdownId).css({
+                overflow: "auto",
+                display: "none",
+                position: "absolute",
+                "z-index": 9999,
+                width: opt.dropdownWidth,
+                height: opt.dropdownHeight,
+                left: target.position().left,
+                "background-color": "honeydew",
+                "border-radius": "2px"
+            });
+            target.renderCustomDropdownTree(opt);
+            target.click(function(){target._showMenu(opt);});
+            $(window).bind("load resize", function () {
+                if(target.is(':visible')) target._hideMenu(opt);
+            });
+        },
+        renderCustomDropdownTree: function(newOpt){
+                var target = $(this);
+                var opt = newOpt;
+                if(target.data("opt")) opt = newOpt ? $.extend(true, target.data("opt"), newOpt) : target.data("opt");
+                var zTree = opt.treeId ? $.fn.zTree.getZTreeObj(opt.treeId) : null;
+                if(zTree) zTree.destroy();
+                if(newOpt.url){
+                    $.commonAjax({
+                        url: newOpt.url,
+                        async: opt.async,
+                        data: newOpt.param ? newOpt.param : {},
+                        success: function (json) {
+                            if (!$.checkSessionInvalid(json)) {
+                                if (json.state) {
+                                    opt.treeDatas = json.rows;
+                                    target._initCustomDropdownTree(opt);
+                                }
+                            }
+                        }
+                    });
+                }else target._initCustomDropdownTree(opt);
+        },
+        _initCustomDropdownTree: function(opt){
+            var target = $(this);
+            target._initChecked(opt);
+            var effertNodes = "";
+            if(opt.isEffertParents) effertNodes += "p";
+            if(opt.isEffertChildren) effertNodes += "s";
+            var setting = {
+                check: {
+                    enable: true,
+                    chkStyle: opt.multi ? "checkbox" : "radio",
+                    chkboxType: { "Y": effertNodes, "N":  effertNodes},
+                    radioType: 'all'
+                },
+                view: {
+                    dblClickExpand: false
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
+                },
+                callback: {
+                    beforeClick: function (treeId, treeNode) {
+                        var zTree = $.fn.zTree.getZTreeObj(opt.treeId);
+                        zTree.checkNode(treeNode, !treeNode.checked, true, true);
+                        return false;
+                    },
+                    onCheck: function (e, treeId, treeNode) {
+                        target._setValue(opt.notSaveIds);
+                        if(opt.onCheck && typeof opt.onCheck == 'function') opt.onCheck(e, treeId, treeNode);
+                    }
+                }
+            };
+            var filteredTreeDatas = target._filterTreeDatas(opt.treeDatas, opt.filter, opt.exclude);
+            $.fn.zTree.init($("#"+opt.treeId), setting, filteredTreeDatas);
+            target.data("opt", opt);
+            target._setValue(opt.notSaveIds);
+            target.attr("title", target.val());
+        },
+        _filterTreeDatas: function(treeDatas, filter, exclude){
+            var target = $(this);
+            var filteredTreeDatas = [];
+            if(!filter || typeof filter != 'object') filter = {};
+            if(!exclude || typeof exclude != 'object') exclude = {};
+            if(treeDatas && $.isArray(treeDatas)) {
+                for (var i in treeDatas) {
+                    var flag = true;
+                    for (var k in filter) {
+                        if (!treeDatas[i]["data"] || treeDatas[i]["data"][k] != filter[k]) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag) {
+                        var children = treeDatas[i]["children"];
+                        if (children && $.isArray(children) && children.length > 0) {
+                            treeDatas[i]["children"] = target._filterTreeDatas(children, filter);
+                        }
+                        if(exclude.length>0){
+                            for (var k in exclude) {
+                                if (treeDatas[i]["data"][k] != exclude[k]) {
+                                    filteredTreeDatas.push(treeDatas[i]);
+                                    break;
+                                }
+                            }
+                        }else{
+                            filteredTreeDatas.push(treeDatas[i]);
+                        }
+
+                    }
+                }
+            }
+            return filteredTreeDatas;
+        },
+        _initChecked: function (opt) {
+            var treeDatas = opt.treeDatas;
+            var initDatas = opt.initVal;
+            var isMulti = opt.multi;
+            var split = opt.split;
+            var canCheckParent = (opt.canCheckParent == true ||  opt.canCheckParent == false) ? opt.canCheckParent : isMulti;
+            var target = $(this);
+            var checkedCount = 0;
+            if (!initDatas) initDatas = [];
+            if (typeof initDatas == 'string') initDatas = $.strsToArray(initDatas, split);
+            if (treeDatas && $.isArray(treeDatas)) {
+                for (var i in treeDatas) {
+                    var children = treeDatas[i]["children"];
+                    if (children && $.isArray(children) && children.length > 0) {
+                        var opt1 = $.my_clone(opt);
+                        opt1.treeDatas = children;
+                        var childrenCheckedCount = target._initChecked(opt1);
+                        if (!canCheckParent) treeDatas[i]["nocheck"] = true;
+                        else{
+                            if ($.isArray(initDatas) && initDatas.indexOf(treeDatas[i]["id"]) >= 0) {
+                                treeDatas[i]["checked"] = true;
+                                isMulti ? checkedCount++ : checkedCount = 1;
+                            }
+                            if (childrenCheckedCount > 0) {
+                                if(opt.isEffertParents && !treeDatas[i]["checked"] && childrenCheckedCount == children.length) {
+                                    treeDatas[i]["checked"] = true;
+                                    checkedCount++;
+                                }
+                            }
+                        }
+                    } else {
+                        if ($.isArray(initDatas) && initDatas.indexOf(treeDatas[i]["id"]) >= 0) {
+                            treeDatas[i]["checked"] = true;
+                            isMulti ? checkedCount++ : checkedCount = 1;
+                        }
+                    }
+
+                }
+            }
+            return checkedCount;
+        },
+        getCustomDropdownTreeValue: function(){
+            var target = $(this);
+            var opt = target.data("opt");
+            return opt ? $("#"+opt.valueHiddenId).val() : "";
+        },
+        setCustomDropdownTreeValue: function(values){
+            var target = $(this);
+            var opt = target.data("opt");
+            if(opt) {
+                if (values == null || values == undefined) values = [];
+                if (!$.isArray(values)) values = values.split(opt.split);
+                var zTree = $.fn.zTree.getZTreeObj(opt.treeId);
+                var nodes = zTree.transformToArray(zTree.getNodes());
+                for (var i in nodes) {
+                    zTree.checkNode(nodes[i], values.indexOf(nodes[i].id) > -1, true, true);
+                }
+            }
+        },
+        _setValue: function(notSaveIds){
+            var target = $(this);
+            var opt = target.data("opt");
+            var zTree = $.fn.zTree.getZTreeObj(opt.treeId),
+                nodes = zTree.getCheckedNodes(true),
+                v = "";
+            var names = "";
+            for (var i = 0, l = nodes.length; i < l; i++) {
+                var notNeedSave = false;
+                if(notSaveIds && typeof notSaveIds == 'object'){
+                    for(var k= 0,kk=notSaveIds.length;k<kk;k++){
+                        if(nodes[i].id == notSaveIds[k]){
+                            notNeedSave = true;
+                            break;
+                        }
+                    }
+                }
+                if ((!opt.isSaveParentVal && !nodes[i].isParent && !notNeedSave) || (opt.isSaveParentVal && !notNeedSave)) {
+                    v += nodes[i].id + ",";
+                    names += nodes[i].name + ",";
+                }
+            }
+            if (v.length > 0) v = v.substring(0, v.length - 1);
+            if (names.length > 0) names = names.substring(0, names.length - 1);
+            $("#"+opt.valueHiddenId).val(v);
+            target.val(names);
+            target.attr("title", target.val());
+        },
+        _showMenu: function (opt) {
+            var target = $(this);
+            $("#"+opt.dropdownId).css({width: target.outerWidth(), left: target.position().left});
+            $("#"+opt.dropdownId).slideDown("fast");
+            $("body").bind("mousedown", function(e){target._onBodyDown(e, opt)});
+        },
+        _hideMenu: function (opt) {
+            var target = $(this);
+            $("#"+opt.dropdownId).fadeOut("fast");
+            $("body").unbind("mousedown", function(e){target._onBodyDown(e, opt);});
+        },
+        _onBodyDown: function (event, opt) {
+            if (!(event.target.id == $(this).attr("id")
+                || event.target.id == opt.dropdownId || $(event.target).parents("#"+opt.dropdownId).length > 0)) {
+                $(this)._hideMenu(opt);
+            }
+        }
     });
 }
 
@@ -1868,6 +1921,6 @@ $(function(){
         invalidClass: 'has-error',
         bindClassTo: '.form-group',
         formClass: 'n-default n-bootstrap',
-        msgClass: 'n-right'
+        msgClass: 'n-bottom'
     });
 });

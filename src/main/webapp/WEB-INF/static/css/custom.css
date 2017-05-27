@@ -11,6 +11,11 @@ body {
     font-family: '微软雅黑' !important;
 }
 
+/*处理表单输入框提示信息位置不对的问题*/
+form .form-group label {
+    display: block;
+}
+
 /*一键去除所有圆角效果*/
 /** {*/
     /*-webkit-border-radius: 0 !important;*/

@@ -3,9 +3,9 @@ package com.chinawiserv.dsp.dcs.dcm.common.aspect;
 import com.alibaba.fastjson.JSON;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
 import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysLog;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysLogService;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysLog;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysUser;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -52,12 +52,12 @@ public class LogAdvice {
 		SysUser loginUser = ShiroUtils.getLoginUser();
 		if(log != null){
 			SysLog sysLog  =new SysLog();
-			sysLog.setCreateTime(new Date());
-			sysLog.setTitle(log.value());
-			sysLog.setUserId((loginUser != null )? loginUser.getId() : "systemUserId");
-			sysLog.setUserName((loginUser != null )? loginUser.getUserName() : "system");
-			sysLog.setUrl(request.getRequestURI().toString());
-			sysLog.setParams(JSON.toJSONString(request.getParameterMap()));
+			sysLog.setOperator((loginUser != null )? loginUser.getId() : "systemUserId");
+			sysLog.setOperateTime(new Date());
+			//todo
+			sysLog.setOperateType("1");
+			sysLog.setOperateDesc(log.value());
+			sysLog.setOperateDetail(JSON.toJSONString(request.getParameterMap()));
 			sysLogService.insert(sysLog);
 			logger.debug("记录日志:"+sysLog.toString());
 		}

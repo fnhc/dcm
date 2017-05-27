@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.chinawiserv.dsp.dcs.dcm.common.SystemConst;
 import com.chinawiserv.dsp.dcs.dcm.common.util.CommonUtil;
 import com.chinawiserv.dsp.dcs.dcm.common.util.ShiroUtils;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysSetting;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
-import com.chinawiserv.dsp.dcs.dcm.entity.vo.TreeMenu;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysLogService;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysSettingService;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysUserService;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysSetting;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysUser;
+import com.chinawiserv.dsp.dcs.dcm.entity.vo.system.TreeMenu;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysLogService;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysMenuService;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysSettingService;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysUserService;
 import com.google.code.kaptcha.servlet.KaptchaExtend;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -156,43 +156,51 @@ public class LoginController extends BaseController {
      */
     private void loginSuccess(Map<String, Object> paramMap) {
         SysUser currentLoginUser = ShiroUtils.getLoginUser();
-        /**
-         * 加载全局非登录访问常量
-         */
-        List<SysSetting> list = sysSettingService.selectList(new EntityWrapper<SysSetting>().orderBy("sort", true));
-        for (SysSetting setting : list) {
-            ShiroUtils.setSessionAttribute(setting.getSysKey(), setting.getSysValue());
+        try {
+            /**
+             * 加载全局非登录访问常量
+             */
+
+            //todo remove
+            List<SysSetting> list = sysSettingService.selectList(null);
+            for (SysSetting setting : list) {
+                ShiroUtils.setSessionAttribute(setting.getSettingCode(), setting.getSettingValue());
+            }
+
+            /**
+             * 保存登录信息
+             */
+            currentLoginUser.setPassword("");
+            ShiroUtils.setSessionAttribute(SystemConst.ME, currentLoginUser);
+            /**
+             * 资源和当前选中菜单
+             */
+
+            String res = MapUtils.getString(paramMap, "res");
+            if (StringUtils.isNotBlank(res)) {
+                ShiroUtils.setSessionAttribute(SystemConst.RES, res);
+            }
+            String cur = MapUtils.getString(paramMap, "cur");
+            if (StringUtils.isNotBlank(cur)) {
+                ShiroUtils.setSessionAttribute(SystemConst.CUR, cur);
+            }
+            /**
+             * 获取当前用户的菜单
+             */
+            List<TreeMenu> treeMenus = sysMenuService.selectTreeMenuByUserId(currentLoginUser.getId());
+            ShiroUtils.setSessionAttribute(SystemConst.TREE_MENUS, treeMenus);
+
+            /**
+             * 获取当前用户的权限列表,用于控制页面功能按钮是否显示
+             */
+            List<String> list2 = null;
+            list2 = sysMenuService.selectMenuIdsByuserId(currentLoginUser.getId());
+            String[] permissions = list2.toArray(new String[list2.size()]);
+            ShiroUtils.setSessionAttribute(SystemConst.PERMISSIONS, permissions);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        /**
-         * 保存登录信息
-         */
-        currentLoginUser.setPassword("");
-        ShiroUtils.setSessionAttribute(SystemConst.ME, currentLoginUser);
-        /**
-         * 资源和当前选中菜单
-         */
-
-        String res = MapUtils.getString(paramMap, "res");
-        if (StringUtils.isNotBlank(res)) {
-            ShiroUtils.setSessionAttribute(SystemConst.RES, res);
-        }
-        String cur = MapUtils.getString(paramMap, "cur");
-        if (StringUtils.isNotBlank(cur)) {
-            ShiroUtils.setSessionAttribute(SystemConst.CUR, cur);
-        }
-        /**
-         * 获取当前用户的菜单
-         */
-        List<TreeMenu> treeMenus = sysMenuService.selectTreeMenuByUserId(currentLoginUser.getId());
-        ShiroUtils.setSessionAttribute(SystemConst.TREE_MENUS, treeMenus);
-
-        /**
-         * 获取当前用户的权限列表,用于控制页面功能按钮是否显示
-         */
-        List<String> list2 = sysMenuService.selectMenuIdsByuserId(currentLoginUser.getId());
-        String[] permissions = list2.toArray(new String[list2.size()]);
-        ShiroUtils.setSessionAttribute(SystemConst.PERMISSIONS, permissions);
     }
 
     /**

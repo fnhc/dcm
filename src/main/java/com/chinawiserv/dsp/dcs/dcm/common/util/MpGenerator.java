@@ -8,7 +8,9 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.DbType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +33,7 @@ public class MpGenerator {
 
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
-        gc.setOutputDir("D:\\tmp\\gcode\\java\\");
+        gc.setOutputDir("E:/testMybatisPlus/code");
         gc.setFileOverride(true);
         gc.setActiveRecord(false);
         gc.setEnableCache(false);// XML 二级缓存
@@ -60,8 +62,8 @@ public class MpGenerator {
         });
         dsc.setDriverName("com.mysql.jdbc.Driver");
         dsc.setUsername("root");
-        dsc.setPassword("Wiser159");
-        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/dcm_new?characterEncoding=utf8");
+        dsc.setPassword("root");
+        dsc.setUrl("jdbc:mysql://127.0.0.1:3306/dcm?characterEncoding=utf8");
         mpg.setDataSource(dsc);
 
         // 策略配置
@@ -70,7 +72,15 @@ public class MpGenerator {
         strategy.setTablePrefix(new String[] { "dcm_"});// 此处可以修改为您的表前缀
         //****
         strategy.setNaming(NamingStrategy.underline_to_camel);// 表名生成策略
-         strategy.setInclude(new String[] { "sys_role" }); // 需要生成的表
+
+        // 需要生成的表以逗号连接
+//        String includeTableStr = "dcm_task_api_conf,dcm_task_crawler_conf,dcm_task_db_conf,dcm_task_scan_record,dcm_task_sd_column_conf,dcm_task_sf_conf,dcm_task_uf_record,dcm_task_usf_conf";
+        String includeTableStr = "";
+        String includeTableArr[] =  includeTableStr.split(",");
+        if (includeTableArr != null && includeTableArr.length > 0 ) {
+            strategy.setInclude(includeTableArr); // 需要生成的表
+        }
+
         // strategy.setExclude(new String[]{"test"}); // 排除生成的表
         // 自定义实体父类
         // strategy.setSuperEntityClass("com.baomidou.demo.TestEntity");
@@ -79,9 +89,9 @@ public class MpGenerator {
         // 自定义 mapper 父类
         // strategy.setSuperMapperClass("com.baomidou.demo.TestMapper");
         // 自定义 service 父类
-        // strategy.setSuperServiceClass("com.baomidou.demo.TestService");
+         strategy.setSuperServiceClass("com.chinawiserv.dsp.dcs.dcm.service.common.ICommonService");
         // 自定义 service 实现类父类
-        // strategy.setSuperServiceImplClass("com.baomidou.demo.TestServiceImpl");
+         strategy.setSuperServiceImplClass("com.chinawiserv.dsp.dcs.dcm.service.common.impl.CommonServiceImpl");
         // 自定义 controller 父类
          strategy.setSuperControllerClass("com.chinawiserv.dsp.dcs.dcm.controller.BaseController");
         // 【实体】是否生成字段常量（默认 false）
@@ -105,16 +115,21 @@ public class MpGenerator {
             public void initMap() {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("abc", this.getConfig().getGlobalConfig().getAuthor() + "-mp");
+                //todo 设置子模块名称
+                map.put("subModuleName", "task");
                 this.setMap(map);
             }
         };
         // 自定义 xxList.jsp 生成
         List<FileOutConfig> focList = new ArrayList<FileOutConfig>();
-        focList.add(new FileOutConfig("/templates/list.jsp.vm") {
+        focList.add(new FileOutConfig("/templates/vo.java.vm") {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输入文件名称
-                return "D:\\tmp\\gcode\\page\\" + tableInfo.getEntityName() + "List.jsp";
+                String voPackage = packageConfig.getParent() + ".entity.vo";
+                String voPath = joinPath(gc.getOutputDir() , voPackage);
+
+                return voPath + "\\" + tableInfo.getEntityName() + "Vo.java";
             }
         });
         cfg.setFileOutConfigList(focList);
@@ -124,11 +139,11 @@ public class MpGenerator {
         // 放置自己项目的 src/main/resources/template 目录下, 默认名称一下可以不配置，也可以自定义模板名称
          TemplateConfig tc = new TemplateConfig();
          tc.setController("templates/controller.java.vm");
-        // tc.setEntity("...");
-        // tc.setMapper("...");
-        // tc.setXml("...");
-        // tc.setService("...");
-        // tc.setServiceImpl("...");
+         tc.setEntity("templates/entity.java.vm");
+         tc.setMapper("templates/mapper.java.vm");
+         tc.setXml("templates/mapper.xml.vm");
+         tc.setService("templates/service.java.vm");
+         tc.setServiceImpl("templates/serviceImpl.java.vm");
         // 如上任何一个模块如果设置 空 OR Null 将不生成该模块。
          mpg.setTemplate(tc);
 
@@ -137,6 +152,24 @@ public class MpGenerator {
 
         // 打印注入设置
         System.out.println(mpg.getCfg().getMap().get("abc"));
+    }
+
+    /**
+     * 连接路径字符串
+     *
+     * @param parentDir   路径常量字符串
+     * @param packageName 包名
+     * @return 连接后的路径
+     */
+    private static String joinPath(String parentDir, String packageName) {
+        if (StringUtils.isEmpty(parentDir)) {
+            parentDir = System.getProperty(ConstVal.JAVA_TMPDIR);
+        }
+        if (!StringUtils.endsWith(parentDir, File.separator)) {
+            parentDir += File.separator;
+        }
+        packageName = packageName.replaceAll("\\.", "\\" + File.separator);
+        return parentDir + packageName;
     }
 
 }

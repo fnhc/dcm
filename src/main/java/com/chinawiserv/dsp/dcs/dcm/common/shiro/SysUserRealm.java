@@ -1,10 +1,10 @@
 package com.chinawiserv.dsp.dcs.dcm.common.shiro;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysMenu;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysUserService;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysMenu;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysUser;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysMenuService;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -28,35 +28,37 @@ public class SysUserRealm extends AuthorizingRealm {
      * 授权(验证权限时调用)
      */
 	@Override
-	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals){
 		SysUser user = (SysUser)principals.getPrimaryPrincipal();
 		String userId = user.getId();
 
-		List<String> permsList = null;
-		
+		List<String> permsList;
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		//系统管理员，拥有最高权限
 		//todo xxx
-		if("1".equals(userId)){
-			List<SysMenu> menuList = sysMenuService.selectList(new EntityWrapper<SysMenu>());
-			permsList = new ArrayList<>(menuList.size());
-			for(SysMenu menu : menuList){
-				permsList.add(menu.getResource());
-			}
-		} else{
-			permsList = sysMenuService.selectMenuIdsByuserId(userId);
-		}
+        try {
+            if("1".equals(userId)){
+                List<SysMenu> menuList = sysMenuService.selectList(new EntityWrapper<SysMenu>());
+                permsList = new ArrayList<>(menuList.size());
+                for(SysMenu menu : menuList){
+                    permsList.add(menu.getResourceName());
+                }
+            } else{
+                permsList = sysMenuService.selectMenuIdsByuserId(userId);
+            }
+            //用户权限列表
+            Set<String> permsSet = new HashSet<String>();
+            for(String perms : permsList){
+                if(StringUtils.isBlank(perms)){
+                    continue;
+                }
+                permsSet.addAll(Arrays.asList(perms.trim().split(",")));
+            }
 
-		//用户权限列表
-		Set<String> permsSet = new HashSet<String>();
-		for(String perms : permsList){
-			if(StringUtils.isBlank(perms)){
-				continue;
-			}
-			permsSet.addAll(Arrays.asList(perms.trim().split(",")));
-		}
-		
-		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-		info.setStringPermissions(permsSet);
+            info.setStringPermissions(permsSet);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 		return info;
 	}
 

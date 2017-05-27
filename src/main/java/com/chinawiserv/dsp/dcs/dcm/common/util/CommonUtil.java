@@ -3,6 +3,7 @@ package com.chinawiserv.dsp.dcs.dcm.common.util;
 import java.io.File;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -15,26 +16,20 @@ import org.apache.commons.lang3.StringUtils;
  * @date 2016年12月27日 上午11:51:21
  */
 public class CommonUtil {
-	
-	private final static Pattern pat = Pattern.compile("-");
 	/**
-	 * UUID生成方法
+	 * 获取32位UUID（去掉"-" ）
 	 * 
 	 * @return
 	 */
-	public static String UUID() {
-		UUID uid = UUID.randomUUID();
-		return pat.matcher(uid.toString()).replaceAll("").toLowerCase();
+	public static String get32UUID() {
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 	/**
 	 * 格式化异常
 	 */
 	public static String formatException(Exception e) {
-
 		String message = e.getMessage();
-
 		if (StringUtils.isBlank(message)) {
-
 			return "系统繁忙,请稍后重试";
 		}
 
@@ -56,21 +51,11 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static String renameFile(String fileName) {
-		String now = formatDate(new Date(),"yyyyMMdd");
+		String now = DateTimeUtils.dateTimeToString(LocalDateTime.now() , DateTimeUtils.YYYYMMDD);
 		String ext = fileName.substring(fileName.lastIndexOf("."));
 		return now + File.separator+ RandomStringUtils.randomAlphanumeric(32) + ext;
 	}
-	/**
-	 * 日期格式化
-	 * @param date
-	 * @param format
-	 * @return
-	 */
-	public static String formatDate(Date date,String format){
-		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		return sdf.format(date);
-	}
-	
+
 	/**
 	 * 过滤非法字符
 	 */

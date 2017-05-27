@@ -16,7 +16,7 @@ import net.sf.ehcache.Element;
  */
 public class EhcacheHelper {
 
-	public static CacheManager manager = CacheManager.create();
+	public static final CacheManager manager = CacheManager.create();
 
 	public static Object get(String cacheName, Object key) {
 		Cache cache = manager.getCache(cacheName);

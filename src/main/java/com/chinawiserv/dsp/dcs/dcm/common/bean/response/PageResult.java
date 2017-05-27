@@ -13,11 +13,23 @@ public class PageResult<T> extends ListResult<T> {
 	 */
 	private int total;
 
-	public PageResult(Page<T> page) {
-		setRows(page.getRecords());
-		setTotal(page.getTotal());
+	public PageResult(){
+
 	}
-	
+
+	public PageResult(Page<T> page) {
+		if (page != null) {
+			setRows(page.getRecords());
+			setTotal(page.getTotal());
+		}
+	}
+
+	public void setPage(Page<T> page){
+		if (page != null) {
+			setRows(page.getRecords());
+			setTotal(page.getTotal());
+		}
+	}
 
 	public int getTotal() {
 		return total;

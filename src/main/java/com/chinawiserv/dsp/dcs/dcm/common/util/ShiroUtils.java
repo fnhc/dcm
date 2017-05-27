@@ -1,6 +1,6 @@
 package com.chinawiserv.dsp.dcs.dcm.common.util;
 
-import com.chinawiserv.dsp.dcs.dcm.entity.SysUser;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;

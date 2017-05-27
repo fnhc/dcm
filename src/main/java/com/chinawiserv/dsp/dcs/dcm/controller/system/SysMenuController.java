@@ -1,14 +1,23 @@
 package com.chinawiserv.dsp.dcs.dcm.controller.system;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.chinawiserv.dsp.dcs.dcm.common.SystemConst;
 import com.chinawiserv.dsp.dcs.dcm.common.anno.Log;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.HandleResult;
 import com.chinawiserv.dsp.dcs.dcm.common.bean.response.ListResult;
+import com.chinawiserv.dsp.dcs.dcm.common.bean.response.PageResult;
+import com.chinawiserv.dsp.dcs.dcm.common.enums.system.Menu;
 import com.chinawiserv.dsp.dcs.dcm.controller.BaseController;
-import com.chinawiserv.dsp.dcs.dcm.entity.SysMenu;
-import com.chinawiserv.dsp.dcs.dcm.service.ISysMenuService;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysDept;
+import com.chinawiserv.dsp.dcs.dcm.entity.po.system.SysMenu;
+import com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysMenuVo;
+import com.chinawiserv.dsp.dcs.dcm.entity.vo.system.SysRoleVo;
+import com.chinawiserv.dsp.dcs.dcm.service.system.ISysMenuService;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -16,11 +25,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,133 +57,202 @@ public class SysMenuController extends BaseController {
     @Autowired
     private ISysMenuService sysMenuService;
 
+    @RequestMapping("")
+    public  String init(){
+        return "system/menu/menuList";
+    }
+
     /**
      * 分页查询菜单
      */
-    @RequiresPermissions("listMenu")
-    @RequestMapping("/list/{pageNumber}")
-    public  String list(@PathVariable Integer pageNumber, @RequestParam(defaultValue="15") Integer pageSize, String search, Model model){
-
-        Page<SysMenu> page = getPage(pageNumber,pageSize);
-        page.setOrderByField("code");
-        page.setAsc(true);
-        model.addAttribute("pageSize",pageSize);
-        // 查询分页
-        EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
-        if(StringUtils.isNotBlank(search)){
-            ew.like("menu_name",search);
-            model.addAttribute("search",search);
+    @RequiresPermissions("system:menu:list")
+    @RequestMapping("/list")
+    @ResponseBody
+    public  PageResult list(@RequestParam Map<String , Object> paramMap){
+        PageResult pageResult = new PageResult();
+        try {
+            Page<SysMenuVo> page = sysMenuService.getMenuList(paramMap);
+            pageResult.setPage(page);
+        } catch (Exception e) {
+            logger.error("查询菜单列表时出错",e.getMessage());
+            e.printStackTrace();
+            pageResult.error("查询菜单列表时出错");
         }
-        Page<SysMenu> pageData = sysMenuService.selectPage(page, ew);
-
-        for(SysMenu menu : pageData.getRecords()){
-            if(menu.getPid() == null || menu.getDeep() !=3){
-                menu.setMenuName(StringUtils.join("<i class='fa fa-folder-open'></i> ",menu.getMenuName()));
-            }else{
-                menu.setMenuName(StringUtils.join("<i class='fa fa-file'></i> ",menu.getMenuName()));
-            }
-            for(int i=1;i<menu.getDeep();i++){
-                menu.setMenuName(StringUtils.join("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",menu.getMenuName()));
-            }
-
-        }
-
-        model.addAttribute("pageData", pageData);
-        return "system/menu/list";
+        return pageResult;
     }
 
     /**
      * 增加菜单
      */
-    @RequiresPermissions("addMenu")
+    @RequiresPermissions("system:menu:add")
     @RequestMapping("/add")
-    public String add(Model model){
-
-        EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
-        ew.orderBy("code", true);
-        ew.addFilter("pid={0}","0");
-        List<SysMenu> list = sysMenuService.selectList(ew);
-        model.addAttribute("list",list);
-        return "system/menu/add";
+    public String add(){
+        return "system/menu/menuAdd";
 
     }
     /**
      * 添加目录
      */
-    @RequiresPermissions("addMenu")
-    @Log("创建目录菜单")
+    /*@RequiresPermissions("addMenu")
+    @Log("新增菜单")
     @RequestMapping("/doAddDir")
-    public String doAddDir(SysMenu sysMenu,Model model){
+    public String doAddDir(SysMenuVo sysMenu,Model model){
 
         sysMenu.setPid("0");
-        sysMenu.setDeep(1);
+        sysMenu.setMenuType(1);
         sysMenuService.insert(sysMenu);
         return redirectTo("/system/menu/list/1.html");
-    }
+    }*/
 
     /**
      * 添加菜单
      */
-    @RequiresPermissions("addMenu")
-    @Log("创建菜单")
-    @RequestMapping("/doAddMenu")
-    public String doAddMenu(SysMenu sysMenu,Model model){
-        sysMenu.setDeep(2);
-        sysMenuService.insert(sysMenu);
-        return redirectTo("/system/menu/list/1.html");
+    @RequiresPermissions("system:menu:add")
+    @Log("新增菜单")
+    @RequestMapping("/doAdd")
+    @ResponseBody
+    public HandleResult doAddMenu(SysMenuVo sysMenu){
+        HandleResult handleResult = new HandleResult();
+        try {
+            boolean result = sysMenuService.insertVO(sysMenu);
+            if(result){
+                handleResult.success("新增菜单信息成功");
+            }else{
+                handleResult.error("新增菜单信息失败");
+            }
+        } catch (Exception e) {
+            handleResult.error("新增菜单信息失败");
+            logger.error("新增菜单信息失败", e);
+        }
+        return handleResult;
     }
+
+
+    /**
+     * 获取菜单类型的下拉框信息列表(由枚举类转换成下拉框格式数据)
+     */
+    @RequiresPermissions("system:menu:add")
+    @RequestMapping("/menuTypeList")
+    @ResponseBody
+    public HandleResult getMenuTypeList(){
+        HandleResult handleResult = new HandleResult();
+        try {
+            handleResult.put("menuType",Menu.MenuType.getEnumList());
+        } catch (Exception e) {
+            handleResult.error("获取菜单类型信息失败");
+            logger.error("获取菜单类型信息失败", e);
+        }
+        return handleResult;
+    }
+
     /**
      * 编辑菜单
      */
-    @RequiresPermissions("editMenu")
-    @RequestMapping("/edit/{id}")
-    public String edit(@PathVariable String id,Model model){
+    @RequiresPermissions("system:menu:edit")
+    @RequestMapping("/edit")
+    public String edit(@RequestParam String id,Model model){
+        model.addAttribute("id", id);
         SysMenu sysMenu =sysMenuService.selectById(id);
-        model.addAttribute("sysMenu", sysMenu);
-
-        if(sysMenu.getDeep() == 1){
-            return  "/system/menu/edit";
-        }else if(sysMenu.getDeep() == 2){
-            EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
-            ew.orderBy("code", true);
-            ew.addFilter("pid={0}","0");
-            List<SysMenu> list = sysMenuService.selectList(ew);
-            model.addAttribute("list",list);
-            return "/system/menu/editMenu";
-        }
-        else{
-            EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
-            ew.orderBy("code", true);
-            ew.addFilter("pid={0}","0");
-            List<SysMenu> list = sysMenuService.selectList(ew);
-            model.addAttribute("list",list);
-            model.addAttribute("pSysMenu",sysMenuService.selectById(sysMenu.getPid()));
-            return  "/system/menu/editAction";
+        if(sysMenu.getMenuType() == SystemConst.SYS_MENU_TYPE_CATALOG){
+            return  "system/menu/editCatalog";
+        }else if(sysMenu.getMenuType() == SystemConst.SYS_MENU_TYPE_MENU){
+            return "system/menu/editMenu";
+        }else{
+            return  "system/menu/editFunction";
         }
     }
 
     /**
-     * 执行编辑菜单
+     * 获取要编辑菜单的数据内容
      */
-    @RequiresPermissions("editMenu")
+    @RequiresPermissions("system:menu:edit")
+    @RequestMapping("/editData")
+    @ResponseBody
+    public HandleResult getEditData(@RequestParam String id){
+        HandleResult result = new HandleResult();
+        try {
+            SysMenuVo sysMenuVo = sysMenuService.getEditData(id);
+            result.put("sysMenu",sysMenuVo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.error("获取菜单的基本信息出错");
+        }
+        return result;
+    }
+
+    /**
+     * 获取下拉框中菜单的内容(封装成json数组的格式)
+     */
+    @RequiresPermissions("system:menu:list")
+    @RequestMapping("/menuSelect")
+    @ResponseBody
+    public HandleResult getSelectData(@RequestParam Map<String , Object> paramMap){
+        HandleResult result = new HandleResult();
+        List<JSONObject> selectDataList;
+        try {
+            String menuType = MapUtils.getString(paramMap, "menuType");
+            if(!ObjectUtils.isEmpty(menuType)){
+                selectDataList = sysMenuService.getSelectDataForCatalog(paramMap);
+            }else{
+                String pid = MapUtils.getString(paramMap, "pid");
+                if(!ObjectUtils.isEmpty(pid)){
+                    selectDataList = sysMenuService.getSelectDataForMenuByPid(paramMap);
+                }else{
+                    selectDataList = sysMenuService.getSelectDataForMenuById(paramMap);
+                }
+            }
+            result.put("selectData",selectDataList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.error("获取菜单下拉框的信息列表出错");
+        }
+        return result;
+    }
+
+
+    /**
+     * 保存菜单的修改
+     */
+    @RequiresPermissions("system:menu:edit")
     @Log("编辑菜单")
     @RequestMapping("/doEdit")
-    public String doEdit(SysMenu sysMenu,Model model){
-        sysMenuService.updateById(sysMenu);
-        return redirectTo("/system/menu/list/1.html");
+    @ResponseBody
+    public  HandleResult doEdit(SysMenuVo sysMenu){
+        HandleResult handleResult = new HandleResult();
+        try {
+            sysMenuService.updateVO(sysMenu);
+            handleResult.success("修改菜单信息成功");
+        } catch (Exception e) {
+            handleResult.error("修改菜单信息失败");
+            logger.error("修改菜单信息失败", e);
+        }
+        return handleResult;
     }
 
     /**
      * 执行编辑菜单
      */
-    @RequiresPermissions("deleteMenu")
+    @RequiresPermissions("system:menu:delete")
     @Log("删除菜单")
     @RequestMapping("/delete")
     @ResponseBody
-    public HandleResult delete(String id){
-        sysMenuService.deleteById(id);
-        return new HandleResult().success("删除菜单成功");
+    public HandleResult delete(@RequestParam Map<String, Object> param){
+        HandleResult handleResult = new HandleResult();
+        try {
+            boolean result = sysMenuService.deleteByQuery(param);
+            if(result){
+                handleResult.success("删除菜单信息成功");
+            }else{
+                handleResult.success("删除菜单信息失败");
+            }
+        } catch (Exception e) {
+            handleResult.error("删除菜单信息失败");
+            logger.error("删除菜单信息失败", e);
+        }
+        return handleResult;
     }
+
+
 
     /**
      * 根据父节点获取子菜单
@@ -179,7 +260,7 @@ public class SysMenuController extends BaseController {
     @RequestMapping("/json")
     @ResponseBody
     public ListResult json(String pid){
-        EntityWrapper<SysMenu> ew = new EntityWrapper<SysMenu>();
+        EntityWrapper<SysMenu> ew = new EntityWrapper<>();
         ew.orderBy("sort");
         ew.addFilter("pid = {0} ", pid);
         List<SysMenu> list = sysMenuService.selectList(ew);
@@ -188,7 +269,7 @@ public class SysMenuController extends BaseController {
         for(SysMenu m : list){
             Map<String, Object> map = Maps.newHashMap();
             map.put("id", m.getId());
-            map.put("text",StringUtils.join(m.getCode(),"-",m.getMenuName()));
+            map.put("text",m.getMenuName());
             listMap.add(map);
         }
         //todo
@@ -213,11 +294,11 @@ public class SysMenuController extends BaseController {
         return "{\"ok\":\"资源名称很棒.\"}";
     }
 
-    @RequiresPermissions("addMenu")
+    @RequiresPermissions("system:menu:add")
     @Log("新增功能菜单")
     @RequestMapping("/doAddAction")
-    public String doAddAction(SysMenu sysMenu,Model model){
-        sysMenu.setDeep(3);
+    public String doAddAction(SysMenuVo sysMenu,Model model){
+        sysMenu.setMenuType(3);
         sysMenuService.insert(sysMenu);
         return redirectTo("/system/menu/list/1.html");
     }
